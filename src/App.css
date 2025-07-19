@@ -1120,7 +1120,7 @@ body {
     .right-section {
         margin-left: 0;
         padding: 0 10px;
-        height: 100vh;
+        height: 100vh;  
         overflow-x: hidden;
         overflow-y: scroll; /* Scroll her zaman aktif */
         position: relative;
@@ -2106,4 +2106,247 @@ body {
     /* Down Arrow Kapsayıcı Div Stili (Mobil) */
     .down-arrow {
         width: 20px;
-        height
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        padding: 4px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Down Arrow Görseli Stili (Mobil) */
+    .down-arrow-img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Samsung S23 Ultra gibi ultra yüksek DPI cihazlar */
+@media only screen and (max-width: 767px) and (min-resolution: 3dppx) {
+    .dot {
+        width: 12px;
+        height: 12px;
+    }
+    .dots {
+        gap: 18px;
+    }
+
+    .bekleme-content {
+        padding-top: 160px;
+    }
+
+    .bekleme-iscep-logo {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 80px !important;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1001;
+    }
+
+    .bekleme-check-logo {
+        width: 50px !important;
+        height: 50px !important;
+        position: absolute;
+        top: 220px !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .waiting-message {
+        font-size: 18px;
+        max-width: 320px;
+        padding: 0 15px;
+        margin-top: 165px !important;
+    }
+
+    /* Down Arrow Kapsayıcı Div Stili (Mobil) */
+    .down-arrow {
+        width: 20px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        padding: 4px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Down Arrow Görseli Stili (Mobil) */
+    .down-arrow-img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Android cihazlar için yatay mod (örn. Samsung S23 Ultra, Huawei Mate, Oppo Reno, 900px'e kadar) */
+@media only screen and (max-width: 900px) and (orientation: landscape) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .right-section {
+        overflow-y: auto;
+    }
+
+    .input-wrapper {
+        top: 30vh;
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .new-container {
+        width: 100%;
+        max-width: 340px;
+        font-size: 18px;
+        top: 230px;
+    }
+
+    .new-lower-container {
+        width: 100%;
+        max-width: 340px;
+        top: 250px;
+    }
+
+    .iscep-logo {
+        top: 40px !important; /* Logoyu aşağı indirdik */
+        width: 80px;
+        height: 80px;
+    }
+
+    .right-section .iscep-logo.iscep-logo-phone {
+        top: 40px !important;
+    }
+
+    .user-icon {
+        top: 145px !important;
+        width: 72px;
+        height: 72px;
+    }
+
+    .user-icon img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .new-input,
+    .tc-input-wrapper,
+    .password-input-wrapper,
+    .phone-input-wrapper {
+        width: 100%;
+        max-width: 340px;
+        top: 30px;
+    }
+
+    .continue-button {
+        top: 30vh;
+        width: 90% !important;
+        max-width: 380px !important;
+    }
+
+    .continue-button.shifted {
+        top: 38vh !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 38vh !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 46vh !important;
+    }
+
+    .button-phone {
+        top: 25vh;
+        width: 90% !important;
+        max-width: 380px !important;
+    }
+
+    .phone-error {
+        top: 63px;
+        max-width: 340px;
+    }
+
+    .tc-error {
+        max-width: 340px;
+    }
+
+    .action-links {
+        width: 100%;
+        left: 48%;
+        max-width: 340px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        z-index: 3;
+        flex-wrap: nowrap;
+        gap: 30px;
+        padding-left: 0;
+    }
+
+    .action-link {
+        font-size: 12px;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .bekleme-content {
+        padding-top: 160px;
+    }
+
+    .bekleme-iscep-logo {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 80px !important;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1001;
+    }
+
+    .bekleme-check-logo {
+        width: 50px !important;
+        height: 50px !important;
+        position: absolute;
+        top: 220px !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .waiting-message {
+        font-size: 18px;
+        max-width: 320px;
+        padding: 0 15px;
+        margin-top: 165px !important;
+    }
+
+    .dot {
+        width: 12px;
+        height: 12px;
+    }
+    .dots {
+        gap: 18px;
+    }
+
+    /* Down Arrow Kapsayıcı Div Stili (Mobil) */
+    .down-arrow {
+        width: 20px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        padding: 4px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Down Arrow Görseli Stili (Mobil) */
+    .down-arrow-img {
+        width: 20px;
+        height: 20px;
+    }
+}
