@@ -72,13 +72,11 @@ function LoginPage() {
       const isSamsung = /Samsung/i.test(navigator.userAgent);
       const isOppo = /OPPO/i.test(navigator.userAgent);
 
-      if (!isAndroid) return;
+      if (!isAndroid || !ref) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Gecikmeyi azalttık, hızlı tepki için
+      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Hızlı tepki için optimize
 
       const adjustScroll = debounce(() => {
-        if (!ref) return;
-
         requestAnimationFrame(() => {
           const rightSection = document.querySelector('.right-section');
           const continueButton = document.querySelector('.continue-button');
@@ -93,16 +91,14 @@ function LoginPage() {
           rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
           rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-          // Inputu ortala ve devam butonunu görünür tut
+          // Inputu ortala
           ref.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
 
-          // Klavye açıkken devam butonunu görünür kılmak için ek ayar
+          // Devam butonunu görünür kılmak için ek kontrol
           const continueRect = continueButton.getBoundingClientRect();
-          if (continueRect.bottom > viewportHeight) {
-            rightSection.scrollBy({
-              top: continueRect.bottom - viewportHeight + 20,
-              behavior: 'auto',
-            });
+          if (continueRect.bottom > viewportHeight || continueRect.top < 0) {
+            const scrollTo = rightSection.scrollTop + (continueRect.top + continueRect.height / 2) - (viewportHeight / 2);
+            rightSection.scrollTo({ top: scrollTo, behavior: 'auto' });
           }
         });
       }, 50);
