@@ -74,11 +74,11 @@ function LoginPage() {
 
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 3500 : 2000;
+      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Gecikmeyi azalttık ve optimize ettik
 
       const adjustScroll = debounce(() => {
         let attempts = 0;
-        const maxAttempts = 20;
+        const maxAttempts = 10; // Deneme sayısını azalttık
 
         const scrollLoop = () => {
           requestAnimationFrame(() => {
@@ -90,36 +90,34 @@ function LoginPage() {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
 
-            const extraPadding = inputType === 'Password' ? 150 : 80;
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Uzunluğu azalttık
-            rightSection.style.paddingBottom = `${keyboardHeight + extraPadding}px`;
+            // Dinamik min-height ve padding
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 50}px`; // Daha kısa min-height
+            rightSection.style.paddingBottom = `${keyboardHeight + 30}px`; // Daha az padding
 
-            const rect = continueButton.getBoundingClientRect();
-            if (rect.top >= 0 && rect.bottom <= viewportHeight + 20) {
-              return;
-            }
-
-            const scrollOffset = rect.bottom - viewportHeight + 40;
-            rightSection.scrollBy({
-              top: scrollOffset,
-              behavior: 'smooth',
-            });
+            // Devam butonunu görünür yapmak için scrollIntoView
+            continueButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
             attempts++;
             if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 150);
+              setTimeout(scrollLoop, 100); // Daha kısa aralık
             }
           });
         };
-
         scrollLoop();
       }, 50);
 
       setTimeout(adjustScroll, baseDelay);
 
       const handleResizeDuringFocus = () => adjustScroll();
+      window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
+      window.visualViewport?.addEventListener('scroll', handleResizeDuringFocus);
       window.addEventListener('resize', handleResizeDuringFocus);
-      return () => window.removeEventListener('resize', handleResizeDuringFocus);
+
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
+        window.visualViewport?.removeEventListener('scroll', handleResizeDuringFocus);
+        window.removeEventListener('resize', handleResizeDuringFocus);
+      };
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC');
@@ -136,7 +134,7 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (rightSection) {
         rightSection.style.minHeight = '100vh';
-        rightSection.style.paddingBottom = '0';
+        rightSection.style.paddingBottom = '20px'; // Varsayılan padding
         rightSection.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
