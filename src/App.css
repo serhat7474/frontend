@@ -19,6 +19,7 @@ body {
     height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-y: auto; /* Ekledik: Body scroll'u zorla */
 }
 
 /* Ana Sistem */
@@ -72,7 +73,8 @@ body {
     margin-left: 0; /* Sol banner yoksa sıfırladık */
     padding: 20px 10px;
     overflow-y: auto; /* Scroll her zaman aktif */
-    height: 100vh;
+    height: auto; /* Height auto yaptık, viewport'a göre uzasın */
+    min-height: 100vh;
     box-sizing: border-box;
     background-color: transparent;
     position: relative;
@@ -1123,17 +1125,16 @@ body {
         padding: 0 10px;
         height: 100vh;  
         overflow-x: hidden;
-        overflow-y: auto; /* Scroll her zaman aktif */
+        overflow-y: scroll; /* Scroll her zaman aktif */
         position: relative;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-        transition: padding-bottom 0.3s ease;
-        padding-bottom: calc(var(--keyboard-height, 0px) + 30px); /* Daha az padding */
+        -webkit-overflow-scrolling: touch; /* Daha akıcı kaydırma için */
+        transition: height 0.3s ease, padding-bottom 0.3s ease;
+        padding-bottom: calc(var(--keyboard-height, 0px) + 50px); /* Klavye için ekstra alan */
     }
 
     /* Görünmez scroll bar */
     .right-section::-webkit-scrollbar {
-        width: 0;
+        width: 0; /* Scroll çubuğunu gizle */
         background: transparent;
     }
 
@@ -1216,22 +1217,8 @@ body {
     .continue-button,
     .button-phone {
         width: 90% !important;
-        max-width: 330px !important; /* Samsung/Oppo için optimize */
-        font-size: 0.95rem;
-        padding: 1rem;
-        z-index: 10; /* Klavye üstünde kalmasını sağlar */
-    }
-
-    .continue-button.shifted {
-        top: 200px !important;
-    }
-
-    .continue-button.error-shifted {
-        top: 200px !important;
-    }
-
-    .continue-button.error-shifted.shifted {
-        top: 270px !important;
+        max-width: 300px !important; /* Samsung/Oppo için optimize */
+        margin: 0 auto;
     }
 
     .bekleme-content {
@@ -1563,19 +1550,18 @@ body {
 
     .continue-button {
         top: 140px;
-        max-width: 300px !important;
     }
 
     .continue-button.shifted {
-        top: 190px !important;
+        top: 200px !important;
     }
 
     .continue-button.error-shifted {
-        top: 190px !important;
+        top: 200px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 260px !important;
+        top: 270px !important;
     }
 
     .button-phone {
@@ -1671,7 +1657,7 @@ body {
     }
 
     .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 20px); /* Daha az padding */
+        padding-bottom: calc(var(--keyboard-height, 0px) + 40px); /* Daha az padding */
     }
 }
 
@@ -1830,7 +1816,7 @@ body {
     }
 
     .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 25px);
+        padding-bottom: calc(var(--keyboard-height, 0px) + 45px);
     }
 }
 
@@ -1985,7 +1971,7 @@ body {
     }
 
     .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 30px);
+        padding-bottom: calc(var(--keyboard-height, 0px) + 50px);
     }
 }
 
