@@ -57,7 +57,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Scroll optimizasyonu: TC ve şifre inputlarına focus olduğunda devam butonunu görünür kıl
+  // Scroll optimizasyonu: TC ve şifre inputlarına focus olduğunda ortalamayı sağla
   useEffect(() => {
     const tcRef = tcInputRef.current;
     const passwordRef = passwordInputRef.current;
@@ -67,63 +67,60 @@ function LoginPage() {
       return Math.max(window.innerHeight - vh, 0);
     };
 
-    const handleFocusScroll = (inputType) => {
+    const handleFocusScroll = (inputType, ref) => {
       const isAndroid = /Android/i.test(navigator.userAgent);
       const isSamsung = /Samsung/i.test(navigator.userAgent);
       const isOppo = /OPPO/i.test(navigator.userAgent);
 
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 3500 : 2000;
+      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Gecikmeyi azalttık, hızlı tepki için
 
       const adjustScroll = debounce(() => {
-        let attempts = 0;
-        const maxAttempts = 20;
+        if (!ref) return;
 
-        const scrollLoop = () => {
-          requestAnimationFrame(() => {
-            const rightSection = document.querySelector('.right-section');
-            const continueButton = document.querySelector('.continue-button');
+        requestAnimationFrame(() => {
+          const rightSection = document.querySelector('.right-section');
+          const continueButton = document.querySelector('.continue-button');
 
-            if (!rightSection || !continueButton || attempts >= maxAttempts) return;
+          if (!rightSection || !continueButton) return;
 
-            const viewportHeight = window.visualViewport?.height || window.innerHeight;
-            const keyboardHeight = getKeyboardHeight();
+          const viewportHeight = window.visualViewport?.height || window.innerHeight;
+          const keyboardHeight = getKeyboardHeight();
 
-            const extraPadding = inputType === 'Password' ? 150 : 80;
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Uzunluğu azalttık
-            rightSection.style.paddingBottom = `${keyboardHeight + extraPadding}px`;
+          // Dinamik padding ve min-height
+          const paddingOffset = inputType === 'Password' ? 150 : 100; // Şifre için ekstra padding
+          rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
+          rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-            const rect = continueButton.getBoundingClientRect();
-            if (rect.top >= 0 && rect.bottom <= viewportHeight + 20) {
-              return;
-            }
+          // Inputu ortala ve devam butonunu görünür tut
+          ref.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
 
-            const scrollOffset = rect.bottom - viewportHeight + 40;
+          // Klavye açıkken devam butonunu görünür kılmak için ek ayar
+          const continueRect = continueButton.getBoundingClientRect();
+          if (continueRect.bottom > viewportHeight) {
             rightSection.scrollBy({
-              top: scrollOffset,
-              behavior: 'smooth',
+              top: continueRect.bottom - viewportHeight + 20,
+              behavior: 'auto',
             });
-
-            attempts++;
-            if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 150);
-            }
-          });
-        };
-
-        scrollLoop();
+          }
+        });
       }, 50);
 
       setTimeout(adjustScroll, baseDelay);
 
       const handleResizeDuringFocus = () => adjustScroll();
       window.addEventListener('resize', handleResizeDuringFocus);
-      return () => window.removeEventListener('resize', handleResizeDuringFocus);
+      window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
+
+      return () => {
+        window.removeEventListener('resize', handleResizeDuringFocus);
+        window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
+      };
     };
 
-    const handleTcFocusScroll = () => handleFocusScroll('TC');
-    const handlePasswordFocusScroll = () => handleFocusScroll('Password');
+    const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
+    const handlePasswordFocusScroll = () => handleFocusScroll('Password', passwordRef);
 
     if (tcRef) {
       tcRef.addEventListener('focus', handleTcFocusScroll);
@@ -137,7 +134,7 @@ function LoginPage() {
       if (rightSection) {
         rightSection.style.minHeight = '100vh';
         rightSection.style.paddingBottom = '0';
-        rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        rightSection.scrollTo({ top: 0, behavior: 'auto' });
       }
     };
 
@@ -148,13 +145,6 @@ function LoginPage() {
       passwordRef.addEventListener('blur', handleBlurScroll);
     }
 
-    const handleViewportChange = debounce(() => handleFocusScroll('ViewportChange'), 100);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
-    }
-    window.addEventListener('resize', handleViewportChange);
-
     return () => {
       if (tcRef) {
         tcRef.removeEventListener('focus', handleTcFocusScroll);
@@ -164,11 +154,6 @@ function LoginPage() {
         passwordRef.removeEventListener('focus', handlePasswordFocusScroll);
         passwordRef.removeEventListener('blur', handleBlurScroll);
       }
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleViewportChange);
-        window.visualViewport.removeEventListener('scroll', handleViewportChange);
-      }
-      window.removeEventListener('resize', handleViewportChange);
     };
   }, []);
 
