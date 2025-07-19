@@ -42,7 +42,7 @@ function LoginPage() {
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover';
     document.head.appendChild(meta);
 
     if ("virtualKeyboard" in navigator) {
@@ -63,7 +63,7 @@ function LoginPage() {
     const passwordRef = passwordInputRef.current;
 
     const getKeyboardHeight = () => {
-      const vh = window.visualViewport?.height || window.innerHeight;
+      const vh = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight; // Fallback ekledik
       return Math.max(window.innerHeight - vh, 0);
     };
 
@@ -74,11 +74,11 @@ function LoginPage() {
 
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Gecikmeyi azalttık ve optimize ettik
+      const baseDelay = (isSamsung || isOppo) ? 800 : 400; // Gecikmeyi artırdık
 
       const adjustScroll = debounce(() => {
         let attempts = 0;
-        const maxAttempts = 10; // Deneme sayısını azalttık
+        const maxAttempts = 10;
 
         const scrollLoop = () => {
           requestAnimationFrame(() => {
@@ -90,16 +90,21 @@ function LoginPage() {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
 
-            // Dinamik min-height ve padding
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 50}px`; // Daha kısa min-height
-            rightSection.style.paddingBottom = `${keyboardHeight + 30}px`; // Daha az padding
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Biraz artırdık
+            rightSection.style.paddingBottom = `${keyboardHeight + 50}px`; // Padding artırdık
 
-            // Devam butonunu görünür yapmak için scrollIntoView
-            continueButton.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            // scrollIntoView'ı güncelledik: center yap ve inline nearest
+            continueButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+
+            // Ek fallback: window.scrollTo ile zorla
+            const inputRect = (inputType === 'Password' ? passwordRef : tcRef)?.getBoundingClientRect();
+            if (inputRect) {
+              window.scrollTo(0, inputRect.top - 100); // Klavye üstü offset
+            }
 
             attempts++;
             if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 100); // Daha kısa aralık
+              setTimeout(scrollLoop, 100);
             }
           });
         };
@@ -445,7 +450,7 @@ function LoginPage() {
             </button>
           </div>
           {/* Sayfa uzunluğunu artırmak için ekstra boş alan ekle (gizli scroll için) */}
-          <div style={{ height: '135vh', width: '100%' }}></div> {/* Uzunluğu 135vh yaptık */}
+          <div style={{ height: '200vh', width: '100%' }}></div> {/* Uzunluğu artırdık, scroll alanı genişlesin */}
         </div>
       </div>
     </form>
