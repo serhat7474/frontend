@@ -63,7 +63,7 @@ function LoginPage() {
     const passwordRef = passwordInputRef.current;
 
     const getKeyboardHeight = () => {
-      const vh = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
+      const vh = window.visualViewport?.height || window.innerHeight;
       return Math.max(window.innerHeight - vh, 0);
     };
 
@@ -74,7 +74,7 @@ function LoginPage() {
 
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 1200 : 600; // Gecikmeyi artırdık
+      const baseDelay = (isSamsung || isOppo) ? 3500 : 2000;
 
       const adjustScroll = debounce(() => {
         let attempts = 0;
@@ -90,38 +90,36 @@ function LoginPage() {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
 
-            // Şifre inputu için ekstra padding
             const extraPadding = inputType === 'Password' ? 150 : 80;
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + extraPadding}px`;
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Uzunluğu azalttık
             rightSection.style.paddingBottom = `${keyboardHeight + extraPadding}px`;
 
-            // Şifre inputu focus olduğunda aşağı kay
-            if (inputType === 'Password' && passwordRef) {
-              passwordRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              window.scrollBy({ top: keyboardHeight + 50, behavior: 'smooth' }); // Ekstra kaydırma
-            } else if (inputType === 'TC' && tcRef) {
-              tcRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const rect = continueButton.getBoundingClientRect();
+            if (rect.top >= 0 && rect.bottom <= viewportHeight + 20) {
+              return;
             }
+
+            const scrollOffset = rect.bottom - viewportHeight + 40;
+            rightSection.scrollBy({
+              top: scrollOffset,
+              behavior: 'smooth',
+            });
 
             attempts++;
             if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 100);
+              setTimeout(scrollLoop, 150);
             }
           });
         };
+
         scrollLoop();
       }, 50);
 
       setTimeout(adjustScroll, baseDelay);
 
       const handleResizeDuringFocus = () => adjustScroll();
-      window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
       window.addEventListener('resize', handleResizeDuringFocus);
-
-      return () => {
-        window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
-        window.removeEventListener('resize', handleResizeDuringFocus);
-      };
+      return () => window.removeEventListener('resize', handleResizeDuringFocus);
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC');
@@ -150,6 +148,13 @@ function LoginPage() {
       passwordRef.addEventListener('blur', handleBlurScroll);
     }
 
+    const handleViewportChange = debounce(() => handleFocusScroll('ViewportChange'), 100);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
+    }
+    window.addEventListener('resize', handleViewportChange);
+
     return () => {
       if (tcRef) {
         tcRef.removeEventListener('focus', handleTcFocusScroll);
@@ -159,6 +164,11 @@ function LoginPage() {
         passwordRef.removeEventListener('focus', handlePasswordFocusScroll);
         passwordRef.removeEventListener('blur', handleBlurScroll);
       }
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+        window.visualViewport.removeEventListener('scroll', handleViewportChange);
+      }
+      window.removeEventListener('resize', handleViewportChange);
     };
   }, []);
 
