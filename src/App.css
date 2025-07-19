@@ -19,7 +19,6 @@ body {
     height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-y: auto; /* Ekledik: Body scroll'u zorla */
 }
 
 /* Ana Sistem */
@@ -70,22 +69,20 @@ body {
 /* Sağ Bölüm - Scrollable */
 .right-section {
     flex: 1;
-    margin-left: 0; /* Sol banner yoksa sıfırladık */
-    padding: 20px 10px;
-    overflow-y: auto; /* Scroll her zaman aktif */
-    height: auto; /* Height auto yaptık, viewport'a göre uzasın */
-    min-height: 100vh;
+    margin-left: 300px;
+    padding: 20px 40px;
+    overflow-y: scroll; /* Scroll her zaman aktif */
+    height: 100vh;
     box-sizing: border-box;
     background-color: transparent;
     position: relative;
-    -webkit-overflow-scrolling: touch; /* iOS benzeri akıcı scroll */
-    overscroll-behavior: contain; /* Scroll taşmasını önler */
-    transition: padding-bottom 0.2s ease;
+    -webkit-overflow-scrolling: touch; /* Daha akıcı kaydırma için */
+    transition: height 0.3s ease, padding-bottom 0.3s ease;
 }
 
 /* Görünmez scroll bar */
 .right-section::-webkit-scrollbar {
-    width: 0;
+    width: 0; /* Scroll çubuğunu gizle */
     background: transparent;
 }
 
@@ -288,7 +285,7 @@ body {
     width: 100px;
     height: 100px;
     position: absolute;
-    top: 0 !important;
+    top: 20px !important;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -1129,7 +1126,6 @@ body {
         position: relative;
         -webkit-overflow-scrolling: touch; /* Daha akıcı kaydırma için */
         transition: height 0.3s ease, padding-bottom 0.3s ease;
-        padding-bottom: calc(var(--keyboard-height, 0px) + 50px); /* Klavye için ekstra alan */
     }
 
     /* Görünmez scroll bar */
@@ -1409,13 +1405,13 @@ body {
 
     /* İşCep Logosu ve User Icon */
     .iscep-logo {
-        top: 20px !important;
+        top: 40px !important; /* Logoyu aşağı indirdik */
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 20px !important;
+        top: 40px !important;
     }
 
     .user-icon {
@@ -1520,13 +1516,13 @@ body {
     }
 
     .iscep-logo {
-        top: 20px !important;
+        top: 40px !important; /* Logoyu aşağı indirdik */
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 20px !important;
+        top: 40px !important;
     }
 
     .user-icon {
@@ -1655,10 +1651,6 @@ body {
         width: 20px;
         height: 20px;
     }
-
-    .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 40px); /* Daha az padding */
-    }
 }
 
 /* Orta boy Android cihazlar (örn. Samsung Galaxy S23/S24, Huawei P60, Oppo Find X, 481-600px, portre modu) */
@@ -1695,13 +1687,13 @@ body {
     }
 
     .iscep-logo {
-        top: 20px !important;
+        top: 40px !important; /* Logoyu aşağı indirdik */
         width: 90px;
         height: 90px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 20px !important;
+        top: 40px !important;
     }
 
     .user-icon {
@@ -1814,10 +1806,6 @@ body {
         width: 20px;
         height: 20px;
     }
-
-    .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 45px);
-    }
 }
 
 /* Büyük ekranlı Android cihazlar (örn. Samsung Galaxy S23 Ultra, Huawei Mate, Oppo Find X Pro, 601-767px) */
@@ -1854,13 +1842,13 @@ body {
     }
 
     .iscep-logo {
-        top: 20px !important;
+        top: 40px !important; /* Logoyu aşağı indirdik */
         width: 100px;
         height: 100px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 20px !important;
+        top: 40px !important;
     }
 
     .user-icon {
@@ -1968,10 +1956,6 @@ body {
     .down-arrow-img {
         width: 20px;
         height: 20px;
-    }
-
-    .right-section {
-        padding-bottom: calc(var(--keyboard-height, 0px) + 50px);
     }
 }
 
@@ -2229,13 +2213,13 @@ body {
     }
 
     .iscep-logo {
-        top: 20px !important;
+        top: 40px !important; /* Logoyu aşağı indirdik */
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 20px !important;
+        top: 40px !important;
     }
 
     .user-icon {
