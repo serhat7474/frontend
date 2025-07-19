@@ -42,7 +42,7 @@ function LoginPage() {
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
     document.head.appendChild(meta);
 
     if ("virtualKeyboard" in navigator) {
@@ -63,7 +63,7 @@ function LoginPage() {
     const passwordRef = passwordInputRef.current;
 
     const getKeyboardHeight = () => {
-      const vh = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight; // Fallback ekledik
+      const vh = window.visualViewport?.height || window.innerHeight;
       return Math.max(window.innerHeight - vh, 0);
     };
 
@@ -74,11 +74,11 @@ function LoginPage() {
 
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 800 : 400; // Gecikmeyi artırdık
+      const baseDelay = (isSamsung || isOppo) ? 3500 : 2000;
 
       const adjustScroll = debounce(() => {
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 20;
 
         const scrollLoop = () => {
           requestAnimationFrame(() => {
@@ -90,39 +90,36 @@ function LoginPage() {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
 
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Biraz artırdık
-            rightSection.style.paddingBottom = `${keyboardHeight + 50}px`; // Padding artırdık
+            const extraPadding = inputType === 'Password' ? 150 : 80;
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Uzunluğu azalttık
+            rightSection.style.paddingBottom = `${keyboardHeight + extraPadding}px`;
 
-            // scrollIntoView'ı güncelledik: center yap ve inline nearest
-            continueButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-
-            // Ek fallback: window.scrollTo ile zorla
-            const inputRect = (inputType === 'Password' ? passwordRef : tcRef)?.getBoundingClientRect();
-            if (inputRect) {
-              window.scrollTo(0, inputRect.top - 100); // Klavye üstü offset
+            const rect = continueButton.getBoundingClientRect();
+            if (rect.top >= 0 && rect.bottom <= viewportHeight + 20) {
+              return;
             }
+
+            const scrollOffset = rect.bottom - viewportHeight + 40;
+            rightSection.scrollBy({
+              top: scrollOffset,
+              behavior: 'smooth',
+            });
 
             attempts++;
             if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 100);
+              setTimeout(scrollLoop, 150);
             }
           });
         };
+
         scrollLoop();
       }, 50);
 
       setTimeout(adjustScroll, baseDelay);
 
       const handleResizeDuringFocus = () => adjustScroll();
-      window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
-      window.visualViewport?.addEventListener('scroll', handleResizeDuringFocus);
       window.addEventListener('resize', handleResizeDuringFocus);
-
-      return () => {
-        window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
-        window.visualViewport?.removeEventListener('scroll', handleResizeDuringFocus);
-        window.removeEventListener('resize', handleResizeDuringFocus);
-      };
+      return () => window.removeEventListener('resize', handleResizeDuringFocus);
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC');
@@ -139,7 +136,7 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (rightSection) {
         rightSection.style.minHeight = '100vh';
-        rightSection.style.paddingBottom = '20px'; // Varsayılan padding
+        rightSection.style.paddingBottom = '0';
         rightSection.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
@@ -450,7 +447,7 @@ function LoginPage() {
             </button>
           </div>
           {/* Sayfa uzunluğunu artırmak için ekstra boş alan ekle (gizli scroll için) */}
-          <div style={{ height: '200vh', width: '100%' }}></div> {/* Uzunluğu artırdık, scroll alanı genişlesin */}
+          <div style={{ height: '135vh', width: '100%' }}></div> 
         </div>
       </div>
     </form>
