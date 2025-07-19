@@ -447,7 +447,7 @@ function LoginPage() {
             </button>
           </div>
           {/* Sayfa uzunluğunu artırmak için ekstra boş alan ekle (gizli scroll için) */}
-          <div style={{ height: '100vh', width: '100%' }}></div> {/* Uzunluğu artırdık */}
+          <div style={{ height: '135vh', width: '100%' }}></div> {/* Uzunluğu 135vh yaptık */}
         </div>
       </div>
     </form>
