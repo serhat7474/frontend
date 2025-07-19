@@ -74,32 +74,45 @@ function LoginPage() {
 
       if (!isAndroid || !ref) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 500 : 300; // Hızlı tepki için optimize
+      // Oppo ve Samsung için daha kısa gecikme süresi
+      const baseDelay = (isSamsung || isOppo) ? 300 : 200;
 
       const adjustScroll = debounce(() => {
         requestAnimationFrame(() => {
           const rightSection = document.querySelector('.right-section');
           const continueButton = document.querySelector('.continue-button');
+          const inputWrapper = document.querySelector('.input-wrapper');
 
-          if (!rightSection || !continueButton) return;
+          if (!rightSection || !continueButton || !inputWrapper) return;
 
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
           const keyboardHeight = getKeyboardHeight();
+          const inputRect = ref.getBoundingClientRect();
 
           // Dinamik padding ve min-height
-          const paddingOffset = inputType === 'Password' ? 150 : 100; // Şifre için ekstra padding
+          const paddingOffset = inputType === 'Password' ? 180 : 150; // Daha fazla alan
           rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
           rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-          // Inputu ortala
-          ref.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+          // Input ve butonu görünür alanda tutmak için scroll hesaplama
+          const inputCenter = inputRect.top + inputRect.height / 2;
+          const viewportCenter = viewportHeight / 2;
+          const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
-          // Devam butonunu görünür kılmak için ek kontrol
-          const continueRect = continueButton.getBoundingClientRect();
-          if (continueRect.bottom > viewportHeight || continueRect.top < 0) {
-            const scrollTo = rightSection.scrollTop + (continueRect.top + continueRect.height / 2) - (viewportHeight / 2);
-            rightSection.scrollTo({ top: scrollTo, behavior: 'auto' });
-          }
+          // Scroll inputu merkeze al
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+
+          // Devam butonunun görünürlüğünü kontrol et
+          setTimeout(() => {
+            const updatedContinueRect = continueButton.getBoundingClientRect();
+            if (updatedContinueRect.bottom > viewportHeight - 20) {
+              const additionalScroll = updatedContinueRect.bottom - (viewportHeight - 60); // Butonu görünür tut
+              rightSection.scrollTo({
+                top: rightSection.scrollTop + additionalScroll,
+                behavior: 'smooth',
+              });
+            }
+          }, 100); // Kısa bir gecikme ile buton pozisyonunu kontrol et
         });
       }, 50);
 
@@ -130,7 +143,7 @@ function LoginPage() {
       if (rightSection) {
         rightSection.style.minHeight = '100vh';
         rightSection.style.paddingBottom = '0';
-        rightSection.scrollTo({ top: 0, behavior: 'auto' });
+        rightSection.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
 
@@ -138,7 +151,7 @@ function LoginPage() {
       tcRef.addEventListener('blur', handleBlurScroll);
     }
     if (passwordRef) {
-      passwordRef.addEventListener('blur', handleBlurScroll);
+      tcRef.addEventListener('blur', handleBlurScroll);
     }
 
     return () => {
