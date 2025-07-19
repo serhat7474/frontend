@@ -78,7 +78,7 @@ function LoginPage() {
 
       const adjustScroll = debounce(() => {
         let attempts = 0;
-        const maxAttempts = 20; // Denemeleri azalttık, manuel scroll'u engellememek için
+        const maxAttempts = 20;
 
         const scrollLoop = () => {
           requestAnimationFrame(() => {
@@ -90,20 +90,16 @@ function LoginPage() {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
 
-            // Şifre inputu için ekstra padding
             const extraPadding = inputType === 'Password' ? 150 : 80;
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 200}px`; // Ekstra alan manuel scroll için
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + 100}px`; // Uzunluğu azalttık
             rightSection.style.paddingBottom = `${keyboardHeight + extraPadding}px`;
 
-            // Buton viewport'ta mı diye kontrol et
             const rect = continueButton.getBoundingClientRect();
             if (rect.top >= 0 && rect.bottom <= viewportHeight + 20) {
-              // Zaten görünür, döngüyü durdur
               return;
             }
 
-            // Minimal scroll: Sadece butonu viewport'a getir
-            const scrollOffset = rect.bottom - viewportHeight + 40; // Ekstra 40px margin
+            const scrollOffset = rect.bottom - viewportHeight + 40;
             rightSection.scrollBy({
               top: scrollOffset,
               behavior: 'smooth',
@@ -111,7 +107,7 @@ function LoginPage() {
 
             attempts++;
             if (attempts < maxAttempts) {
-              setTimeout(scrollLoop, 150); // Zamanlayıcıyı artırdık, kullanıcı müdahalesine izin ver
+              setTimeout(scrollLoop, 150);
             }
           });
         };
@@ -451,7 +447,7 @@ function LoginPage() {
             </button>
           </div>
           {/* Sayfa uzunluğunu artırmak için ekstra boş alan ekle (gizli scroll için) */}
-          <div style={{ height: '150vh', width: '100%' }}></div> {/* Uzunluğu kısalttık */}
+          <div style={{ height: '50vh', width: '100%' }}></div> {/* Uzunluğu azalttık, scroll gizli */}
         </div>
       </div>
     </form>
