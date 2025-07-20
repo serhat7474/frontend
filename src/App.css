@@ -338,19 +338,11 @@ body {
 
 /* Telefon Doğrulama Başlık Stili */
 .new-container.phone-verification-title {
-    top: 230px;
+    top: 150px; /* Inputun yukarısında */
     flex-direction: column;
     height: auto;
     font-size: 28px;
     font-weight: 600;
-}
-
-/* Telefon Doğrulama Alt Başlık Stili */
-.phone-verification-subtitle {
-    font-size: 16px;
-    font-weight: 400;
-    color: #E6E6E6;
-    margin-top: 8px;
 }
 
 /* Down Arrow Kapsayıcı Div Stili */
@@ -462,7 +454,7 @@ body {
 /* Input Kapsayıcı Stili */
 .input-wrapper {
     position: absolute;
-    top: 340px;
+    top: 180px; /* Inputu daha yukarı aldık */
     width: 350px;
     left: 50%;
     transform: translateX(-50%);
@@ -896,7 +888,7 @@ body {
 /* Doğrula Butonu Kapsayıcı Stili */
 .verify-button-container {
     position: absolute;
-    top: 280px; /* Inputtan sonra butonu yukarı aldık */
+    top: 260px; /* Inputtan sonra butonu yukarı aldık, mobil için genel ayar */
     left: 50%;
     transform: translateX(-50%);
     width: 350px;
@@ -1122,7 +1114,7 @@ body {
     --keyboard-height: env(keyboard-inset-height, 0px);
 }
 
-/* Genel Mobil Görünüm (768px ve altı, Android cihazlar dahil) */
+/* Genel Mobil Görünüm (768px ve altı, tüm mobil cihazlar için) */
 @media only screen and (max-width: 767px) {
     .left-section {
         display: none;
@@ -1204,7 +1196,7 @@ body {
 
     .verify-button-container {
         position: absolute;
-        top: 250px; /* Mobil için yukarı alınmış pozisyon */
+        top: 260px; /* Mobil için genel pozisyon */
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1212,6 +1204,41 @@ body {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    /* iPhone cihazlarda sayfanın en üstte başlaması için */
+    .right-section {
+        scroll-behavior: smooth;
+    }
+
+    .right-section[data-loaded="false"] {
+        overflow-y: hidden;
+    }
+
+    .right-section[data-loaded="true"] {
+        overflow-y: scroll;
+    }
+
+    /* Sayfa yüklendiğinde en üste kay */
+    @media only screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) { /* iPhone için */
+        .right-section {
+            scroll-behavior: smooth;
+        }
+        .right-section::before {
+            content: '';
+            display: block;
+            height: 0;
+            width: 0;
+        }
+        [data-page="telefon"] .right-section {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+        [data-page="telefon"] .right-section::before {
+            content: '';
+            display: block;
+            height: 1px;
+        }
     }
 
     .phone-input-wrapper {
@@ -1461,7 +1488,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 180px; /* Inputu daha yukarı aldık */
     }
 
     .password-input-wrapper {
@@ -1504,14 +1531,14 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* Küçük ekranlar için ayar */
+        top: 180px; /* Küçük ekranlar için ayar */
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 155px;
+        top: 150px; /* Inputun yukarısında */
     }
 
     .new-lower-container {
@@ -1615,7 +1642,7 @@ body {
     }
 
     .verify-button-container {
-        top: 230px; /* Küçük ekranlar için ayar */
+        top: 260px; /* Küçük ekranlar için ayar */
         max-width: 300px;
         width: 90%;
     }
@@ -1708,20 +1735,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 245px; /* Orta boy ekranlar için ayar */
+        top: 180px; /* Orta boy ekranlar için ayar */
     }
 
     .new-container {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 190px;
+        top: 150px; /* Inputun yukarısında */
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 210px;
+        top: 175px;
     }
 
     .iscep-logo {
@@ -1908,20 +1935,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 265px; /* Büyük ekranlar için ayar */
+        top: 180px; /* Büyük ekranlar için ayar */
     }
 
     .new-container {
         width: 100%;
         max-width: 360px;
         font-size: 22px;
-        top: 200px;
+        top: 150px; /* Inputun yukarısında */
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 360px;
-        top: 220px;
+        top: 175px;
     }
 
     .iscep-logo {
@@ -1999,7 +2026,7 @@ body {
     }
 
     .verify-button-container {
-        top: 280px; /* Büyük ekranlar için ayar */
+        top: 260px; /* Büyük ekranlar için ayar */
         max-width: 360px;
         width: 90%;
     }
@@ -2194,20 +2221,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 180px;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 175px;
+        top: 150px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 195px;
+        top: 175px;
     }
 
     .password-input-wrapper {
@@ -2318,20 +2345,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 180px;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 175px;
+        top: 150px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 195px;
+        top: 175px;
     }
 
     .password-input-wrapper {
@@ -2364,6 +2391,34 @@ body {
 
     .continue-button.error-shifted.shifted {
         top: 281px !important; /* 271px yerine 281px */
+    }
+
+    /* iPhone'da sayfanın en üstte başlaması için */
+    .right-section {
+        scroll-behavior: smooth;
+    }
+
+    .right-section[data-loaded="false"] {
+        overflow-y: hidden;
+    }
+
+    .right-section[data-loaded="true"] {
+        overflow-y: scroll;
+    }
+
+    [data-page="telefon"] .right-section {
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+    }
+
+    [data-page="telefon"] .right-section::before {
+        content: '';
+        display: block;
+        height: 1px;
+    }
+
+    [data-page="telefon"] .right-section {
+        scroll-top: 0 !important;
     }
 }
 
@@ -2442,20 +2497,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 180px;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 175px;
+        top: 150px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 195px;
+        top: 175px;
     }
 
     .password-input-wrapper {
@@ -2662,18 +2717,3 @@ body {
     }
 }
 
-/* Pulse animasyonu */
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-    }
-}
