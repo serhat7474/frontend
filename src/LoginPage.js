@@ -17,12 +17,13 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // TC 11 haneye ulaştığında şifre inputuna fokus
+  // TC 11 haneye ulaştığında şifre inputuna fokus ve scroll
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
+      // AuthContext zaten scroll'u yönetiyor, manuel scroll burada gerekli değil
     }
-  }, [inputValue]); // inputValue değiştiğinde tetiklenir
+  }, [inputValue]);
 
   // Meta tag and Virtual Keyboard API
   useEffect(() => {
