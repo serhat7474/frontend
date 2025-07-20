@@ -77,7 +77,7 @@ body {
     background-color: transparent;
     position: relative;
     -webkit-overflow-scrolling: touch;
-    transition: padding-bottom 0.3s ease;
+    transition: min-height 0.3s ease, padding-bottom 0.3s ease;
 }
 
 /* Görünmez scroll bar */
@@ -1124,7 +1124,7 @@ body {
         overflow-y: scroll;
         position: relative;
         -webkit-overflow-scrolling: touch;
-        transition: padding-bottom 0.3s ease;
+        transition: min-height 0.3s ease, padding-bottom 0.3s ease;
     }
 
     .right-section::-webkit-scrollbar {
