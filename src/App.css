@@ -77,7 +77,6 @@ body {
     background-color: transparent;
     position: relative;
     -webkit-overflow-scrolling: touch;
-    transition: min-height 0.3s ease, padding-bottom 0.3s ease;
 }
 
 /* Görünmez scroll bar */
@@ -789,17 +788,17 @@ body {
 
 /* TC 11 hane olduğunda pozisyon kaydırma */
 .continue-button.shifted {
-    top: 231px !important;
+    top: 241px !important; /* 231px yerine 241px */
 }
 
 /* TC hata mesajı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted {
-    top: 231px !important;
+    top: 241px !important; /* 231px yerine 241px */
 }
 
 /* TC hata mesajı + şifre alanı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted.shifted {
-    top: 306px !important;
+    top: 316px !important; /* 306px yerine 316px */
 }
 
 /* Aktif buton (TCKN girişi başladığında veya şifre tamamlandığında) */
@@ -1124,7 +1123,6 @@ body {
         overflow-y: scroll;
         position: relative;
         -webkit-overflow-scrolling: touch;
-        transition: min-height 0.3s ease, padding-bottom 0.3s ease;
     }
 
     .right-section::-webkit-scrollbar {
@@ -1333,15 +1331,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 170px !important;
+        top: 180px !important; /* 170px yerine 180px */
     }
 
     .continue-button.error-shifted {
-        top: 176px !important;
+        top: 186px !important; /* 176px yerine 186px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 245px !important;
+        top: 255px !important; /* 245px yerine 255px */
     }
 
     .button-phone {
@@ -1555,15 +1553,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 155px !important;
+        top: 165px !important; /* 155px yerine 165px */
     }
 
     .continue-button.error-shifted {
-        top: 161px !important;
+        top: 171px !important; /* 161px yerine 171px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 230px !important;
+        top: 240px !important; /* 230px yerine 240px */
     }
 
     .button-phone {
@@ -1848,15 +1846,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 261px !important;
+        top: 271px !important; /* 261px yerine 271px */
     }
 }
 
@@ -2033,15 +2031,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 196px !important;
+        top: 206px !important; /* 196px yerine 206px */
     }
 
     .continue-button.error-shifted {
-        top: 196px !important;
+        top: 206px !important; /* 196px yerine 206px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 271px !important;
+        top: 281px !important; /* 271px yerine 281px */
     }
 }
 
@@ -2195,15 +2193,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 261px !important;
+        top: 271px !important; /* 261px yerine 271px */
     }
 }
 
@@ -2323,15 +2321,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 261px !important;
+        top: 271px !important; /* 261px yerine 271px */
     }
 }
 
@@ -2447,15 +2445,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted {
-        top: 186px !important;
+        top: 196px !important; /* 186px yerine 196px */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 261px !important;
+        top: 271px !important; /* 261px yerine 271px */
     }
 }
 
@@ -2535,15 +2533,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 39vh !important;
+        top: 40vh !important; /* 39vh yerine 40vh */
     }
 
     .continue-button.error-shifted {
-        top: 39vh !important;
+        top: 40vh !important; /* 39vh yerine 40vh */
     }
 
     .continue-button.error-shifted.shifted {
-        top: 47vh !important;
+        top: 48vh !important; /* 47vh yerine 48vh */
     }
 
     .button-phone {
@@ -2616,17 +2614,5 @@ body {
     .down-arrow-img {
         width: 20px;
         height: 20px;
-    }
-
-    .continue-button.shifted {
-        top: 196px !important;
-    }
-
-    .continue-button.error-shifted {
-        top: 196px !important;
-    }
-
-    .continue-button.error-shifted.shifted {
-        top: 271px !important;
     }
 }
