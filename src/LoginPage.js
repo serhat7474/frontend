@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, memo } from 'react'; // useEffect eklendi
+import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
@@ -17,8 +17,15 @@ function LoginPage() {
     showTcError: false,
   });
 
+  // TC 11 haneye ulaştığında şifre inputuna fokus
   useEffect(() => {
-    // Meta tag and Virtual Keyboard API
+    if (inputValue.length === 11 && passwordInputRef.current) {
+      passwordInputRef.current.focus();
+    }
+  }, [inputValue]); // inputValue değiştiğinde tetiklenir
+
+  // Meta tag and Virtual Keyboard API
+  useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
@@ -40,23 +47,6 @@ function LoginPage() {
       document.head.removeChild(meta);
     };
   }, []);
-
-  // Şifre inputu göründüğünde ortasından 150px aşağıya scroll
-  useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current) {
-      requestAnimationFrame(() => {
-        const passwordInput = passwordInputRef.current;
-        if (passwordInput) {
-          const rightSection = document.querySelector('.right-section');
-          const inputRect = passwordInput.getBoundingClientRect();
-          const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 150; // Şifre için 150px aşağı kaydırma
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        }
-      });
-    }
-  }, [inputValue]);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
