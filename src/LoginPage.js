@@ -90,7 +90,7 @@ function LoginPage() {
 
       let resizeTimeout;
       const isSamsung = /Samsung/i.test(navigator.userAgent);
-      const delay = isSamsung ? 300 : 100; // Samsung için 300ms, diğer cihazlar için 100ms
+      const delay = isSamsung ? 400 : 100; // Samsung için 400ms, diğer cihazlar için 100ms
 
       const handleResizeDuringFocus = () => {
         clearTimeout(resizeTimeout);
@@ -130,6 +130,7 @@ function LoginPage() {
 
       rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
 
+      // Klavyenin tamamen kapandığından emin olmak için 400ms gecikme
       setTimeout(() => {
         requestAnimationFrame(() => {
           const keyboardHeight = getKeyboardHeight();
@@ -139,7 +140,7 @@ function LoginPage() {
             rightSection.scrollTo({ top: 0, behavior: 'auto' }); // Smooth yerine auto
           }
         });
-      }, 100); // Klavyenin kapanmasını beklemek için 100ms gecikme
+      }, 400); // Samsung için daha uzun gecikme
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
@@ -165,8 +166,8 @@ function LoginPage() {
         tcRef.removeEventListener('blur', handleBlurScroll);
       }
       if (passwordRef) {
-        passwordRef.removeEventListener('focus', handlePasswordFocusScroll);
-        passwordRef.removeEventListener('blur', handleBlurScroll);
+        tcRef.removeEventListener('focus', handlePasswordFocusScroll);
+        tcRef.removeEventListener('blur', handleBlurScroll);
       }
     };
   }, []);
