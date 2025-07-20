@@ -52,7 +52,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Şifre inputu göründüğünde ortasına scroll (offset olmadan)
+  // Şifre inputu göründüğünde ortasından daha aşağıya scroll
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       requestAnimationFrame(() => {
@@ -61,7 +61,8 @@ function LoginPage() {
           const rightSection = document.querySelector('.right-section');
           const inputRect = passwordInput.getBoundingClientRect();
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
+          const offset = 100; // Şifre için aşağı kaydırma offseti
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
         }
       });
@@ -102,8 +103,12 @@ function LoginPage() {
           // Samsung cihazlarda TC için 100px aşağı kaydırma
           const offset = 100;
           scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+        } else if (inputType === 'Password') {
+          // Şifre için mevcut offset
+          const offset = 100;
+          scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
         } else {
-          // Diğer durumlarda (şifre dahil) ortalamaya devam et
+          // Diğer durumlarda ortalamaya devam et
           scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
         }
         rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
@@ -126,6 +131,9 @@ function LoginPage() {
             let scrollTo;
             if (isSamsung && inputType === 'TC') {
               const offset = 100; // TC için sabit 100px offset
+              scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            } else if (inputType === 'Password') {
+              const offset = 100; // Şifre için sabit 100px offset
               scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             } else {
               scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
