@@ -32,7 +32,7 @@ function LoginPage() {
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
     document.head.appendChild(meta);
 
     if ("virtualKeyboard" in navigator) {
@@ -120,7 +120,7 @@ function LoginPage() {
               rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
             }, 300);
           });
-        }, isSamsung ? 100 : 50);  // Samsung için debounce benzeri gecikme
+        }, isSamsung ? 300 : 50);  // Samsung için artırılmış gecikme
       };
 
       window.addEventListener('resize', handleResizeDuringFocus);
@@ -136,22 +136,26 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
+      const isSamsung = /Samsung/i.test(navigator.userAgent);
+
       // Titremeyi önlemek için geçişleri devre dışı bırak
       rightSection.style.transition = 'none';
 
-      requestAnimationFrame(() => {
-        const keyboardHeight = getKeyboardHeight();
-        if (keyboardHeight === 0) {
-          rightSection.style.minHeight = '100vh';
-          rightSection.style.paddingBottom = '0';
-          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const keyboardHeight = getKeyboardHeight();
+          if (keyboardHeight === 0) {
+            rightSection.style.minHeight = '100vh';
+            rightSection.style.paddingBottom = '0';
+            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+          }
 
-        // Geçişleri geri yükle
-        setTimeout(() => {
-          rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
-        }, 300);
-      });
+          // Geçişleri geri yükle
+          setTimeout(() => {
+            rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
+          }, 300);
+        });
+      }, isSamsung ? 500 : 0);  // Samsung için blur'da gecikme ekle
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
