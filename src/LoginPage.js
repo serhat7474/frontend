@@ -135,9 +135,11 @@ function LoginPage() {
     const handleBlurScroll = () => {
       const rightSection = document.querySelector('.right-section');
       if (rightSection) {
-        rightSection.style.minHeight = '100vh';
-        rightSection.style.paddingBottom = '0';
-        rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          rightSection.style.minHeight = '100vh';
+          rightSection.style.paddingBottom = '0';
+          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300); // Klavye kapanma animasyonu için gecikme ekle
       }
     };
 
