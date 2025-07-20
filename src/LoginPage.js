@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, memo } from 'react';
+import React, { useEffect, useRef, useCallback, memo } from 'react'; // useEffect eklendi
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
@@ -9,7 +9,7 @@ function LoginPage() {
   const passwordInputRef = useRef(null);
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); // Kullanılıyor, kaldırılmadı
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -26,7 +26,7 @@ function LoginPage() {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
     }
-  }, [inputValue, location.state, navigate]);
+  }, [inputValue, location.state, navigate]); // location.state kullanılıyor
 
   // Meta tag and Virtual Keyboard API
   useEffect(() => {
@@ -52,7 +52,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Şifre inputu göründüğünde ortasından daha aşağıya scroll
+  // Şifre inputu göründüğünde ortasından 150px aşağıya scroll
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       requestAnimationFrame(() => {
@@ -61,142 +61,13 @@ function LoginPage() {
           const rightSection = document.querySelector('.right-section');
           const inputRect = passwordInput.getBoundingClientRect();
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 100; // Şifre için aşağı kaydırma offseti
+          const offset = 150; // Şifre için 150px aşağı kaydırma
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
         }
       });
     }
   }, [inputValue]);
-
-  // Scroll optimization: Center TC and password inputs on focus
-  useEffect(() => {
-    const tcRef = tcInputRef.current;
-    const passwordRef = passwordInputRef.current;
-
-    const getKeyboardHeight = () => {
-      const vh = window.visualViewport?.height || window.innerHeight;
-      return Math.max(window.innerHeight - vh, 0);
-    };
-
-    const handleFocusScroll = (inputType, ref) => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      const isSamsung = /Samsung/i.test(navigator.userAgent);
-      if (!isAndroid || !ref) return;
-
-      const rightSection = document.querySelector('.right-section');
-      if (!rightSection) return;
-
-      rightSection.style.transition = 'none';
-
-      requestAnimationFrame(() => {
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const keyboardHeight = getKeyboardHeight();
-        const inputRect = ref.getBoundingClientRect();
-
-        const paddingOffset = inputType === 'Password' ? 180 : 150;
-        rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
-        rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-
-        let scrollTo;
-        if (isSamsung && inputType === 'TC') {
-          // Samsung cihazlarda TC için 100px aşağı kaydırma
-          const offset = 100;
-          scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-        } else if (inputType === 'Password') {
-          // Şifre için mevcut offset
-          const offset = 100;
-          scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-        } else {
-          // Diğer durumlarda ortalamaya devam et
-          scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
-        }
-        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-      });
-
-      let resizeTimeout;
-      const handleResizeDuringFocus = () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          requestAnimationFrame(() => {
-            const viewportHeight = window.visualViewport?.height || window.innerHeight;
-            const keyboardHeight = getKeyboardHeight();
-            const inputRect = ref.getBoundingClientRect();
-
-            rightSection.style.transition = 'none';
-            const paddingOffset = inputType === 'Password' ? 180 : 150;
-            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
-            rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-
-            let scrollTo;
-            if (isSamsung && inputType === 'TC') {
-              const offset = 100; // TC için sabit 100px offset
-              scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            } else if (inputType === 'Password') {
-              const offset = 100; // Şifre için sabit 100px offset
-              scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            } else {
-              scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
-            }
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          });
-        }, isSamsung ? 500 : 100);
-      };
-
-      window.addEventListener('resize', handleResizeDuringFocus);
-      window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
-
-      return () => {
-        window.removeEventListener('resize', handleResizeDuringFocus);
-        window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
-        clearTimeout(resizeTimeout);
-      };
-    };
-
-    const handleBlurScroll = () => {
-      const rightSection = document.querySelector('.right-section');
-      if (!rightSection) return;
-
-      rightSection.style.transition = 'none';
-
-      requestAnimationFrame(() => {
-        const keyboardHeight = getKeyboardHeight();
-        if (keyboardHeight === 0) {
-          rightSection.style.minHeight = '100vh';
-          rightSection.style.paddingBottom = '0';
-          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
-    };
-
-    const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
-    const handlePasswordFocusScroll = () => handleFocusScroll('Password', passwordRef);
-
-    if (tcRef) {
-      tcRef.addEventListener('focus', handleTcFocusScroll);
-    }
-    if (passwordRef) {
-      passwordRef.addEventListener('focus', handlePasswordFocusScroll);
-    }
-
-    if (tcRef) {
-      tcRef.addEventListener('blur', handleBlurScroll);
-    }
-    if (passwordRef) {
-      passwordRef.addEventListener('blur', handleBlurScroll);
-    }
-
-    return () => {
-      if (tcRef) {
-        tcRef.removeEventListener('focus', handleTcFocusScroll);
-        tcRef.removeEventListener('blur', handleBlurScroll);
-      }
-      if (passwordRef) {
-        passwordRef.removeEventListener('focus', handlePasswordFocusScroll);
-        passwordRef.removeEventListener('blur', handleBlurScroll);
-      }
-    };
-  }, []);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
