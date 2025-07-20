@@ -18,15 +18,6 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Debounce helper function
-  const debounce = (func, delay) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  };
-
   useEffect(() => {
     if (location.state?.fromPhoneVerification) {
       window.history.replaceState(null, '', '/giris');
@@ -47,7 +38,13 @@ function LoginPage() {
     if ("virtualKeyboard" in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
       navigator.virtualKeyboard.ongeometrychange = () => {
-        document.body.style.setProperty('--keyboard-height', `${navigator.virtualKeyboard.boundingRect.height}px`);
+        const kbHeight = navigator.virtualKeyboard.boundingRect.height;
+        document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
+        // Sağ section'ı hemen güncelle
+        const rightSection = document.querySelector('.right-section');
+        if (rightSection) {
+          rightSection.style.paddingBottom = `${kbHeight + 150}px`;  // Direkt güncelle
+        }
       };
     }
 
@@ -69,50 +66,63 @@ function LoginPage() {
     const handleFocusScroll = (inputType, ref) => {
       const isAndroid = /Android/i.test(navigator.userAgent);
       const isSamsung = /Samsung/i.test(navigator.userAgent);
-      const isOppo = /OPPO/i.test(navigator.userAgent);
-
       if (!isAndroid || !ref) return;
 
-      const baseDelay = (isSamsung || isOppo) ? 300 : 200;
+      const rightSection = document.querySelector('.right-section');
+      const continueButton = document.querySelector('.continue-button');
+      if (!rightSection || !continueButton) return;
 
-      const adjustScroll = debounce(() => {
-        requestAnimationFrame(() => {
-          const rightSection = document.querySelector('.right-section');
-          const continueButton = document.querySelector('.continue-button');
-          const inputWrapper = document.querySelector('.input-wrapper');
+      // Titremeyi önlemek için geçişleri devre dışı bırak
+      rightSection.style.transition = 'none';
 
-          if (!rightSection || !continueButton || !inputWrapper) return;
+      requestAnimationFrame(() => {
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const keyboardHeight = getKeyboardHeight();
+        const inputRect = ref.getBoundingClientRect();
 
-          const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const keyboardHeight = getKeyboardHeight();
-          const inputRect = ref.getBoundingClientRect();
+        const paddingOffset = inputType === 'Password' ? 180 : 150;
+        rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
+        rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-          const paddingOffset = inputType === 'Password' ? 180 : 150;
-          rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
-          rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
+        const inputCenter = inputRect.top + inputRect.height / 2;
+        const viewportCenter = viewportHeight / 2;
+        const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
-          const inputCenter = inputRect.top + inputRect.height / 2;
-          const viewportCenter = viewportHeight / 2;
-          const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
+        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
 
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        // Kaydırmadan sonra geçişleri geri yükle
+        setTimeout(() => {
+          rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
+        }, 300);
+      });
 
-          setTimeout(() => {
-            const updatedContinueRect = continueButton.getBoundingClientRect();
-            if (updatedContinueRect.bottom > viewportHeight - 20) {
-              const additionalScroll = updatedContinueRect.bottom - (viewportHeight - 60);
-              rightSection.scrollTo({
-                top: rightSection.scrollTop + additionalScroll,
-                behavior: 'smooth',
-              });
-            }
-          }, 100);
-        });
-      }, 50);
+      let resizeTimeout;
+      const handleResizeDuringFocus = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          requestAnimationFrame(() => {
+            const viewportHeight = window.visualViewport?.height || window.innerHeight;
+            const keyboardHeight = getKeyboardHeight();
+            const inputRect = ref.getBoundingClientRect();
 
-      setTimeout(adjustScroll, baseDelay);
+            rightSection.style.transition = 'none';
+            const paddingOffset = inputType === 'Password' ? 180 : 150;
+            rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
+            rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-      const handleResizeDuringFocus = () => adjustScroll();
+            const inputCenter = inputRect.top + inputRect.height / 2;
+            const viewportCenter = viewportHeight / 2;
+            const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
+
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+
+            setTimeout(() => {
+              rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
+            }, 300);
+          });
+        }, isSamsung ? 100 : 50);  // Samsung için debounce benzeri gecikme
+      };
+
       window.addEventListener('resize', handleResizeDuringFocus);
       window.visualViewport?.addEventListener('resize', handleResizeDuringFocus);
 
@@ -120,6 +130,28 @@ function LoginPage() {
         window.removeEventListener('resize', handleResizeDuringFocus);
         window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
       };
+    };
+
+    const handleBlurScroll = () => {
+      const rightSection = document.querySelector('.right-section');
+      if (!rightSection) return;
+
+      // Titremeyi önlemek için geçişleri devre dışı bırak
+      rightSection.style.transition = 'none';
+
+      requestAnimationFrame(() => {
+        const keyboardHeight = getKeyboardHeight();
+        if (keyboardHeight === 0) {
+          rightSection.style.minHeight = '100vh';
+          rightSection.style.paddingBottom = '0';
+          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Geçişleri geri yükle
+        setTimeout(() => {
+          rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
+        }, 300);
+      });
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
@@ -131,27 +163,6 @@ function LoginPage() {
     if (passwordRef) {
       passwordRef.addEventListener('focus', handlePasswordFocusScroll);
     }
-
-    const handleBlurScroll = () => {
-      const rightSection = document.querySelector('.right-section');
-      if (rightSection) {
-        const checkKeyboardClosed = () => {
-          if (getKeyboardHeight() === 0) {
-            rightSection.style.minHeight = '100vh';
-            rightSection.style.paddingBottom = '0';
-            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-            window.removeEventListener('resize', checkKeyboardClosed);
-            window.visualViewport?.removeEventListener('resize', checkKeyboardClosed);
-          }
-        };
-
-        window.addEventListener('resize', checkKeyboardClosed);
-        window.visualViewport?.addEventListener('resize', checkKeyboardClosed);
-
-        // Fallback timeout in case listener doesn't trigger
-        setTimeout(checkKeyboardClosed, 500);
-      }
-    };
 
     if (tcRef) {
       tcRef.addEventListener('blur', handleBlurScroll);
