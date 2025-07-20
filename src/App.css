@@ -1358,7 +1358,7 @@ body {
 
     .action-links {
         position: absolute;
-        top: 68px;
+        top: 78px;
         left: 50%;
         transform: translateX(-50%);
         width: 300px;
@@ -1372,15 +1372,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .action-link {
@@ -1443,13 +1443,13 @@ body {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 170px;
+        top: 175px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 190px;
+        top: 195px;
     }
 
     .down-arrow {
@@ -1512,13 +1512,13 @@ body {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 150px;
+        top: 155px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 170px;
+        top: 175px;
     }
 
     .iscep-logo {
@@ -1595,7 +1595,7 @@ body {
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 68px;
+        top: 78px;
     }
 
     .action-link {
@@ -1604,15 +1604,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .bekleme-content {
@@ -1705,13 +1705,13 @@ body {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 185px;
+        top: 190px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 205px;
+        top: 210px;
     }
 
     .iscep-logo {
@@ -1772,7 +1772,7 @@ body {
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 68px;
+        top: 78px;
     }
 
     .action-link {
@@ -1781,15 +1781,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .bekleme-content {
@@ -1894,13 +1894,13 @@ body {
         width: 100%;
         max-width: 360px;
         font-size: 22px;
-        top: 195px;
+        top: 200px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 360px;
-        top: 215px;
+        top: 220px;
     }
 
     .iscep-logo {
@@ -1957,7 +1957,7 @@ body {
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 68px;
+        top: 78px;
     }
 
     .action-link {
@@ -1966,15 +1966,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .bekleme-content {
@@ -2081,7 +2081,7 @@ body {
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 68px !important;
+        top: 78px !important;
     }
 
     .action-link {
@@ -2169,13 +2169,13 @@ body {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 170px;
+        top: 175px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 190px;
+        top: 195px;
     }
 
     .password-input-wrapper {
@@ -2183,15 +2183,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .continue-button.shifted {
@@ -2293,13 +2293,13 @@ body {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 170px;
+        top: 175px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 190px;
+        top: 195px;
     }
 
     .password-input-wrapper {
@@ -2307,19 +2307,19 @@ body {
     }
 
     .action-links {
-        top: 68px !important;
+        top: 78px !important;
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .continue-button.shifted {
@@ -2417,13 +2417,13 @@ body {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 170px;
+        top: 175px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 190px;
+        top: 195px;
     }
 
     .password-input-wrapper {
@@ -2431,19 +2431,19 @@ body {
     }
 
     .action-links {
-        top: 68px !important;
+        top: 78px !important;
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .continue-button.shifted {
@@ -2479,13 +2479,13 @@ body {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 230px;
+        top: 235px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 250px;
+        top: 255px;
     }
 
     .iscep-logo {
@@ -2573,7 +2573,7 @@ body {
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 68px;
+        top: 78px;
     }
 
     .action-link {
@@ -2582,15 +2582,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 144px !important;
+        top: 154px !important;
     }
 
     .action-links.error-shifted {
-        top: 129px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 204px !important;
+        top: 214px !important;
     }
 
     .dot {
