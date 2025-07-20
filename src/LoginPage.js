@@ -53,7 +53,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Scroll optimization: Center TC and password inputs on focus
+  // Scroll optimization: Center TC and password inputs on focus (scroll kaldırıldı)
   useEffect(() => {
     const tcRef = tcInputRef.current;
     const passwordRef = passwordInputRef.current;
@@ -78,17 +78,10 @@ function LoginPage() {
       requestAnimationFrame(() => {
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
         const keyboardHeight = getKeyboardHeight();
-        const inputRect = ref.getBoundingClientRect();
-
         const paddingOffset = inputType === 'Password' ? 180 : 150;
         rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
         rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-
-        const inputCenter = inputRect.top + inputRect.height / 2;
-        const viewportCenter = viewportHeight / 2;
-        const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
-
-        rightSection.scrollTo({ top: scrollTo, behavior: 'auto' }); // Smooth yerine auto
+        // scrollTo kaldırıldı
       });
 
       let resizeTimeout;
@@ -102,18 +95,11 @@ function LoginPage() {
           requestAnimationFrame(() => {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
-            const inputRect = ref.getBoundingClientRect();
-
-            rightSection.style.transition = 'none';
             const paddingOffset = inputType === 'Password' ? 180 : 150;
+            rightSection.style.transition = 'none';
             rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
             rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-
-            const inputCenter = inputRect.top + inputRect.height / 2;
-            const viewportCenter = viewportHeight / 2;
-            const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
-
-            rightSection.scrollTo({ top: scrollTo, behavior: 'auto' });
+            // scrollTo kaldırıldı
           });
         }, debounceDelay); // Samsung için 500ms
       };
@@ -141,10 +127,10 @@ function LoginPage() {
           if (keyboardHeight === 0) {
             rightSection.style.minHeight = '100vh';
             rightSection.style.paddingBottom = '0';
-            rightSection.scrollTo({ top: 0, behavior: 'auto' });
+            // scrollTo kaldırıldı
           }
         });
-      }, 500); // Samsung için daha uzun gecikme
+      }, 500); // Samsung için 500ms gecikme
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
