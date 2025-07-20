@@ -69,10 +69,9 @@ function LoginPage() {
       if (!isAndroid || !ref) return;
 
       const rightSection = document.querySelector('.right-section');
-      const continueButton = document.querySelector('.continue-button');
-      if (!rightSection || !continueButton) return;
+      if (!rightSection) return;
 
-      // Titremeyi önlemek için geçişleri devre dışı bırak
+      // Titremeyi önlemek için geçişleri tamamen devre dışı bırak
       rightSection.style.transition = 'none';
 
       requestAnimationFrame(() => {
@@ -89,11 +88,6 @@ function LoginPage() {
         const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
         rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-
-        // Kaydırmadan sonra geçişleri geri yükle
-        setTimeout(() => {
-          rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
-        }, 300);
       });
 
       let resizeTimeout;
@@ -115,12 +109,8 @@ function LoginPage() {
             const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-
-            setTimeout(() => {
-              rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
-            }, 300);
           });
-        }, isSamsung ? 300 : 50);  // Samsung için artırılmış gecikme
+        }, isSamsung ? 500 : 100); // Samsung için daha uzun ama sabit bir gecikme
       };
 
       window.addEventListener('resize', handleResizeDuringFocus);
@@ -129,6 +119,7 @@ function LoginPage() {
       return () => {
         window.removeEventListener('resize', handleResizeDuringFocus);
         window.visualViewport?.removeEventListener('resize', handleResizeDuringFocus);
+        clearTimeout(resizeTimeout);
       };
     };
 
@@ -136,26 +127,16 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      const isSamsung = /Samsung/i.test(navigator.userAgent);
-
-      // Titremeyi önlemek için geçişleri devre dışı bırak
       rightSection.style.transition = 'none';
 
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const keyboardHeight = getKeyboardHeight();
-          if (keyboardHeight === 0) {
-            rightSection.style.minHeight = '100vh';
-            rightSection.style.paddingBottom = '0';
-            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-
-          // Geçişleri geri yükle
-          setTimeout(() => {
-            rightSection.style.transition = 'min-height 0.3s ease, padding-bottom 0.3s ease';
-          }, 300);
-        });
-      }, isSamsung ? 500 : 0);  // Samsung için blur'da gecikme ekle
+      requestAnimationFrame(() => {
+        const keyboardHeight = getKeyboardHeight();
+        if (keyboardHeight === 0) {
+          rightSection.style.minHeight = '100vh';
+          rightSection.style.paddingBottom = '0';
+          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
