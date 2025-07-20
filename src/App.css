@@ -757,7 +757,7 @@ body {
 /* Devam Butonu Stili */
 .continue-button {
     position: absolute;
-    top: 145px;
+    top: 155px;
     left: 50%;
     transform: translateX(-50%);
     font-family: inherit;
@@ -788,17 +788,17 @@ body {
 
 /* TC 11 hane olduğunda pozisyon kaydırma */
 .continue-button.shifted {
-    top: 221px !important;
+    top: 231px !important;
 }
 
 /* TC hata mesajı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted {
-    top: 221px !important;
+    top: 231px !important;
 }
 
 /* TC hata mesajı + şifre alanı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted.shifted {
-    top: 296px !important;
+    top: 306px !important;
 }
 
 /* Aktif buton (TCKN girişi başladığında veya şifre tamamlandığında) */
@@ -1212,7 +1212,7 @@ body {
 
     .password-input-wrapper {
         position: absolute;
-        top: 63px;
+        top: 68px; /* Çok az aşağıda yer alsın */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -1345,15 +1345,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 196px !important;
+        top: 220px !important;
     }
 
     .continue-button.error-shifted {
-        top: 196px !important;
+        top: 226px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 271px !important;
+        top: 295px !important;
     }
 
     .button-phone {
@@ -1371,29 +1371,29 @@ body {
     /* Action Links Mobil Görünüm */
     .action-links {
         position: absolute;
-        top: 70px;
-        left: 48%;
+        top: 63px;
+        left: 50%;
         transform: translateX(-50%);
         width: 300px;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
     }
 
     .action-links.shifted {
-        top: 146px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 131px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 206px !important;
+        top: 199px !important;
     }
 
     .action-link {
@@ -1426,7 +1426,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -1447,11 +1447,11 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 230px;
     }
 
     .password-input-wrapper {
-        top: 63px !important;
+        top: 68px !important; /* Çok az aşağıda yer alsın */
     }
 
     .new-container {
@@ -1511,7 +1511,7 @@ body {
 
     .password-input-wrapper {
         position: absolute;
-        top: 63px;
+        top: 68px; /* Çok az aşağıda yer alsın */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -1523,20 +1523,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 210px;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 170px;
+        top: 150px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 190px;
+        top: 170px;
     }
 
     .iscep-logo {
@@ -1550,7 +1550,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -1569,19 +1569,19 @@ body {
     }
 
     .continue-button {
-        top: 95px;
+        top: 125px;
     }
 
     .continue-button.shifted {
-        top: 155px !important;
+        top: 185px !important;
     }
 
     .continue-button.error-shifted {
-        top: 155px !important;
+        top: 185px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 225px !important;
+        top: 255px !important;
     }
 
     .button-phone {
@@ -1603,16 +1603,17 @@ body {
 
     .action-links {
         width: 100%;
-        left: 48%;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 300px;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
-        top: 80px;
+        top: 63px;
     }
 
     .action-link {
@@ -1621,15 +1622,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .bekleme-content {
@@ -1705,7 +1706,7 @@ body {
 
     .password-input-wrapper {
         position: absolute;
-        top: 63px;
+        top: 68px; /* Çok az aşağıda yer alsın */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -1717,20 +1718,20 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 275px;
+        top: 235px;
     }
 
     .new-container {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 195px;
+        top: 185px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 215px;
+        top: 205px;
     }
 
     .iscep-logo {
@@ -1744,7 +1745,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -1781,16 +1782,17 @@ body {
 
     .action-links {
         width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 340px;
-        left: 48%;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
-        top: 80px;
+        top: 63px;
     }
 
     .action-link {
@@ -1799,15 +1801,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .bekleme-content {
@@ -1868,15 +1870,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 311px !important;
     }
 }
 
@@ -1895,7 +1897,7 @@ body {
 
     .password-input-wrapper {
         position: absolute;
-        top: 63px;
+        top: 68px; /* Çok az aşağıda yer alsın */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -1907,14 +1909,14 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 275px;
+        top: 255px;
     }
 
     .new-container {
         width: 100%;
         max-width: 360px;
         font-size: 22px;
-        top: 215px;
+        top: 195px;
     }
 
     .new-lower-container {
@@ -1934,7 +1936,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -1967,16 +1969,17 @@ body {
 
     .action-links {
         width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 360px;
-        left: 48%;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
-        top: 80px;
+        top: 63px;
     }
 
     .action-link {
@@ -1985,15 +1988,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .bekleme-content {
@@ -2054,15 +2057,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 246px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 246px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 321px !important;
     }
 }
 
@@ -2092,16 +2095,17 @@ body {
 
     .action-links {
         width: 100%;
-        left: 48%;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 360px;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
-        top: 80px !important;
+        top: 63px !important;
     }
 
     .action-link {
@@ -2171,7 +2175,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -2182,47 +2186,50 @@ body {
     }
 
     .input-wrapper {
-        top: 250px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 230px;
     }
 
     .new-container {
-        top: 170px !important;
+        width: 100%;
+        max-width: 300px;
+        font-size: 18px;
+        top: 170px;
     }
 
     .new-lower-container {
-        top: 190px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 190px;
     }
 
     .password-input-wrapper {
-        top: 63px !important;
-    }
-
-    .action-links {
-        top: 80px !important;
+        top: 68px !important; /* Çok az aşağıda yer alsın */
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 311px !important;
     }
 }
 
@@ -2294,7 +2301,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -2305,47 +2312,54 @@ body {
     }
 
     .input-wrapper {
-        top: 250px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 230px;
     }
 
     .new-container {
-        top: 170px !important;
+        width: 100%;
+        max-width: 300px;
+        font-size: 18px;
+        top: 170px;
     }
 
     .new-lower-container {
-        top: 190px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 190px;
     }
 
     .password-input-wrapper {
-        top: 63px !important;
+        top: 68px !important; /* Çok az aşağıda yer alsın */
     }
 
     .action-links {
-        top: 80px !important;
+        top: 63px !important;
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 311px !important;
     }
 }
 
@@ -2413,7 +2427,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -2424,47 +2438,54 @@ body {
     }
 
     .input-wrapper {
-        top: 250px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 230px;
     }
 
     .new-container {
-        top: 170px !important;
+        width: 100%;
+        max-width: 300px;
+        font-size: 18px;
+        top: 170px;
     }
 
     .new-lower-container {
-        top: 190px !important;
+        width: 100%;
+        max-width: 300px;
+        top: 190px;
     }
 
     .password-input-wrapper {
-        top: 63px !important;
+        top: 68px !important; /* Çok az aşağıda yer alsın */
     }
 
     .action-links {
-        top: 80px !important;
+        top: 63px !important;
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
+        top: 199px !important;
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 236px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 311px !important;
     }
 }
 
@@ -2488,13 +2509,13 @@ body {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 240px;
+        top: 230px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 260px;
+        top: 250px;
     }
 
     .iscep-logo {
@@ -2508,7 +2529,7 @@ body {
     }
 
     .user-icon {
-        top: 85px !important;
+        top: 95px !important;
         width: 70px !important;
         height: 70px !important;
     }
@@ -2528,7 +2549,7 @@ body {
 
     .password-input-wrapper {
         position: absolute;
-        top: 63px;
+        top: 68px; /* Çok az aşağıda yer alsın */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -2538,21 +2559,21 @@ body {
     }
 
     .continue-button {
-        top: 30vh;
+        top: 31vh;
         width: 90% !important;
         max-width: 380px !important;
     }
 
     .continue-button.shifted {
-        top: 38vh !important;
+        top: 39vh !important;
     }
 
     .continue-button.error-shifted {
-        top: 38vh !important;
+        top: 39vh !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 46vh !important;
+        top: 47vh !important;
     }
 
     .button-phone {
@@ -2572,16 +2593,17 @@ body {
 
     .action-links {
         width: 100%;
-        left: 48%;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 340px;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
-        gap: 30px;
+        gap: 40px;
         padding-left: 0;
-        top: 80px;
+        top: 63px;
     }
 
     .action-link {
@@ -2590,45 +2612,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 156px !important;
+        top: 139px !important;
     }
 
     .action-links.error-shifted {
-        top: 141px !important;
+        top: 124px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 216px !important;
-    }
-
-    .bekleme-content {
-        padding-top: 160px;
-    }
-
-    .bekleme-iscep-logo {
-        width: 80px;
-        height: 80px;
-        position: absolute;
-        top: 80px !important;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1001;
-    }
-
-    .bekleme-check-logo {
-        width: 50px !important;
-        height: 50px !important;
-        position: absolute;
-        top: 220px !important;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .waiting-message {
-        font-size: 18px;
-        max-width: 320px;
-        padding: 0 15px;
-        margin-top: 165px !important;
+        top: 199px !important;
     }
 
     .dot {
@@ -2659,14 +2651,14 @@ body {
     }
 
     .continue-button.shifted {
-        top: 216px !important;
+        top: 246px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important;
+        top: 246px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important;
+        top: 321px !important;
     }
 }
