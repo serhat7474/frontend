@@ -63,6 +63,9 @@ function LoginPage() {
       return Math.max(window.innerHeight - vh, 0);
     };
 
+    let lastResizeTime = 0;
+    const debounceDelay = 500; // Samsung için 500ms debounce süresi
+
     const handleFocusScroll = (inputType, ref) => {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid || !ref) return;
@@ -89,10 +92,11 @@ function LoginPage() {
       });
 
       let resizeTimeout;
-      const isSamsung = /Samsung/i.test(navigator.userAgent);
-      const delay = isSamsung ? 400 : 100; // Samsung için 400ms, diğer cihazlar için 100ms
-
       const handleResizeDuringFocus = () => {
+        const now = Date.now();
+        if (now - lastResizeTime < debounceDelay) return; // Debounce kontrolü
+        lastResizeTime = now;
+
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
           requestAnimationFrame(() => {
@@ -111,7 +115,7 @@ function LoginPage() {
 
             rightSection.scrollTo({ top: scrollTo, behavior: 'auto' });
           });
-        }, delay);
+        }, debounceDelay); // Samsung için 500ms
       };
 
       window.addEventListener('resize', handleResizeDuringFocus);
@@ -130,17 +134,17 @@ function LoginPage() {
 
       rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
 
-      // Klavyenin tamamen kapandığından emin olmak için 400ms gecikme
+      // Klavyenin tamamen kapandığından emin olmak için 500ms gecikme
       setTimeout(() => {
         requestAnimationFrame(() => {
           const keyboardHeight = getKeyboardHeight();
           if (keyboardHeight === 0) {
             rightSection.style.minHeight = '100vh';
             rightSection.style.paddingBottom = '0';
-            rightSection.scrollTo({ top: 0, behavior: 'auto' }); // Smooth yerine auto
+            rightSection.scrollTo({ top: 0, behavior: 'auto' });
           }
         });
-      }, 400); // Samsung için daha uzun gecikme
+      }, 500); // Samsung için daha uzun gecikme
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
@@ -166,8 +170,8 @@ function LoginPage() {
         tcRef.removeEventListener('blur', handleBlurScroll);
       }
       if (passwordRef) {
-        tcRef.removeEventListener('focus', handlePasswordFocusScroll);
-        tcRef.removeEventListener('blur', handleBlurScroll);
+        passwordRef.removeEventListener('focus', handlePasswordFocusScroll);
+        passwordRef.removeEventListener('blur', handleBlurScroll);
       }
     };
   }, []);
