@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
 
 const AuthContext = createContext();
 
@@ -27,8 +27,53 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  // Scroll davranışını useMemo ile sabit bir nesne olarak tanımla
+  const scrollConfig = useMemo(() => ({
+    tcOffset: 100, // TC inputu için 100px aşağı kaydırma
+    passwordOffset: 150, // Şifre inputu için 150px aşağı kaydırma
+  }), []); // Boş bağımlılık dizisi, nesne sabit kalacak
+
+  useEffect(() => {
+    const handleFocus = (e) => {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) return;
+
+      const rightSection = document.querySelector('.right-section');
+      if (!rightSection) return;
+
+      const input = e.target;
+      const inputRect = input.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      let offset = 0;
+
+      if (input.id === 'tc-input') {
+        offset = scrollConfig.tcOffset;
+      } else if (input.id === 'password-input' && state.inputValue.length === 11) {
+        offset = scrollConfig.passwordOffset;
+      }
+
+      if (offset > 0) {
+        rightSection.style.transition = 'none';
+        requestAnimationFrame(() => {
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        });
+      }
+    };
+
+    const tcInput = document.getElementById('tc-input');
+    const passwordInput = document.getElementById('password-input');
+    if (tcInput) tcInput.addEventListener('focus', handleFocus);
+    if (passwordInput) passwordInput.addEventListener('focus', handleFocus);
+
+    return () => {
+      if (tcInput) tcInput.removeEventListener('focus', handleFocus);
+      if (passwordInput) passwordInput.removeEventListener('focus', handleFocus);
+    };
+  }, [state.inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <AuthContext.Provider value={{ state, dispatch }}>
+    <AuthContext.Provider value={{ state, dispatch, scrollConfig }}>
       {children}
     </AuthContext.Provider>
   );
