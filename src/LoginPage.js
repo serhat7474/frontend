@@ -40,10 +40,10 @@ function LoginPage() {
       navigator.virtualKeyboard.ongeometrychange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        // Sağ section'ı hemen güncelle
         const rightSection = document.querySelector('.right-section');
         if (rightSection) {
-          rightSection.style.paddingBottom = `${kbHeight + 150}px`;  // Direkt güncelle
+          rightSection.style.transition = 'none'; // Animasyonu devre dışı bırak
+          rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
     }
@@ -65,14 +65,12 @@ function LoginPage() {
 
     const handleFocusScroll = (inputType, ref) => {
       const isAndroid = /Android/i.test(navigator.userAgent);
-      const isSamsung = /Samsung/i.test(navigator.userAgent);
       if (!isAndroid || !ref) return;
 
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      // Titremeyi önlemek için geçişleri tamamen devre dışı bırak
-      rightSection.style.transition = 'none';
+      rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
 
       requestAnimationFrame(() => {
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
@@ -87,10 +85,13 @@ function LoginPage() {
         const viewportCenter = viewportHeight / 2;
         const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
-        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        rightSection.scrollTo({ top: scrollTo, behavior: 'auto' }); // Smooth yerine auto
       });
 
       let resizeTimeout;
+      const isSamsung = /Samsung/i.test(navigator.userAgent);
+      const delay = isSamsung ? 300 : 100; // Samsung için 300ms, diğer cihazlar için 100ms
+
       const handleResizeDuringFocus = () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
@@ -108,9 +109,9 @@ function LoginPage() {
             const viewportCenter = viewportHeight / 2;
             const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+            rightSection.scrollTo({ top: scrollTo, behavior: 'auto' });
           });
-        }, isSamsung ? 500 : 100); // Samsung için daha uzun ama sabit bir gecikme
+        }, delay);
       };
 
       window.addEventListener('resize', handleResizeDuringFocus);
@@ -127,16 +128,18 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      rightSection.style.transition = 'none';
+      rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
 
-      requestAnimationFrame(() => {
-        const keyboardHeight = getKeyboardHeight();
-        if (keyboardHeight === 0) {
-          rightSection.style.minHeight = '100vh';
-          rightSection.style.paddingBottom = '0';
-          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const keyboardHeight = getKeyboardHeight();
+          if (keyboardHeight === 0) {
+            rightSection.style.minHeight = '100vh';
+            rightSection.style.paddingBottom = '0';
+            rightSection.scrollTo({ top: 0, behavior: 'auto' }); // Smooth yerine auto
+          }
+        });
+      }, 100); // Klavyenin kapanmasını beklemek için 100ms gecikme
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
