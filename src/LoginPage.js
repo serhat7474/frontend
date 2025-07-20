@@ -42,7 +42,6 @@ function LoginPage() {
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
         const rightSection = document.querySelector('.right-section');
         if (rightSection) {
-          rightSection.style.transition = 'none'; // Animasyonu devre dışı bırak
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
@@ -53,7 +52,23 @@ function LoginPage() {
     };
   }, []);
 
-  // Scroll optimization: Center TC and password inputs on focus (scroll kaldırıldı)
+  // Şifre inputu göründüğünde ortasına scroll
+  useEffect(() => {
+    if (inputValue.length === 11 && passwordInputRef.current) {
+      requestAnimationFrame(() => {
+        const passwordInput = passwordInputRef.current;
+        if (passwordInput) {
+          const rightSection = document.querySelector('.right-section');
+          const inputRect = passwordInput.getBoundingClientRect();
+          const viewportHeight = window.visualViewport?.height || window.innerHeight;
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        }
+      });
+    }
+  }, [inputValue]);
+
+  // Scroll optimization: Center TC and password inputs on focus
   useEffect(() => {
     const tcRef = tcInputRef.current;
     const passwordRef = passwordInputRef.current;
@@ -63,45 +78,47 @@ function LoginPage() {
       return Math.max(window.innerHeight - vh, 0);
     };
 
-    let lastResizeTime = 0;
-    const debounceDelay = 500; // Samsung için 500ms debounce süresi
-
     const handleFocusScroll = (inputType, ref) => {
       const isAndroid = /Android/i.test(navigator.userAgent);
+      const isSamsung = /Samsung/i.test(navigator.userAgent);
       if (!isAndroid || !ref) return;
 
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
+      rightSection.style.transition = 'none';
 
       requestAnimationFrame(() => {
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
         const keyboardHeight = getKeyboardHeight();
+        const inputRect = ref.getBoundingClientRect();
+
         const paddingOffset = inputType === 'Password' ? 180 : 150;
         rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
         rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-        // scrollTo kaldırıldı
+
+        const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
+        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
       });
 
       let resizeTimeout;
       const handleResizeDuringFocus = () => {
-        const now = Date.now();
-        if (now - lastResizeTime < debounceDelay) return; // Debounce kontrolü
-        lastResizeTime = now;
-
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
           requestAnimationFrame(() => {
             const viewportHeight = window.visualViewport?.height || window.innerHeight;
             const keyboardHeight = getKeyboardHeight();
-            const paddingOffset = inputType === 'Password' ? 180 : 150;
+            const inputRect = ref.getBoundingClientRect();
+
             rightSection.style.transition = 'none';
+            const paddingOffset = inputType === 'Password' ? 180 : 150;
             rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
             rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
-            // scrollTo kaldırıldı
+
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, debounceDelay); // Samsung için 500ms
+        }, isSamsung ? 500 : 100);
       };
 
       window.addEventListener('resize', handleResizeDuringFocus);
@@ -118,19 +135,16 @@ function LoginPage() {
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      rightSection.style.transition = 'none'; // Tüm animasyonları devre dışı bırak
+      rightSection.style.transition = 'none';
 
-      // Klavyenin tamamen kapandığından emin olmak için 500ms gecikme
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const keyboardHeight = getKeyboardHeight();
-          if (keyboardHeight === 0) {
-            rightSection.style.minHeight = '100vh';
-            rightSection.style.paddingBottom = '0';
-            // scrollTo kaldırıldı
-          }
-        });
-      }, 500); // Samsung için 500ms gecikme
+      requestAnimationFrame(() => {
+        const keyboardHeight = getKeyboardHeight();
+        if (keyboardHeight === 0) {
+          rightSection.style.minHeight = '100vh';
+          rightSection.style.paddingBottom = '0';
+          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
     };
 
     const handleTcFocusScroll = () => handleFocusScroll('TC', tcRef);
