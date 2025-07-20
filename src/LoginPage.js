@@ -26,17 +26,49 @@ function LoginPage() {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 150; // Şifre için 150px aşağı kaydırma
-        console.log('Triggering scroll for password input'); // Test için log
+        const offset = 200; // Şifre için offseti artırdık (150px yerine 200px)
+        console.log('Triggering scroll for password input with offset:', offset); // Test için log
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, 100); // Klavye animasyonunu beklemek için gecikme
+        }, 200); // Gecikmeyi artırdık
       }
     }
   }, [inputValue]);
+
+  // TC inputuna fokus olduğunda scroll'u tetikle
+  useEffect(() => {
+    const handleTcFocus = () => {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid || !tcInputRef.current) return;
+
+      const rightSection = document.querySelector('.right-section');
+      if (rightSection) {
+        const tcInput = tcInputRef.current;
+        const inputRect = tcInput.getBoundingClientRect();
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const offset = 100; // TC için 100px offset
+        console.log('Triggering scroll for TC input with offset:', offset); // Test için log
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          });
+        }, 200); // Gecikmeyi artırdık
+      }
+    };
+
+    const tcInput = tcInputRef.current;
+    if (tcInput) {
+      tcInput.addEventListener('focus', handleTcFocus);
+    }
+
+    return () => {
+      if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
+    };
+  }, []);
 
   // Meta tag and Virtual Keyboard API
   useEffect(() => {
