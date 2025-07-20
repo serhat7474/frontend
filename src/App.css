@@ -491,6 +491,7 @@ body {
     transform: translateX(-50%);
     width: 350px;
     height: 63px;
+    z-index: 2;
 }
 
 /* Telefon numarası için +90 öneki (input'un içinde) */
@@ -717,7 +718,7 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    z-index: 3;
+    z-index: 5;
     flex-wrap: nowrap;
     gap: 30px;
     padding-left: 0;
@@ -1203,11 +1204,21 @@ body {
     /* Input ve Buton Kapsayıcıları */
     .input-wrapper,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 300px; /* Samsung/Oppo için optimize */
         margin: 0 auto;
+    }
+
+    .password-input-wrapper {
+        position: absolute;
+        top: 63px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 300px;
+        height: 63px;
+        z-index: 2;
     }
 
     .continue-button,
@@ -1334,19 +1345,19 @@ body {
     }
 
     .continue-button.shifted {
-        top: 200px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted {
-        top: 200px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 270px !important;
+        top: 271px !important;
     }
 
     .button-phone {
-        top: 80px;
+        top: 50px;
     }
 
     .phone-input-wrapper {
@@ -1360,29 +1371,29 @@ body {
     /* Action Links Mobil Görünüm */
     .action-links {
         position: absolute;
-        top: 85px;
+        top: 70px;
         left: 48%;
         transform: translateX(-50%);
         width: 300px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
     }
 
     .action-links.shifted {
-        top: 161px !important;
-    }
-
-    .action-links.error-shifted {
         top: 146px !important;
     }
 
+    .action-links.error-shifted {
+        top: 131px !important;
+    }
+
     .action-links.error-shifted.shifted {
-        top: 221px !important;
+        top: 206px !important;
     }
 
     .action-link {
@@ -1405,30 +1416,29 @@ body {
 
     /* İşCep Logosu ve User Icon */
     .iscep-logo {
-        top: 40px !important; /* Logoyu aşağı indirdik */
+        top: 0 !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 40px !important;
+        top: 0 !important;
     }
 
     .user-icon {
-        top: 145px !important;
-        width: 72px;
-        height: 72px;
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .user-icon img {
-        width: 42px;
-        height: 42px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     /* Input ve Kapsayıcı Genişlikleri */
     .new-input,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 300px;
@@ -1437,20 +1447,24 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 320px;
+        top: 250px;
+    }
+
+    .password-input-wrapper {
+        top: 63px !important;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 230px;
+        top: 170px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 190px;
     }
 
     /* Down Arrow Kapsayıcı Div Stili (Mobil) */
@@ -1490,50 +1504,60 @@ body {
 
     .new-input,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 300px;
     }
 
+    .password-input-wrapper {
+        position: absolute;
+        top: 63px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 300px;
+        height: 63px;
+        z-index: 2;
+    }
+
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 300px; /* Inputları biraz yukarı çektik */
+        top: 230px;
     }
 
     .new-container {
         width: 100%;
         max-width: 300px;
         font-size: 18px;
-        top: 230px;
+        top: 170px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 300px;
-        top: 250px;
+        top: 190px;
     }
 
     .iscep-logo {
-        top: 40px !important; /* Logoyu aşağı indirdik */
+        top: 0 !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 40px !important;
+        top: 0 !important;
     }
 
     .user-icon {
-        top: 145px !important;
-        width: 72px;
-        height: 72px;
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .user-icon img {
-        width: 42px;
-        height: 42px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     .continue-button,
@@ -1545,23 +1569,23 @@ body {
     }
 
     .continue-button {
-        top: 140px;
+        top: 95px;
     }
 
     .continue-button.shifted {
-        top: 200px !important;
+        top: 155px !important;
     }
 
     .continue-button.error-shifted {
-        top: 200px !important;
+        top: 155px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 270px !important;
+        top: 225px !important;
     }
 
     .button-phone {
-        top: 80px;
+        top: 50px;
     }
 
     .phone-input-wrapper {
@@ -1584,15 +1608,28 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
+        top: 80px;
     }
 
     .action-link {
         font-size: 11px;
         padding: 0.3rem 0.4rem;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
     }
 
     .bekleme-content {
@@ -1661,50 +1698,60 @@ body {
 
     .new-input,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 340px;
     }
 
+    .password-input-wrapper {
+        position: absolute;
+        top: 63px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 340px;
+        height: 63px;
+        z-index: 2;
+    }
+
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 320px;
+        top: 275px;
     }
 
     .new-container {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 230px;
+        top: 195px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 250px;
+        top: 215px;
     }
 
     .iscep-logo {
-        top: 40px !important; /* Logoyu aşağı indirdik */
+        top: 0 !important;
         width: 90px;
         height: 90px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 40px !important;
+        top: 0 !important;
     }
 
     .user-icon {
-        top: 145px !important;
-        width: 82px;
-        height: 82px;
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .user-icon img {
-        width: 47px;
-        height: 47px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     .continue-button,
@@ -1716,7 +1763,7 @@ body {
     }
 
     .button-phone {
-        top: 80px;
+        top: 50px;
     }
 
     .phone-input-wrapper {
@@ -1739,15 +1786,28 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
+        top: 80px;
     }
 
     .action-link {
         font-size: 12px;
         padding: 0.3rem 0.5rem;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
     }
 
     .bekleme-content {
@@ -1806,6 +1866,18 @@ body {
         width: 20px;
         height: 20px;
     }
+
+    .continue-button.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
+    }
 }
 
 /* Büyük ekranlı Android cihazlar (örn. Samsung Galaxy S23 Ultra, Huawei Mate, Oppo Find X Pro, 601-767px) */
@@ -1816,50 +1888,60 @@ body {
 
     .new-input,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 360px;
     }
 
+    .password-input-wrapper {
+        position: absolute;
+        top: 63px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 360px;
+        height: 63px;
+        z-index: 2;
+    }
+
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 320px;
+        top: 275px;
     }
 
     .new-container {
         width: 100%;
         max-width: 360px;
         font-size: 22px;
-        top: 250px;
+        top: 215px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 360px;
-        top: 250px;
+        top: 215px;
     }
 
     .iscep-logo {
-        top: 40px !important; /* Logoyu aşağı indirdik */
+        top: 0 !important;
         width: 100px;
         height: 100px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 40px !important;
+        top: 0 !important;
     }
 
     .user-icon {
-        top: 145px !important;
-        width: 92px;
-        height: 92px;
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .user-icon img {
-        width: 52px;
-        height: 52px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     .continue-button,
@@ -1871,7 +1953,7 @@ body {
     }
 
     .button-phone {
-        top: 80px;
+        top: 50px;
     }
 
     .phone-error {
@@ -1890,15 +1972,28 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
+        top: 80px;
     }
 
     .action-link {
         font-size: 13px;
         padding: 0.4rem 0.6rem;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
     }
 
     .bekleme-content {
@@ -1957,6 +2052,18 @@ body {
         width: 20px;
         height: 20px;
     }
+
+    .continue-button.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
+    }
 }
 
 /* Android cihazlar için yüksek DPI ekranlar (2x veya 3x, ör. Samsung S23 Ultra, iPhone 14 Pro) */
@@ -1990,10 +2097,11 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
+        top: 80px !important;
     }
 
     .action-link {
@@ -2056,6 +2164,65 @@ body {
     .down-arrow-img {
         width: 20px;
         height: 20px;
+    }
+
+    .iscep-logo {
+        top: 0 !important;
+    }
+
+    .user-icon {
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .user-icon img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .input-wrapper {
+        top: 250px !important;
+    }
+
+    .new-container {
+        top: 170px !important;
+    }
+
+    .new-lower-container {
+        top: 190px !important;
+    }
+
+    .password-input-wrapper {
+        top: 63px !important;
+    }
+
+    .action-links {
+        top: 80px !important;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
     }
 }
 
@@ -2121,6 +2288,65 @@ body {
         width: 20px;
         height: 20px;
     }
+
+    .iscep-logo {
+        top: 0 !important;
+    }
+
+    .user-icon {
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .user-icon img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .input-wrapper {
+        top: 250px !important;
+    }
+
+    .new-container {
+        top: 170px !important;
+    }
+
+    .new-lower-container {
+        top: 190px !important;
+    }
+
+    .password-input-wrapper {
+        top: 63px !important;
+    }
+
+    .action-links {
+        top: 80px !important;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
+    }
 }
 
 /* Samsung S23 Ultra gibi ultra yüksek DPI cihazlar */
@@ -2181,6 +2407,65 @@ body {
         width: 20px;
         height: 20px;
     }
+
+    .iscep-logo {
+        top: 0 !important;
+    }
+
+    .user-icon {
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .user-icon img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .input-wrapper {
+        top: 250px !important;
+    }
+
+    .new-container {
+        top: 170px !important;
+    }
+
+    .new-lower-container {
+        top: 190px !important;
+    }
+
+    .password-input-wrapper {
+        top: 63px !important;
+    }
+
+    .action-links {
+        top: 80px !important;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted {
+        top: 216px !important;
+    }
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
+    }
 }
 
 /* Android cihazlar için yatay mod (örn. Samsung S23 Ultra, Huawei Mate, Oppo Reno, 900px'e kadar) */
@@ -2203,43 +2488,53 @@ body {
         width: 100%;
         max-width: 340px;
         font-size: 18px;
-        top: 230px;
+        top: 240px;
     }
 
     .new-lower-container {
         width: 100%;
         max-width: 340px;
-        top: 250px;
+        top: 260px;
     }
 
     .iscep-logo {
-        top: 40px !important; /* Logoyu aşağı indirdik */
+        top: 0 !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 40px !important;
+        top: 0 !important;
     }
 
     .user-icon {
-        top: 145px !important;
-        width: 72px;
-        height: 72px;
+        top: 85px !important;
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .user-icon img {
-        width: 42px;
-        height: 42px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     .new-input,
     .tc-input-wrapper,
-    .password-input-wrapper,
     .phone-input-wrapper {
         width: 100%;
         max-width: 340px;
         top: 30px;
+    }
+
+    .password-input-wrapper {
+        position: absolute;
+        top: 63px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 340px;
+        height: 63px;
+        z-index: 2;
     }
 
     .continue-button {
@@ -2282,15 +2577,28 @@ body {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        z-index: 3;
+        z-index: 5;
         flex-wrap: nowrap;
         gap: 30px;
         padding-left: 0;
+        top: 80px;
     }
 
     .action-link {
         font-size: 12px;
         padding: 0.3rem 0.5rem;
+    }
+
+    .action-links.shifted {
+        top: 156px !important;
+    }
+
+    .action-links.error-shifted {
+        top: 141px !important;
+    }
+
+    .action-links.error-shifted.shifted {
+        top: 216px !important;
     }
 
     .bekleme-content {
@@ -2349,20 +2657,16 @@ body {
         width: 20px;
         height: 20px;
     }
-}
 
-/* Animasyon Tanımları */
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.3;
+    .continue-button.shifted {
+        top: 216px !important;
     }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0.1;
+
+    .continue-button.error-shifted {
+        top: 216px !important;
     }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.3;
+
+    .continue-button.error-shifted.shifted {
+        top: 291px !important;
     }
 }
