@@ -1345,15 +1345,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 220px !important;
+        top: 170px !important;
     }
 
     .continue-button.error-shifted {
-        top: 226px !important;
+        top: 176px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 295px !important;
+        top: 245px !important;
     }
 
     .button-phone {
@@ -1371,12 +1371,12 @@ body {
     /* Action Links Mobil Görünüm */
     .action-links {
         position: absolute;
-        top: 63px;
+        top: 68px;
         left: 50%;
         transform: translateX(-50%);
         width: 300px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
@@ -1385,15 +1385,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .action-link {
@@ -1416,13 +1416,13 @@ body {
 
     /* İşCep Logosu ve User Icon */
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -1447,7 +1447,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .password-input-wrapper {
@@ -1523,7 +1523,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 210px;
+        top: 230px;
     }
 
     .new-container {
@@ -1540,13 +1540,13 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -1573,15 +1573,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 185px !important;
+        top: 155px !important;
     }
 
     .continue-button.error-shifted {
-        top: 185px !important;
+        top: 161px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 255px !important;
+        top: 230px !important;
     }
 
     .button-phone {
@@ -1607,13 +1607,13 @@ body {
         transform: translateX(-50%);
         max-width: 300px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 63px;
+        top: 68px;
     }
 
     .action-link {
@@ -1622,15 +1622,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .bekleme-content {
@@ -1718,7 +1718,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 235px;
+        top: 245px;
     }
 
     .new-container {
@@ -1735,13 +1735,13 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
         width: 90px;
         height: 90px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -1786,13 +1786,13 @@ body {
         transform: translateX(-50%);
         max-width: 340px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 63px;
+        top: 68px;
     }
 
     .action-link {
@@ -1801,15 +1801,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .bekleme-content {
@@ -1870,15 +1870,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 311px !important;
+        top: 261px !important;
     }
 }
 
@@ -1909,7 +1909,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 255px;
+        top: 265px;
     }
 
     .new-container {
@@ -1926,13 +1926,13 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
         width: 100px;
         height: 100px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -1973,13 +1973,13 @@ body {
         transform: translateX(-50%);
         max-width: 360px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 63px;
+        top: 68px;
     }
 
     .action-link {
@@ -1988,15 +1988,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .bekleme-content {
@@ -2057,15 +2057,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 246px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted {
-        top: 246px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 321px !important;
+        top: 271px !important;
     }
 }
 
@@ -2099,13 +2099,13 @@ body {
         transform: translateX(-50%);
         max-width: 360px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 63px !important;
+        top: 68px !important;
     }
 
     .action-link {
@@ -2171,7 +2171,7 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -2188,7 +2188,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container {
@@ -2209,27 +2209,27 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .continue-button.shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 311px !important;
+        top: 261px !important;
     }
 }
 
@@ -2297,7 +2297,7 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -2314,7 +2314,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container {
@@ -2335,31 +2335,31 @@ body {
     }
 
     .action-links {
-        top: 63px !important;
+        top: 68px !important;
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .continue-button.shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 311px !important;
+        top: 261px !important;
     }
 }
 
@@ -2423,7 +2423,7 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -2440,7 +2440,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container {
@@ -2461,31 +2461,31 @@ body {
     }
 
     .action-links {
-        top: 63px !important;
+        top: 68px !important;
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .continue-button.shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted {
-        top: 236px !important;
+        top: 186px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 311px !important;
+        top: 261px !important;
     }
 }
 
@@ -2519,13 +2519,13 @@ body {
     }
 
     .iscep-logo {
-        top: 0 !important;
+        top: 0px !important;
         width: 80px;
         height: 80px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
-        top: 0 !important;
+        top: 0px !important;
     }
 
     .user-icon {
@@ -2597,13 +2597,13 @@ body {
         transform: translateX(-50%);
         max-width: 340px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         z-index: 5;
         flex-wrap: nowrap;
         gap: 40px;
         padding-left: 0;
-        top: 63px;
+        top: 68px;
     }
 
     .action-link {
@@ -2612,15 +2612,15 @@ body {
     }
 
     .action-links.shifted {
-        top: 139px !important;
+        top: 144px !important;
     }
 
     .action-links.error-shifted {
-        top: 124px !important;
+        top: 129px !important;
     }
 
     .action-links.error-shifted.shifted {
-        top: 199px !important;
+        top: 204px !important;
     }
 
     .dot {
@@ -2651,14 +2651,14 @@ body {
     }
 
     .continue-button.shifted {
-        top: 246px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted {
-        top: 246px !important;
+        top: 196px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 321px !important;
+        top: 271px !important;
     }
 }
