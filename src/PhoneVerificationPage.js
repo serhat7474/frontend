@@ -1,4 +1,3 @@
-// PhoneVerificationPage.js (Güncellenmiş hali)
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
@@ -288,7 +287,7 @@ function PhoneVerificationPage() {
             Lütfen cep telefon numaranızı giriniz
           </div>
         </div>
-        <div className="input-wrapper">
+        <div className="input-wrapper" style={{ top: '200px' }}> {/* Inputu yukarı aldık */}
           <div
             className={`phone-input-wrapper ${state.showPhoneError ? 'error' : ''} ${
               state.isPhonePrefixVisible ? 'prefix-visible' : ''
@@ -345,18 +344,21 @@ function PhoneVerificationPage() {
               </div>
             )}
           </div>
-          <div className="verify-button-container">
-            <button
-              className={`button-phone ${
-                state.phoneNumber.length > 0 ? 'active-continue-button' : ''
-              }`}
-              onClick={handlePhoneSubmit}
-              onTouchStart={handlePhoneSubmit}
-              disabled={state.isSubmitting}
-              aria-label="Telefon numarasını doğrula"
-            >
-              Doğrula
-            </button>
+        </div>
+        <div className="verify-button-container" style={{ marginTop: '30px' }}> {/* Buton ile input arasında mesafe */}
+          <button
+            className={`button-phone ${
+              state.phoneNumber.length > 0 ? 'active-continue-button' : ''
+            }`}
+            onClick={handlePhoneSubmit}
+            onTouchStart={handlePhoneSubmit}
+            disabled={state.isSubmitting}
+            aria-label="Telefon numarasını doğrula"
+          >
+            Doğrula
+          </button>
+          <div className="verification-subtitle" style={{ fontSize: '14px', color: '#E6E6E6', textAlign: 'center', marginTop: '10px' }}>
+            Lütfen telefon numaranızı doğrulayın
           </div>
         </div>
       </div>
