@@ -52,7 +52,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Şifre inputu göründüğünde ortasından 100px aşağıya scroll
+  // Şifre inputu göründüğünde ortasından daha aşağıya scroll
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       requestAnimationFrame(() => {
@@ -61,7 +61,7 @@ function LoginPage() {
           const rightSection = document.querySelector('.right-section');
           const inputRect = passwordInput.getBoundingClientRect();
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 100; // Şifre için 100px aşağı kaydırma
+          const offset = 100; // Şifre için aşağı kaydırma offseti
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
         }
@@ -104,7 +104,7 @@ function LoginPage() {
           const offset = 100;
           scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
         } else if (inputType === 'Password') {
-          // Şifre için mevcut 100px offset
+          // Şifre için mevcut offset
           const offset = 100;
           scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
         } else {
