@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   const scrollConfig = useMemo(() => ({
     tcOffset: 100, // TC inputu için 100px aşağı kaydırma
     passwordOffset: 150, // Şifre inputu için 150px aşağı kaydırma
-  }), []); // Boş bağımlılık dizisi, nesne sabit kalacak
+  }), []);
 
   useEffect(() => {
     const handleFocus = (e) => {
@@ -46,6 +46,8 @@ export const AuthProvider = ({ children }) => {
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       let offset = 0;
 
+      console.log('Focus event triggered on:', input.id); // Test için log
+
       if (input.id === 'tc-input') {
         offset = scrollConfig.tcOffset;
       } else if (input.id === 'password-input' && state.inputValue.length === 11) {
@@ -54,10 +56,12 @@ export const AuthProvider = ({ children }) => {
 
       if (offset > 0) {
         rightSection.style.transition = 'none';
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        });
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          });
+        }, 100); // Klavye animasyonunu beklemek için gecikme
       }
     };
 
