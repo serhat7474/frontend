@@ -99,8 +99,12 @@ function LoginPage() {
         rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
         let scrollTo;
-        if (isSamsung && (inputType === 'TC' || inputType === 'Password')) {
-          // Samsung cihazlarda TC ve şifre için 100px aşağı kaydırma
+        if (isSamsung && inputType === 'TC') {
+          // Samsung cihazlarda TC için 100px aşağı kaydırma
+          const offset = 100;
+          scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+        } else if (inputType === 'Password') {
+          // Şifre için mevcut 100px offset
           const offset = 100;
           scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
         } else {
@@ -125,8 +129,11 @@ function LoginPage() {
             rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
             let scrollTo;
-            if (isSamsung && (inputType === 'TC' || inputType === 'Password')) {
-              const offset = 100; // TC ve şifre için sabit 100px offset
+            if (isSamsung && inputType === 'TC') {
+              const offset = 100; // TC için sabit 100px offset
+              scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            } else if (inputType === 'Password') {
+              const offset = 100; // Şifre için sabit 100px offset
               scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             } else {
               scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
