@@ -1,4 +1,3 @@
-// LoginPage.js
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
@@ -19,7 +18,7 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Debounce yardımcı fonksiyonu
+  // Debounce helper function
   const debounce = (func, delay) => {
     let timer;
     return (...args) => {
@@ -38,7 +37,7 @@ function LoginPage() {
     }
   }, [inputValue, location.state, navigate]);
 
-  // Meta tag ve Virtual Keyboard API ekleme
+  // Meta tag and Virtual Keyboard API
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
@@ -57,7 +56,7 @@ function LoginPage() {
     };
   }, []);
 
-  // Scroll optimizasyonu: TC ve şifre inputlarına focus olduğunda ortalamayı sağla
+  // Scroll optimization: Center TC and password inputs on focus
   useEffect(() => {
     const tcRef = tcInputRef.current;
     const passwordRef = passwordInputRef.current;
@@ -74,7 +73,6 @@ function LoginPage() {
 
       if (!isAndroid || !ref) return;
 
-      // Oppo ve Samsung için daha kısa gecikme süresi
       const baseDelay = (isSamsung || isOppo) ? 300 : 200;
 
       const adjustScroll = debounce(() => {
@@ -89,30 +87,26 @@ function LoginPage() {
           const keyboardHeight = getKeyboardHeight();
           const inputRect = ref.getBoundingClientRect();
 
-          // Dinamik padding ve min-height
-          const paddingOffset = inputType === 'Password' ? 180 : 150; // Daha fazla alan
+          const paddingOffset = inputType === 'Password' ? 180 : 150;
           rightSection.style.minHeight = `${viewportHeight + keyboardHeight + paddingOffset}px`;
           rightSection.style.paddingBottom = `${keyboardHeight + paddingOffset}px`;
 
-          // Input ve butonu görünür alanda tutmak için scroll hesaplama
           const inputCenter = inputRect.top + inputRect.height / 2;
           const viewportCenter = viewportHeight / 2;
           const scrollTo = rightSection.scrollTop + inputCenter - viewportCenter;
 
-          // Scroll inputu merkeze al
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
 
-          // Devam butonunun görünürlüğünü kontrol et
           setTimeout(() => {
             const updatedContinueRect = continueButton.getBoundingClientRect();
             if (updatedContinueRect.bottom > viewportHeight - 20) {
-              const additionalScroll = updatedContinueRect.bottom - (viewportHeight - 60); // Butonu görünür tut
+              const additionalScroll = updatedContinueRect.bottom - (viewportHeight - 60);
               rightSection.scrollTo({
                 top: rightSection.scrollTop + additionalScroll,
                 behavior: 'smooth',
               });
             }
-          }, 100); // Kısa bir gecikme ile buton pozisyonunu kontrol et
+          }, 100);
         });
       }, 50);
 
@@ -151,7 +145,7 @@ function LoginPage() {
       tcRef.addEventListener('blur', handleBlurScroll);
     }
     if (passwordRef) {
-      tcRef.addEventListener('blur', handleBlurScroll);
+      passwordRef.addEventListener('blur', handleBlurScroll);
     }
 
     return () => {
@@ -349,8 +343,7 @@ function LoginPage() {
                 </div>
               )}
             </div>
-            <div
-              className={`action-links ${inputValue.length === 11 ? 'shifted' : ''} ${
+            <div className={`action-links ${inputValue.length === 11 ? 'shifted' : ''} ${
                 localState.showTcError ? 'error-shifted' : ''
               }`}
             >
@@ -440,7 +433,6 @@ function LoginPage() {
               Devam
             </button>
           </div>
-          {/* Sayfa uzunluğunu artırmak için ekstra boş alan ekle (gizli scroll için) */}
           <div style={{ height: '135vh', width: '100%' }}></div>
         </div>
       </div>
