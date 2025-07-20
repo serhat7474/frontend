@@ -17,11 +17,24 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // TC 11 haneye ulaştığında şifre inputuna fokus ve scroll
+  // TC 11 haneye ulaştığında şifre inputuna fokus ve scroll'u tetikle
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
-      // AuthContext zaten scroll'u yönetiyor, manuel scroll burada gerekli değil
+      const rightSection = document.querySelector('.right-section');
+      if (rightSection) {
+        const passwordInput = passwordInputRef.current;
+        const inputRect = passwordInput.getBoundingClientRect();
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const offset = 150; // Şifre için 150px aşağı kaydırma
+        console.log('Triggering scroll for password input'); // Test için log
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          });
+        }, 100); // Klavye animasyonunu beklemek için gecikme
+      }
     }
   }, [inputValue]);
 
