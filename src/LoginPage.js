@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react'; // useEffect eklendi
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
 
@@ -9,7 +9,6 @@ function LoginPage() {
   const passwordInputRef = useRef(null);
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation(); // Kullanılıyor, kaldırılmadı
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -19,17 +18,7 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    if (location.state?.fromPhoneVerification) {
-      window.history.replaceState(null, '', '/giris');
-      navigate('/giris', { replace: true });
-    }
-    if (inputValue.length === 11 && passwordInputRef.current) {
-      passwordInputRef.current.focus();
-    }
-  }, [inputValue, location.state, navigate]); // location.state kullanılıyor
-
-  // Meta tag and Virtual Keyboard API
-  useEffect(() => {
+    // Meta tag and Virtual Keyboard API
     const meta = document.createElement('meta');
     meta.name = 'viewport';
     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
