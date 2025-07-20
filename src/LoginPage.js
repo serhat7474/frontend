@@ -135,11 +135,21 @@ function LoginPage() {
     const handleBlurScroll = () => {
       const rightSection = document.querySelector('.right-section');
       if (rightSection) {
-        setTimeout(() => {
-          rightSection.style.minHeight = '100vh';
-          rightSection.style.paddingBottom = '0';
-          rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 300); // Klavye kapanma animasyonu için gecikme ekle
+        const checkKeyboardClosed = () => {
+          if (getKeyboardHeight() === 0) {
+            rightSection.style.minHeight = '100vh';
+            rightSection.style.paddingBottom = '0';
+            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+            window.removeEventListener('resize', checkKeyboardClosed);
+            window.visualViewport?.removeEventListener('resize', checkKeyboardClosed);
+          }
+        };
+
+        window.addEventListener('resize', checkKeyboardClosed);
+        window.visualViewport?.addEventListener('resize', checkKeyboardClosed);
+
+        // Fallback timeout in case listener doesn't trigger
+        setTimeout(checkKeyboardClosed, 500);
       }
     };
 
