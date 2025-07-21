@@ -836,7 +836,7 @@ body {
 /* Telefon Doğrulama Butonu */
 .button-phone {
     position: absolute;
-    top: 170px; /* Butonu aşağıya aldık (önceki 150px) */
+    top: 170px;
     left: 50%;
     transform: translateX(-50%);
     font-family: inherit;
@@ -898,7 +898,7 @@ body {
 /* Doğrula Butonu Kapsayıcı Stili */
 .verify-button-container {
     position: absolute;
-    top: 370px; /* Kapsayıcıyı aşağıya aldık (önceki 350px) */
+    top: 370px;
     left: 50%;
     transform: translateX(-50%);
     width: 350px;
@@ -1198,7 +1198,7 @@ body {
 
     .verify-button-container {
         position: absolute;
-        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
+        top: 320px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1246,7 +1246,7 @@ body {
     }
 
     .button-phone {
-        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
+        top: 110px;
     }
 
     .bekleme-content {
@@ -1568,7 +1568,7 @@ body {
     }
 
     .button-phone {
-        top: 100px; /* Butonu aşağıya aldık (önceki 80px) */
+        top: 100px;
     }
 
     .phone-input-wrapper {
@@ -1617,7 +1617,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px; /* Kapsayıcıyı aşağıya aldık (önceki 280px) */
+        top: 300px;
         max-width: 300px;
         width: 90%;
     }
@@ -1760,7 +1760,7 @@ body {
     }
 
     .button-phone {
-        top: 120px; /* Butonu aşağıya aldık (önceki 90px) */
+        top: 120px;
     }
 
     .phone-input-wrapper {
@@ -1809,7 +1809,7 @@ body {
     }
 
     .verify-button-container {
-        top: 330px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
+        top: 330px;
         max-width: 340px;
         width: 90%;
     }
@@ -1964,7 +1964,7 @@ body {
     }
 
     .button-phone {
-        top: 130px; /* Butonu aşağıya aldık (önceki 100px) */
+        top: 130px;
     }
 
     .phone-input-wrapper {
@@ -2013,7 +2013,7 @@ body {
     }
 
     .verify-button-container {
-        top: 340px; /* Kapsayıcıyı aşağıya aldık (önceki 320px) */
+        top: 340px;
         max-width: 360px;
         width: 90%;
     }
@@ -2248,11 +2248,11 @@ body {
     }
 
     .button-phone {
-        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
+        top: 110px;
     }
 
     .verify-button-container {
-        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
+        top: 320px;
     }
 }
 
@@ -2392,11 +2392,11 @@ body {
     }
 
     .button-phone {
-        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
+        top: 110px;
     }
 
     .verify-button-container {
-        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
+        top: 320px;
     }
 }
 
@@ -2532,11 +2532,11 @@ body {
     }
 
     .button-phone {
-        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
+        top: 110px;
     }
 
     .verify-button-container {
-        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
+        top: 320px;
     }
 }
 
@@ -2636,7 +2636,7 @@ body {
     }
 
     .button-phone {
-        top: 35vh; /* Butonu aşağıya aldık (önceki 30vh) */
+        top: 35vh;
         width: 90% !important;
         max-width: 380px !important;
     }
@@ -2683,7 +2683,7 @@ body {
     }
 
     .verify-button-container {
-        top: 40vh; /* Kapsayıcıyı aşağıya aldık (önceki 35vh) */
+        top: 40vh;
         max-width: 340px;
         width: 90%;
     }
