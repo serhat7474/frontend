@@ -338,7 +338,7 @@ body {
 
 /* Telefon Doğrulama Başlık Stili */
 .new-container.phone-verification-title {
-    top: 240px; /* 260px'den 240px'e düşürüldü */
+    top: 260px;
     flex-direction: column;
     height: auto;
     font-size: 28px;
@@ -463,7 +463,7 @@ body {
 /* Input Kapsayıcı Stili */
 .input-wrapper {
     position: absolute;
-    top: 320px; /* 340px'den 320px'e düşürüldü */
+    top: 340px;
     width: 350px;
     left: 50%;
     transform: translateX(-50%);
@@ -898,7 +898,7 @@ body {
 /* Doğrula Butonu Kapsayıcı Stili */
 .verify-button-container {
     position: absolute;
-    top: 350px; /* 370px'den 350px'e düşürüldü */
+    top: 370px;
     left: 50%;
     transform: translateX(-50%);
     width: 350px;
@@ -1198,7 +1198,7 @@ body {
 
     .verify-button-container {
         position: absolute;
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1209,7 +1209,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .verification-subtitle {
@@ -1372,7 +1372,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1455,7 +1455,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .password-input-wrapper {
@@ -1471,7 +1471,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 }
 
@@ -1502,7 +1502,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 210px; /* 230px'den 210px'e düşürüldü */
+        top: 230px;
     }
 
     .new-container {
@@ -1513,7 +1513,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 180px; /* 200px'den 180px'e düşürüldü */
+        top: 200px;
     }
 
     .new-lower-container {
@@ -1572,7 +1572,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1617,7 +1617,7 @@ body {
     }
 
     .verify-button-container {
-        top: 280px; /* 300px'den 280px'e düşürüldü */
+        top: 300px;
         max-width: 300px;
         width: 90%;
     }
@@ -1710,7 +1710,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 225px; /* 245px'den 225px'e düşürüldü */
+        top: 245px;
     }
 
     .new-container {
@@ -1721,7 +1721,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -1764,7 +1764,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1809,7 +1809,7 @@ body {
     }
 
     .verify-button-container {
-        top: 310px; /* 330px'den 310px'e düşürüldü */
+        top: 330px;
         max-width: 340px;
         width: 90%;
     }
@@ -1914,7 +1914,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 245px; /* 265px'den 245px'e düşürüldü */
+        top: 265px;
     }
 
     .new-container {
@@ -1925,7 +1925,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* 240px'den 220px'e düşürüldü */
+        top: 240px;
     }
 
     .new-lower-container {
@@ -1968,7 +1968,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -2013,7 +2013,7 @@ body {
     }
 
     .verify-button-container {
-        top: 320px; /* 340px'den 320px'e düşürüldü */
+        top: 340px;
         max-width: 360px;
         width: 90%;
     }
@@ -2208,11 +2208,11 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .password-input-wrapper {
@@ -2244,7 +2244,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2252,7 +2252,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2335,7 +2335,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container {
@@ -2346,7 +2346,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2388,7 +2388,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2396,7 +2396,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2475,7 +2475,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container {
@@ -2486,7 +2486,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2528,7 +2528,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2536,7 +2536,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2551,7 +2551,7 @@ body {
     }
 
     .input-wrapper {
-        top: 10vh; /* 30vh'den 10vh'e düşürüldü */
+        top: 30vh;
         width: 100%;
         max-width: 340px;
     }
@@ -2564,7 +2564,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 240px; /* 260px'den 240px'e düşürüldü */
+        top: 260px;
     }
 
     .new-lower-container {
@@ -2603,7 +2603,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .password-input-wrapper {
@@ -2683,7 +2683,7 @@ body {
     }
 
     .verify-button-container {
-        top: 20vh; /* 40vh'den 20vh'e düşürüldü */
+        top: 40vh;
         max-width: 340px;
         width: 90%;
     }
@@ -2711,4 +2711,10 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
-    }} 
+    }
+
+    .down-arrow-img {
+        width: 20px;
+        height: 20px;
+    }
+}
