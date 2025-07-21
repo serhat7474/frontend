@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
 
@@ -9,6 +9,7 @@ function LoginPage() {
   const passwordInputRef = useRef(null);
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -17,7 +18,19 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // TC 11 haneye ulaştığında şifre inputuna fokus ve scroll'u tetikle
+  // Telefon doğrulama veya bekleme sayfasından geri dönüldüğünde state'i sıfırla
+  useEffect(() => {
+    if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
+      dispatch({ type: 'RESET_AUTH' });
+      setLocalState({
+        isTcActive: false,
+        isActive: false,
+        isTcBold: false,
+        showTcError: false,
+      });
+    }
+  }, [location.state, dispatch]);
+
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
@@ -26,19 +39,17 @@ function LoginPage() {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 200; // Şifre için offseti artırdık (150px yerine 200px)
-        console.log('Triggering scroll for password input with offset:', offset); // Test için log
+        const offset = 200;
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, 200); // Gecikmeyi artırdık
+        }, 200);
       }
     }
   }, [inputValue]);
 
-  // TC inputuna fokus olduğunda scroll'u tetikle
   useEffect(() => {
     const handleTcFocus = () => {
       const isAndroid = /Android/i.test(navigator.userAgent);
@@ -49,14 +60,13 @@ function LoginPage() {
         const tcInput = tcInputRef.current;
         const inputRect = tcInput.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 100; // TC için 100px offset
-        console.log('Triggering scroll for TC input with offset:', offset); // Test için log
+        const offset = 100;
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, 200); // Gecikmeyi artırdık
+        }, 200);
       }
     };
 
@@ -70,7 +80,6 @@ function LoginPage() {
     };
   }, []);
 
-  // Meta tag and Virtual Keyboard API
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
