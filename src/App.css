@@ -526,7 +526,7 @@ body {
     border: none;
     color: #FFFFFF;
     font-size: 12px;
-    cursor: pointer; 
+    cursor: pointer;
     padding: 3px;
     z-index: 3;
 }
@@ -821,7 +821,7 @@ body {
     opacity: 1;
 }
 
-/* Tıklama (active状況 */
+/* Tıklama (active) durumu */
 .continue-button.active-continue-button:active {
     background-color: #3A8CCF;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -859,9 +859,7 @@ body {
     z-index: 3;
 }
 
-/* Telefon Doğrulama
-
-System: Butonu Hover Durumu */
+/* Telefon Doğrulama Butonu Hover Durumu */
 .button-phone:hover {
     background-color: #427ba8;
     opacity: 0.8;
@@ -900,7 +898,7 @@ System: Butonu Hover Durumu */
 /* Doğrula Butonu Kapsayıcı Stili */
 .verify-button-container {
     position: absolute;
-    top: 350px; /* 370px'den 350px'e düşürüldü */
+    top: 370px;
     left: 50%;
     transform: translateX(-50%);
     width: 350px;
@@ -1118,7 +1116,7 @@ System: Butonu Hover Durumu */
     --keyboard-height: env(keyboard-inset-height, 0px);
 }
 
-/* Genel Mobil Görünüm (767px ve altı, Android cihazlar dahil) */
+/* Genel Mobil Görünüm (768px ve altı, Android cihazlar dahil) */
 @media only screen and (max-width: 767px) {
     .left-section {
         display: none;
@@ -1200,7 +1198,7 @@ System: Butonu Hover Durumu */
 
     .verify-button-container {
         position: absolute;
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1211,7 +1209,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .verification-subtitle {
@@ -1374,7 +1372,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1457,7 +1455,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .password-input-wrapper {
@@ -1473,7 +1471,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 }
 
@@ -1504,7 +1502,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 210px; /* 230px'den 210px'e düşürüldü */
+        top: 230px;
     }
 
     .new-container {
@@ -1515,7 +1513,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 180px; /* 200px'den 180px'e düşürüldü */
+        top: 200px;
     }
 
     .new-lower-container {
@@ -1574,7 +1572,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1619,7 +1617,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 280px; /* 300px'den 280px'e düşürüldü */
+        top: 300px;
         max-width: 300px;
         width: 90%;
     }
@@ -1712,7 +1710,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 225px; /* 245px'den 225px'e düşürüldü */
+        top: 245px;
     }
 
     .new-container {
@@ -1723,7 +1721,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -1766,7 +1764,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -1811,7 +1809,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 310px; /* 330px'den 310px'e düşürüldü */
+        top: 330px;
         max-width: 340px;
         width: 90%;
     }
@@ -1916,7 +1914,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 245px; /* 265px'den 245px'e düşürüldü */
+        top: 265px;
     }
 
     .new-container {
@@ -1927,7 +1925,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* 240px'den 220px'e düşürüldü */
+        top: 240px;
     }
 
     .new-lower-container {
@@ -1939,7 +1937,7 @@ System: Butonu Hover Durumu */
     .iscep-logo {
         top: 0px !important;
         width: 100px;
-        learnt: 100px;
+        height: 100px;
     }
 
     .right-section .iscep-logo.iscep-logo-phone {
@@ -1970,7 +1968,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .phone-error {
@@ -2015,7 +2013,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 320px; /* 340px'den 320px'e düşürüldü */
+        top: 340px;
         max-width: 360px;
         width: 90%;
     }
@@ -2210,11 +2208,11 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .password-input-wrapper {
@@ -2246,7 +2244,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2254,7 +2252,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2337,7 +2335,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container {
@@ -2348,7 +2346,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2390,7 +2388,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2398,7 +2396,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2477,7 +2475,7 @@ System: Butonu Hover Durumu */
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* 250px'den 230px'e düşürüldü */
+        top: 250px;
     }
 
     .new-container {
@@ -2488,7 +2486,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* 220px'den 200px'e düşürüldü */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2530,7 +2528,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .button-phone {
@@ -2538,7 +2536,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 300px; /* 320px'den 300px'e düşürüldü */
+        top: 320px;
     }
 }
 
@@ -2553,7 +2551,7 @@ System: Butonu Hover Durumu */
     }
 
     .input-wrapper {
-        top: 10vh; /* 30vh'den 10vh'e düşürüldü */
+        top: 30vh;
         width: 100%;
         max-width: 340px;
     }
@@ -2566,7 +2564,7 @@ System: Butonu Hover Durumu */
     }
 
     .new-container.phone-verification-title {
-        top: 240px; /* 260px'den 240px'e düşürüldü */
+        top: 260px;
     }
 
     .new-lower-container {
@@ -2605,7 +2603,7 @@ System: Butonu Hover Durumu */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Göreli pozisyon korunuyor */
+        top: 40px;
     }
 
     .password-input-wrapper {
@@ -2685,7 +2683,7 @@ System: Butonu Hover Durumu */
     }
 
     .verify-button-container {
-        top: 20vh; /* 40vh'den 20vh'e düşürüldü */
+        top: 40vh;
         max-width: 340px;
         width: 90%;
     }
