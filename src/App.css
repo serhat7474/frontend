@@ -338,7 +338,7 @@ body {
 
 /* Telefon Doğrulama Başlık Stili */
 .new-container.phone-verification-title {
-    top: 260px; /* Başlığı aşağıya kaydırdık */
+    top: 260px;
     flex-direction: column;
     height: auto;
     font-size: 28px;
@@ -474,7 +474,7 @@ body {
     position: relative;
     width: 100%;
     height: 63px;
-    top: 40px; /* Inputu aşağıya kaydırdık */
+    top: 40px;
 }
 
 /* TC Inputu Kapsayıcı Stili */
@@ -482,7 +482,7 @@ body {
     position: relative;
     width: 100%;
     height: 63px;
-    min-height: 63px; /* Ensure consistent height */
+    min-height: 63px;
 }
 
 /* Şifre Inputu Kapsayıcı Stili */
@@ -775,7 +775,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     margin-top: 0;
-    margin-bottom: calc(var(--keyboard-height, 0px) + 40px); /* Dinamik margin */
+    margin-bottom: calc(var(--keyboard-height, 0px) + 40px);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     transition: background-color 0.2s, opacity 0.2s;
@@ -790,17 +790,17 @@ body {
 
 /* TC 11 hane olduğunda pozisyon kaydırma */
 .continue-button.shifted {
-    top: 241px !important; /* 231px yerine 241px */
+    top: 241px !important;
 }
 
 /* TC hata mesajı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted {
-    top: 241px !important; /* 231px yerine 241px */
+    top: 241px !important;
 }
 
 /* TC hata mesajı + şifre alanı göründüğünde pozisyon kaydırma */
 .continue-button.error-shifted.shifted {
-    top: 316px !important; /* 306px yerine 316px */
+    top: 316px !important;
 }
 
 /* Aktif buton (TCKN girişi başladığında veya şifre tamamlandığında) */
@@ -836,7 +836,7 @@ body {
 /* Telefon Doğrulama Butonu */
 .button-phone {
     position: absolute;
-    top: 150px; /* Butonu yukarı çıkardık (önceki 175px) */
+    top: 170px; /* Butonu aşağıya aldık (önceki 150px) */
     left: 50%;
     transform: translateX(-50%);
     font-family: inherit;
@@ -852,7 +852,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     margin-top: 0;
-    margin-bottom: calc(var(--keyboard-height, 0px) + 40px); /* Dinamik margin */
+    margin-bottom: calc(var(--keyboard-height, 0px) + 40px);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     transition: background-color 0.2s, opacity 0.2s, box-shadow 0.1s;
@@ -898,7 +898,7 @@ body {
 /* Doğrula Butonu Kapsayıcı Stili */
 .verify-button-container {
     position: absolute;
-    top: 350px; /* Kapsayıcıyı yukarı çıkardık (önceki 380px) */
+    top: 370px; /* Kapsayıcıyı aşağıya aldık (önceki 350px) */
     left: 50%;
     transform: translateX(-50%);
     width: 350px;
@@ -1198,7 +1198,7 @@ body {
 
     .verify-button-container {
         position: absolute;
-        top: 300px; /* Mobil için yukarı çıkarıldı (önceki 330px) */
+        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1209,11 +1209,11 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .verification-subtitle {
-        font-size: 12px; /* Mobil için daha küçük font */
+        font-size: 12px;
         color: #E6E6E6;
         text-align: center;
         margin-top: 8px;
@@ -1246,7 +1246,7 @@ body {
     }
 
     .button-phone {
-        top: 90px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
     }
 
     .bekleme-content {
@@ -1360,19 +1360,19 @@ body {
     }
 
     .continue-button.shifted {
-        top: 190px !important; /* 180px yerine 190px */
+        top: 190px !important;
     }
 
     .continue-button.error-shifted {
-        top: 196px !important; /* 186px yerine 196px */
+        top: 196px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 265px !important; /* 255px yerine 265px */
+        top: 265px !important;
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .phone-error {
@@ -1471,7 +1471,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* Mobil için başlığı aşağıya indir */
+        top: 220px;
     }
 }
 
@@ -1502,7 +1502,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px; /* Küçük ekranlar için ayar */
+        top: 230px;
     }
 
     .new-container {
@@ -1513,7 +1513,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px; /* Küçük ekranlar için başlığı aşağıya indir */
+        top: 200px;
     }
 
     .new-lower-container {
@@ -1556,23 +1556,23 @@ body {
     }
 
     .continue-button.shifted {
-        top: 175px !important; /* 165px yerine 175px */
+        top: 175px !important;
     }
 
     .continue-button.error-shifted {
-        top: 181px !important; /* 171px yerine 181px */
+        top: 181px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 250px !important; /* 240px yerine 250px */
+        top: 250px !important;
     }
 
     .button-phone {
-        top: 80px; /* Butonu yukarı çıkardık (önceki 100px) */
+        top: 100px; /* Butonu aşağıya aldık (önceki 80px) */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .phone-error {
@@ -1617,13 +1617,13 @@ body {
     }
 
     .verify-button-container {
-        top: 280px; /* Küçük ekranlar için yukarı çıkarıldı (önceki 310px) */
+        top: 300px; /* Kapsayıcıyı aşağıya aldık (önceki 280px) */
         max-width: 300px;
         width: 90%;
     }
 
     .verification-subtitle {
-        font-size: 12px; /* Mobil için daha küçük font */
+        font-size: 12px;
         margin-top: 8px;
     }
 
@@ -1710,7 +1710,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 245px; /* Orta boy ekranlar için ayar */
+        top: 245px;
     }
 
     .new-container {
@@ -1721,7 +1721,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* Orta boy ekranlar için başlığı aşağıya indir */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -1760,11 +1760,11 @@ body {
     }
 
     .button-phone {
-        top: 90px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 120px; /* Butonu aşağıya aldık (önceki 90px) */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .phone-error {
@@ -1809,13 +1809,13 @@ body {
     }
 
     .verify-button-container {
-        top: 300px; /* Orta boy ekranlar için yukarı çıkarıldı (önceki 330px) */
+        top: 330px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
         max-width: 340px;
         width: 90%;
     }
 
     .verification-subtitle {
-        font-size: 12px; /* Mobil için daha küçük font */
+        font-size: 12px;
         margin-top: 8px;
     }
 
@@ -1875,15 +1875,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 281px !important; /* 271px yerine 281px */
+        top: 281px !important;
     }
 }
 
@@ -1914,7 +1914,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 265px; /* Büyük ekranlar için ayar */
+        top: 265px;
     }
 
     .new-container {
@@ -1925,7 +1925,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 240px; /* Büyük ekranlar için başlığı aşağıya indir */
+        top: 240px;
     }
 
     .new-lower-container {
@@ -1964,11 +1964,11 @@ body {
     }
 
     .button-phone {
-        top: 100px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 130px; /* Butonu aşağıya aldık (önceki 100px) */
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .phone-error {
@@ -2013,13 +2013,13 @@ body {
     }
 
     .verify-button-container {
-        top: 320px; /* Büyük ekranlar için yukarı çıkarıldı (önceki 350px) */
+        top: 340px; /* Kapsayıcıyı aşağıya aldık (önceki 320px) */
         max-width: 360px;
         width: 90%;
     }
 
     .verification-subtitle {
-        font-size: 12px; /* Mobil için daha küçük font */
+        font-size: 12px;
         margin-top: 8px;
     }
 
@@ -2079,15 +2079,15 @@ body {
     }
 
     .continue-button.shifted {
-        top: 216px !important; /* 206px yerine 216px */
+        top: 216px !important;
     }
 
     .continue-button.error-shifted {
-        top: 216px !important; /* 206px yerine 216px */
+        top: 216px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 291px !important; /* 281px yerine 291px */
+        top: 291px !important;
     }
 }
 
@@ -2212,11 +2212,11 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* Yüksek DPI için başlığı aşağıya indir */
+        top: 220px;
     }
 
     .password-input-wrapper {
-        top: 68px !important; /* Çok az aşağıda yer alsın */
+        top: 68px !important;
     }
 
     .action-links.shifted {
@@ -2232,27 +2232,27 @@ body {
     }
 
     .continue-button.shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 281px !important; /* 271px yerine 281px */
+        top: 281px !important;
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .button-phone {
-        top: 90px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
     }
 
     .verify-button-container {
-        top: 300px; /* Yüksek DPI için yukarı çıkarıldı (önceki 330px) */
+        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
     }
 }
 
@@ -2346,7 +2346,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* iOS için başlığı aşağıya indir */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2356,7 +2356,7 @@ body {
     }
 
     .password-input-wrapper {
-        top: 68px !important; /* Çok az aşağıda yer alsın */
+        top: 68px !important;
     }
 
     .action-links {
@@ -2376,27 +2376,27 @@ body {
     }
 
     .continue-button.shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 281px !important; /* 271px yerine 281px */
+        top: 281px !important;
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .button-phone {
-        top: 90px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
     }
 
     .verify-button-container {
-        top: 300px; /* iOS için yukarı çıkarıldı (önceki 330px) */
+        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
     }
 }
 
@@ -2486,7 +2486,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px; /* Ultra yüksek DPI için başlığı aşağıya indir */
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2496,7 +2496,7 @@ body {
     }
 
     .password-input-wrapper {
-        top: 68px !important; /* Çok az aşağıda yer alsın */
+        top: 68px !important;
     }
 
     .action-links {
@@ -2516,27 +2516,27 @@ body {
     }
 
     .continue-button.shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted {
-        top: 206px !important; /* 196px yerine 206px */
+        top: 206px !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 281px !important; /* 271px yerine 281px */
+        top: 281px !important;
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .button-phone {
-        top: 90px; /* Butonu yukarı çıkardık (önceki 115px) */
+        top: 110px; /* Butonu aşağıya aldık (önceki 90px) */
     }
 
     .verify-button-container {
-        top: 300px; /* Ultra yüksek DPI için yukarı çıkarıldı (önceki 330px) */
+        top: 320px; /* Kapsayıcıyı aşağıya aldık (önceki 300px) */
     }
 }
 
@@ -2564,7 +2564,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 260px; /* Yatay mod için başlığı aşağıya indir */
+        top: 260px;
     }
 
     .new-lower-container {
@@ -2603,7 +2603,7 @@ body {
     }
 
     .phone-input-wrapper {
-        top: 40px; /* Inputu aşağıya kaydırdık */
+        top: 40px;
     }
 
     .password-input-wrapper {
@@ -2624,19 +2624,19 @@ body {
     }
 
     .continue-button.shifted {
-        top: 41vh !important; /* 40vh yerine 41vh */
+        top: 41vh !important;
     }
 
     .continue-button.error-shifted {
-        top: 41vh !important; /* 40vh yerine 41vh */
+        top: 41vh !important;
     }
 
     .continue-button.error-shifted.shifted {
-        top: 49vh !important; /* 48vh yerine 49vh */
+        top: 49vh !important;
     }
 
     .button-phone {
-        top: 30vh; /* Butonu yukarı çıkardık (önceki 35vh) */
+        top: 35vh; /* Butonu aşağıya aldık (önceki 30vh) */
         width: 90% !important;
         max-width: 380px !important;
     }
@@ -2683,13 +2683,13 @@ body {
     }
 
     .verify-button-container {
-        top: 35vh; /* Yatay modda yukarı çıkarıldı (önceki 40vh) */
+        top: 40vh; /* Kapsayıcıyı aşağıya aldık (önceki 35vh) */
         max-width: 340px;
         width: 90%;
     }
 
     .verification-subtitle {
-        font-size: 12px; /* Mobil için daha küçük font */
+        font-size: 12px;
         margin-top: 8px;
     }
 
