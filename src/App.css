@@ -1198,7 +1198,7 @@ body {
 
     .verify-button-container {
         position: absolute;
-        top: 300px;
+        top: 320px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1227,10 +1227,6 @@ body {
         margin: 0 auto;
     }
 
-    .input-wrapper {
-        top: 230px;
-    }
-
     .password-input-wrapper {
         position: absolute;
         top: 68px;
@@ -1246,6 +1242,7 @@ body {
     .button-phone {
         width: 90% !important;
         max-width: 300px !important;
+        margin: 0 auto;
     }
 
     .button-phone {
@@ -1458,7 +1455,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .password-input-wrapper {
@@ -1474,7 +1471,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px;
+        top: 220px;
     }
 }
 
@@ -1505,7 +1502,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 210px;
+        top: 230px;
     }
 
     .new-container {
@@ -1516,7 +1513,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 180px;
+        top: 200px;
     }
 
     .new-lower-container {
@@ -1620,7 +1617,7 @@ body {
     }
 
     .verify-button-container {
-        top: 280px;
+        top: 300px;
         max-width: 300px;
         width: 90%;
     }
@@ -1713,7 +1710,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 340px;
-        top: 225px;
+        top: 245px;
     }
 
     .new-container {
@@ -1724,7 +1721,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px;
+        top: 220px;
     }
 
     .new-lower-container {
@@ -1812,7 +1809,7 @@ body {
     }
 
     .verify-button-container {
-        top: 310px;
+        top: 330px;
         max-width: 340px;
         width: 90%;
     }
@@ -1917,7 +1914,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 360px;
-        top: 245px;
+        top: 265px;
     }
 
     .new-container {
@@ -1928,7 +1925,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 220px;
+        top: 240px;
     }
 
     .new-lower-container {
@@ -2016,7 +2013,7 @@ body {
     }
 
     .verify-button-container {
-        top: 320px;
+        top: 340px;
         max-width: 360px;
         width: 90%;
     }
@@ -2211,11 +2208,11 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container.phone-verification-title {
-        top: 200px;
+        top: 220px;
     }
 
     .password-input-wrapper {
@@ -2255,7 +2252,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px;
+        top: 320px;
     }
 }
 
@@ -2338,7 +2335,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container {
@@ -2349,7 +2346,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px;
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2399,7 +2396,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px;
+        top: 320px;
     }
 }
 
@@ -2478,7 +2475,7 @@ body {
     .input-wrapper {
         width: 100%;
         max-width: 300px;
-        top: 230px;
+        top: 250px;
     }
 
     .new-container {
@@ -2489,7 +2486,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 200px;
+        top: 220px;
     }
 
     .new-lower-container {
@@ -2539,7 +2536,7 @@ body {
     }
 
     .verify-button-container {
-        top: 300px;
+        top: 320px;
     }
 }
 
@@ -2567,7 +2564,7 @@ body {
     }
 
     .new-container.phone-verification-title {
-        top: 240px;
+        top: 260px;
     }
 
     .new-lower-container {
@@ -2686,7 +2683,7 @@ body {
     }
 
     .verify-button-container {
-        top: 38vh;
+        top: 40vh;
         max-width: 340px;
         width: 90%;
     }
