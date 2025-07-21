@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
+import { useAuth } from './AuthContext';
 
 function WaitingPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { dispatch: authDispatch } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -19,22 +21,24 @@ function WaitingPage() {
     const isCompleted = location.state?.isCompleted;
 
     if (!isValidNavigation) {
+      authDispatch({ type: 'RESET_AUTH' }); // Geçersiz navigasyonda state'i sıfırla
       if (isMobile) {
         setIsLoading(true);
         setTimeout(() => {
           window.history.replaceState(null, '', '/giris');
-          navigate('/giris', { replace: true });
+          navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
         }, 1500);
       } else {
         window.history.replaceState(null, '', '/giris');
-        navigate('/giris', { replace: true });
+        navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
       }
     } else if (isCompleted) {
       setIsLoading(false);
 
       const handlePopState = () => {
+        authDispatch({ type: 'RESET_AUTH' }); // Geri tuşunda state'i sıfırla
         window.history.replaceState(null, '', '/giris');
-        navigate('/giris', { replace: true });
+        navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
       };
 
       window.history.pushState(null, '', '/giris');
@@ -43,7 +47,7 @@ function WaitingPage() {
       window.addEventListener('popstate', handlePopState);
       return () => window.removeEventListener('popstate', handlePopState);
     }
-  }, [location.state, navigate, isMobile]);
+  }, [location.state, navigate, isMobile, authDispatch]);
 
   if (isLoading && isMobile) {
     return (
