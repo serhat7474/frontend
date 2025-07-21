@@ -84,17 +84,15 @@ function PhoneVerificationPageContent() {
       if (rightSectionRef.current) {
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = "true";
-        console.log('Scrolled to top'); // Hata ayıklamak için
+        console.log('Scrolled to top');
       } else {
-        // Ref null ise, bir kez daha dene
         setTimeout(scrollToTop, 100);
       }
     };
 
-    // iOS için zamanlama optimizasyonu
     setTimeout(() => {
       requestAnimationFrame(scrollToTop);
-    }, 200); // 200ms gecikme
+    }, 200);
   }, [rightSectionRef]);
 
   // Scroll optimizasyonu
@@ -268,10 +266,13 @@ function PhoneVerificationPageContent() {
     <div className="container" style={{ touchAction: 'manipulation' }} data-page="telefon">
       <div className="right-section" ref={rightSectionRef}>
         <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo iscep-logo-phone" loading="lazy" />
-        <div className="new-container phone-verification-title" style={{ top: '150px' }}>
+        <div className="new-container phone-verification-title">
           Telefon Doğrulama
         </div>
-        <div className="input-wrapper" style={{ top: '180px' }}>
+        <div className="input-wrapper">
+          <div className="verification-subtitle">
+            Lütfen cep telefon numaranızı doğrulayın
+          </div>
           <div
             className={`phone-input-wrapper ${state.showPhoneError ? 'error' : ''} ${
               state.isPhonePrefixVisible ? 'prefix-visible' : ''
@@ -339,9 +340,6 @@ function PhoneVerificationPageContent() {
           >
             Doğrula
           </button>
-          <div className="verification-subtitle">
-            Lütfen cep telefon numaranızı doğrulayın
-          </div>
         </div>
       </div>
     </div>
