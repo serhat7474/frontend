@@ -38,14 +38,14 @@ function WaitingPage() {
       return;
     }
 
-    // Geri tuşu için popstate dinleyicisi ekle
-    const handlePopState = () => {
+    // Geri tuşu için popstate dinleyicisi
+    const handlePopState = (event) => {
+      event.preventDefault(); // Varsayılan davranışı engelle
       authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
-      window.history.replaceState(null, '', '/giris');
-      navigate('/giris', { replace: true });
+      navigate('/giris', { replace: true }); // /giris sayfasına yönlendir
     };
 
-    // Her zaman popstate dinleyicisini ekle
+    // Geçerli sayfa yığınına ekle ve popstate dinleyicisini bağla
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', handlePopState);
 
