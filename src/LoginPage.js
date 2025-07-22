@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
+import { useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -12,6 +13,7 @@ function LoginPage() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { rightSectionRef } = useScroll();
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -20,7 +22,7 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Handle navigation from WaitingPage or PhoneVerification
+  // PhoneVerificationPage veya WaitingPage'den dönüşte navigasyon ve kaydırma sıfırlama
   useEffect(() => {
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
@@ -30,10 +32,25 @@ function LoginPage() {
         isTcBold: false,
         showTcError: false,
       });
-    }
-  }, [location.state, dispatch]);
 
-  // Sync localState with inputValue to ensure UI consistency
+      // Geri dönüldüğünde kaydırmayı en üste sıfırla
+      const scrollToTop = () => {
+        if (rightSectionRef.current) {
+          rightSectionRef.current.scrollTop = 0;
+          rightSectionRef.current.dataset.loaded = "true";
+          console.log('LoginPage: Sayfa en üste kaydırıldı');
+        } else {
+          setTimeout(scrollToTop, 100);
+        }
+      };
+
+      setTimeout(() => {
+        requestAnimationFrame(scrollToTop);
+      }, 200);
+    }
+  }, [location.state, dispatch, rightSectionRef]);
+
+  // inputValue ile localState'i senkronize et
   useEffect(() => {
     setLocalState((prev) => ({
       ...prev,
@@ -46,7 +63,7 @@ function LoginPage() {
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
-      const rightSection = document.querySelector('.right-section');
+      const rightSection = rightSectionRef.current;
       if (rightSection) {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
@@ -69,11 +86,11 @@ function LoginPage() {
         }
       }
     }
-  }, [inputValue]);
+  }, [inputValue, rightSectionRef]);
 
   useEffect(() => {
     const handleTcFocus = () => {
-      const rightSection = document.querySelector('.right-section');
+      const rightSection = rightSectionRef.current;
       if (!rightSection || !tcInputRef.current) return;
 
       if (isIOS()) {
@@ -108,7 +125,7 @@ function LoginPage() {
     return () => {
       if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
     };
-  }, []);
+  }, [rightSectionRef]);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -121,13 +138,13 @@ function LoginPage() {
       navigator.virtualKeyboard.ongeometrychange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = document.querySelector('.right-section');
+        const rightSection = rightSectionRef.current;
         if (rightSection) {
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
     } else if (isIOS()) {
-      const rightSection = document.querySelector('.right-section');
+      const rightSection = rightSectionRef.current;
       if (rightSection) {
         rightSection.style.paddingBottom = '150px';
       }
@@ -136,7 +153,7 @@ function LoginPage() {
     return () => {
       document.head.removeChild(meta);
     };
-  }, []);
+  }, [rightSectionRef]);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
@@ -253,7 +270,7 @@ function LoginPage() {
   return (
     <form onSubmit={handleFormSubmit} style={{ touchAction: 'manipulation' }}>
       <div className="container">
-        <div className="right-section">
+        <div className="right-section" ref={rightSectionRef}>
           <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo" loading="lazy" />
           <div className="user-icon">
             <img src="/user.png" alt="Kullanıcı Simgesi" loading="lazy" />
@@ -273,7 +290,7 @@ function LoginPage() {
               <label
                 className={`tc-label ${localState.isTcActive ? 'hovered' : ''}`}
                 htmlFor="tc-input"
-                >
+              >
                 Müşteri Numarası /{' '}
                 <span className={`tc-label-part ${localState.isTcBold ? 'bold' : ''}`}>
                   TCKN-YKN
@@ -361,7 +378,7 @@ function LoginPage() {
                     onChange={(e) => handleNumberInput(e, 'SET_PASSWORD_VALUE', 6)}
                     onFocus={handlePasswordFocus}
                     onBlur={handlePasswordBlur}
-                    className={`new-input password-input ${
+                    className={`new modifiye password-input ${
                       inputValue.length === 11 ? 'no-right-line' : ''
                     }`}
                     autoComplete="new-password"
