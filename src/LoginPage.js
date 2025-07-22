@@ -22,7 +22,26 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // PhoneVerificationPage veya WaitingPage'den dönüşte navigasyon ve kaydırma sıfırlama
+  const scrollToInput = useCallback((inputRef, offset = 200) => {
+    const rightSection = rightSectionRef.current;
+    if (!rightSection || !inputRef.current) return;
+
+    const input = inputRef.current;
+    const inputRect = input.getBoundingClientRect();
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (isIOS()) {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        }
+      });
+    }, 200);
+  }, [rightSectionRef]);
+
   useEffect(() => {
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
@@ -32,25 +51,9 @@ function LoginPage() {
         isTcBold: false,
         showTcError: false,
       });
-
-      // Geri dönüldüğünde kaydırmayı en üste sıfırla
-      const scrollToTop = () => {
-        if (rightSectionRef.current) {
-          rightSectionRef.current.scrollTop = 0;
-          rightSectionRef.current.dataset.loaded = "true";
-          console.log('LoginPage: Sayfa en üste kaydırıldı');
-        } else {
-          setTimeout(scrollToTop, 100);
-        }
-      };
-
-      setTimeout(() => {
-        requestAnimationFrame(scrollToTop);
-      }, 200);
     }
-  }, [location.state, dispatch, rightSectionRef]);
+  }, [location.state, dispatch]);
 
-  // inputValue ile localState'i senkronize et
   useEffect(() => {
     setLocalState((prev) => ({
       ...prev,
@@ -63,69 +66,20 @@ function LoginPage() {
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
-      const rightSection = rightSectionRef.current;
-      if (rightSection) {
-        const passwordInput = passwordInputRef.current;
-        const inputRect = passwordInput.getBoundingClientRect();
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-
-        if (isIOS()) {
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-          }, 200);
-        } else {
-          const offset = 200;
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            });
-          }, 200);
-        }
-      }
+      scrollToInput(passwordInputRef);
     }
-  }, [inputValue, rightSectionRef]);
+  }, [inputValue, scrollToInput]);
 
   useEffect(() => {
-    const handleTcFocus = () => {
-      const rightSection = rightSectionRef.current;
-      if (!rightSection || !tcInputRef.current) return;
-
-      if (isIOS()) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }, 200);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const tcInput = tcInputRef.current;
-      const inputRect = tcInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 100;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        });
-      }, 200);
-    };
-
+    const handleTcFocus = () => scrollToInput(tcInputRef, 100);
     const tcInput = tcInputRef.current;
     if (tcInput) {
       tcInput.addEventListener('focus', handleTcFocus);
     }
-
     return () => {
       if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
     };
-  }, [rightSectionRef]);
+  }, [scrollToInput]);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -133,21 +87,22 @@ function LoginPage() {
     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
     document.head.appendChild(meta);
 
+    const rightSection = rightSectionRef.current;
     if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
-      navigator.virtualKeyboard.ongeometrychange = () => {
+      const handleGeometryChange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = rightSectionRef.current;
         if (rightSection) {
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
-    } else if (isIOS()) {
-      const rightSection = rightSectionRef.current;
-      if (rightSection) {
-        rightSection.style.paddingBottom = '150px';
-      }
+      navigator.virtualKeyboard.addEventListener('geometrychange', handleGeometryChange);
+      return () => {
+        navigator.virtualKeyboard.removeEventListener('geometrychange', handleGeometryChange);
+      };
+    } else if (isIOS() && rightSection) {
+      rightSection.style.paddingBottom = '150px';
     }
 
     return () => {
@@ -267,6 +222,13 @@ function LoginPage() {
     [handleContinueClick]
   );
 
+  const getTcErrorMessage = () => {
+    if (inputValue.length > 0 && inputValue.length !== 11) {
+      return 'TCKN veya YKN 11 haneli olmalıdır.';
+    }
+    return 'Hatalı giriş yaptınız, lütfen tekrar deneyiniz.';
+  };
+
   return (
     <form onSubmit={handleFormSubmit} style={{ touchAction: 'manipulation' }}>
       <div className="container">
@@ -308,11 +270,11 @@ function LoginPage() {
                 onFocus={handleTcFocus}
                 onBlur={handleTcBlur}
                 onKeyDown={handleTcKeyDown}
-                className={`new-input tc-input ${localState.showTcError ? 'error' : ''}`}
+                className={localState.showTcError ? 'new-input tc-input error' : 'new-input tc-input'}
                 autoComplete="off"
                 autoCapitalize="none"
-                aria-describedby="tc-error"
                 aria-label="Müşteri Numarası veya TCKN-YKN"
+                aria-describedby={localState.showTcError ? 'tc-error' : undefined}
               />
               {inputValue.length > 0 && (
                 <button
@@ -320,7 +282,7 @@ function LoginPage() {
                   type="button"
                   onClick={handleClearTc}
                   onTouchStart={handleClearTc}
-                  aria-label="TCKN-YKN’yi temizle"
+                  aria-label="TCKN-YKN temizle"
                 >
                   ✕
                 </button>
@@ -334,7 +296,7 @@ function LoginPage() {
                     loading="lazy"
                     onError={() => console.warn('Hata simgesi yüklenemedi')}
                   />
-                  Hatalı giriş yaptınız, lütfen tekrar deneyiniz.
+                  {getTcErrorMessage()}
                 </div>
               )}
             </div>
@@ -378,10 +340,9 @@ function LoginPage() {
                     onChange={(e) => handleNumberInput(e, 'SET_PASSWORD_VALUE', 6)}
                     onFocus={handlePasswordFocus}
                     onBlur={handlePasswordBlur}
-                    className={`new-input password-input ${inputValue.length === 11 ? 'no-right-line' : ''}`}
+                    className={inputValue.length === 11 ? 'new-input password-input no-right-line' : 'new-input password-input'}
                     autoComplete="new-password"
                     autoCapitalize="none"
-                    aria-describedby="password-error"
                     aria-label="Şifre"
                   />
                   {passwordValue.length > 0 && (
@@ -402,7 +363,7 @@ function LoginPage() {
                       {[...Array(6)].map((_, index) => (
                         <span
                           key={index}
-                          className={`dot ${index < passwordValue.length ? '' : 'inactive'}`}
+                          className={`dot ${index < passwordValue.length ? 'active' : 'inactive'}`}
                         />
                       ))}
                     </span>
@@ -411,7 +372,6 @@ function LoginPage() {
               </div>
             )}
             <button
-              type="submit"
               className={`continue-button ${
                 inputValue.length > 0 &&
                 (inputValue.length < 11 || (inputValue.length === 11 && passwordValue.length === 6))
@@ -427,7 +387,7 @@ function LoginPage() {
               Devam
             </button>
           </div>
-          <div style={{ height: '135vh', width: '100%' }}></div>
+          <div className="spacer"></div>
         </div>
       </div>
     </form>
