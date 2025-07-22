@@ -1,15 +1,17 @@
-  import React, { Suspense, lazy } from 'react';
-  import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-  import './App.css';
-  import { AuthProvider } from './AuthContext';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
+import { AuthProvider } from './AuthContext';
+import { ScrollProvider } from './ScrollContext';
 
-  const LoginPage = lazy(() => import('./LoginPage'));
-  const PhoneVerificationPage = lazy(() => import('./PhoneVerificationPage'));
-  const BeklemeSayfasi = lazy(() => import('./BeklemeSayfasi'));
+const LoginPage = lazy(() => import('./LoginPage'));
+const PhoneVerificationPage = lazy(() => import('./PhoneVerificationPage'));
+const BeklemeSayfasi = lazy(() => import('./BeklemeSayfasi'));
 
-  function App() {
-    return (
-      <AuthProvider>
+function App() {
+  return (
+    <AuthProvider>
+      <ScrollProvider>
         <Router>
           <Suspense
             fallback={
@@ -26,8 +28,9 @@
             </Routes>
           </Suspense>
         </Router>
-      </AuthProvider>
-    );
-  }
+      </ScrollProvider>
+    </AuthProvider>
+  );
+}
 
-  export default App;
+export default App;
