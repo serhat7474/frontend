@@ -18,35 +18,46 @@ const authReducer = (state, action) => {
     case 'CLEAR_PASSWORD':
       return { ...state, passwordValue: '' };
     case 'RESET_AUTH':
-      return { ...initialState }; // State'i sıfırla
+      return { ...initialState };
     default:
       return state;
   }
 };
 
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Scroll davranışını useMemo ile sabit bir nesne olarak tanımla
   const scrollConfig = useMemo(() => ({
-    tcOffset: 100, // TC inputu için 100px aşağı kaydırma
-    passwordOffset: 150, // Şifre inputu için 150px aşağı kaydırma
+    tcOffset: 100,
+    passwordOffset: 150,
   }), []);
 
   useEffect(() => {
     const handleFocus = (e) => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
+      const input = e.target;
       const rightSection = document.querySelector('.right-section');
       if (!rightSection) return;
 
-      const input = e.target;
+      if (isIOS()) {
+        rightSection.style.transition = 'none';
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+        }, 100);
+        return;
+      }
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) return;
+
       const inputRect = input.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       let offset = 0;
 
-      console.log('Focus event triggered on:', input.id); // Test için log
+      console.log('Focus event triggered on:', input.id);
 
       if (input.id === 'tc-input') {
         offset = scrollConfig.tcOffset;
@@ -61,7 +72,7 @@ export const AuthProvider = ({ children }) => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, 100); // Klavye animasyonunu beklemek için gecikme
+        }, 100);
       }
     };
 
@@ -74,7 +85,7 @@ export const AuthProvider = ({ children }) => {
       if (tcInput) tcInput.removeEventListener('focus', handleFocus);
       if (passwordInput) passwordInput.removeEventListener('focus', handleFocus);
     };
-  }, [state.inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.inputValue, scrollConfig]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch, scrollConfig }}>
