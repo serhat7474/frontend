@@ -20,16 +20,7 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Sayfa yüklendiğinde veya geri dönüldüğünde scroll'u en üste ayarla ve state'i sıfırla
   useEffect(() => {
-    const rightSection = document.querySelector('.right-section');
-    if (rightSection) {
-      rightSection.scrollTop = 0;
-      console.log('LoginPage: Sayfa en üste kaydırıldı');
-    } else {
-      console.warn('LoginPage: rightSection mevcut değil');
-    }
-
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
       setLocalState({
@@ -38,20 +29,11 @@ function LoginPage() {
         isTcBold: false,
         showTcError: false,
       });
-      // Input'ların boş olduğundan emin ol
-      if (tcInputRef.current) {
-        tcInputRef.current.value = '';
-      }
-      if (passwordInputRef.current) {
-        passwordInputRef.current.value = '';
-      }
-      console.log('LoginPage: State sıfırlandı, fromWaitingPage:', location.state?.fromWaitingPage);
     }
   }, [location.state, dispatch]);
 
-  // Şifre input'una otomatik odaklanma (sadece TCKN 11 haneli olduğunda ve geri dönülmediğinde)
   useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current && !location.state?.fromPhoneVerification && !location.state?.fromWaitingPage) {
+    if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
       const rightSection = document.querySelector('.right-section');
       if (rightSection) {
@@ -63,7 +45,6 @@ function LoginPage() {
           setTimeout(() => {
             requestAnimationFrame(() => {
               passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              console.log('iOS: Şifre inputu için scrollIntoView tetiklendi');
             });
           }, 200);
         } else {
@@ -72,49 +53,38 @@ function LoginPage() {
             requestAnimationFrame(() => {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Android: Şifre inputu için scroll tamamlandı', { scrollTo });
             });
           }, 200);
         }
       }
     }
-  }, [inputValue, location.state]);
+  }, [inputValue]);
 
-  // TCKN input'u için fokus yönetimi
   useEffect(() => {
     const handleTcFocus = () => {
       const rightSection = document.querySelector('.right-section');
-      if (!rightSection || !tcInputRef.current) {
-        console.warn('LoginPage: rightSection veya tcInputRef mevcut değil');
-        return;
-      }
+      if (!rightSection || !tcInputRef.current) return;
 
       if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log('iOS: TCKN inputu için scrollIntoView tetiklendi');
           });
         }, 200);
         return;
       }
 
       const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) {
-        console.warn('Android cihaz değil');
-        return;
-      }
+      if (!isAndroid) return;
 
       const tcInput = tcInputRef.current;
       const inputRect = tcInput.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       const offset = 100;
-
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Android: TCKN inputu için scroll tamamlandı', { scrollTo });
         });
       }, 200);
     };
@@ -125,13 +95,10 @@ function LoginPage() {
     }
 
     return () => {
-      if (tcInput) {
-        tcInput.removeEventListener('focus', handleTcFocus);
-      }
+      if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
     };
   }, []);
 
-  // Meta tag ve sanal klavye ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
