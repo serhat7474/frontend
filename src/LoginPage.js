@@ -2,13 +2,11 @@ import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
-import { useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 function LoginPage() {
   const { state, dispatch } = useAuth();
-  const { rightSectionRef } = useScroll();
   const { inputValue = '', passwordValue = '' } = state || {};
   const passwordInputRef = useRef(null);
   const tcInputRef = useRef(null);
@@ -22,23 +20,7 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Sayfa yüklendiğinde veya geri dönüldüğünde scroll'u en üste ayarla
   useEffect(() => {
-    const scrollToTop = () => {
-      if (rightSectionRef.current) {
-        rightSectionRef.current.scrollTop = 0;
-        console.log('LoginPage: Sayfa en üste kaydırıldı');
-      } else {
-        console.warn('LoginPage: rightSectionRef mevcut değil');
-        setTimeout(scrollToTop, 100);
-      }
-    };
-
-    setTimeout(() => {
-      requestAnimationFrame(scrollToTop);
-    }, 200);
-
-    // Geri dönüldüğünde state sıfırlama
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
       setLocalState({
@@ -47,15 +29,13 @@ function LoginPage() {
         isTcBold: false,
         showTcError: false,
       });
-      console.log('LoginPage: State sıfırlandı, fromPhoneVerification:', location.state?.fromPhoneVerification);
     }
-  }, [location.state, dispatch, rightSectionRef]);
+  }, [location.state, dispatch]);
 
-  // Şifre input'una otomatik odaklanma (sadece TCKN 11 haneli olduğunda)
   useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current && !location.state?.fromPhoneVerification) {
+    if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
-      const rightSection = rightSectionRef.current;
+      const rightSection = document.querySelector('.right-section');
       if (rightSection) {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
@@ -65,7 +45,6 @@ function LoginPage() {
           setTimeout(() => {
             requestAnimationFrame(() => {
               passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              console.log('iOS: Şifre inputu için scrollIntoView tetiklendi');
             });
           }, 200);
         } else {
@@ -74,49 +53,38 @@ function LoginPage() {
             requestAnimationFrame(() => {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Android: Şifre inputu için scroll tamamlandı', { scrollTo });
             });
           }, 200);
         }
       }
     }
-  }, [inputValue, rightSectionRef]);
+  }, [inputValue]);
 
-  // TCKN input'u için fokus yönetimi
   useEffect(() => {
     const handleTcFocus = () => {
-      const rightSection = rightSectionRef.current;
-      if (!rightSection || !tcInputRef.current) {
-        console.warn('LoginPage: rightSection veya tcInputRef mevcut değil');
-        return;
-      }
+      const rightSection = document.querySelector('.right-section');
+      if (!rightSection || !tcInputRef.current) return;
 
       if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log('iOS: TCKN inputu için scrollIntoView tetiklendi');
           });
         }, 200);
         return;
       }
 
       const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) {
-        console.warn('Android cihaz değil');
-        return;
-      }
+      if (!isAndroid) return;
 
       const tcInput = tcInputRef.current;
       const inputRect = tcInput.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       const offset = 100;
-
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Android: TCKN inputu için scroll tamamlandı', { scrollTo });
         });
       }, 200);
     };
@@ -127,13 +95,10 @@ function LoginPage() {
     }
 
     return () => {
-      if (tcInput) {
-        tcInput.removeEventListener('focus', handleTcFocus);
-      }
+      if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
     };
-  }, [rightSectionRef]);
+  }, []);
 
-  // Meta tag ve sanal klavye ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
@@ -145,13 +110,13 @@ function LoginPage() {
       navigator.virtualKeyboard.ongeometrychange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = rightSectionRef.current;
+        const rightSection = document.querySelector('.right-section');
         if (rightSection) {
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
     } else if (isIOS()) {
-      const rightSection = rightSectionRef.current;
+      const rightSection = document.querySelector('.right-section');
       if (rightSection) {
         rightSection.style.paddingBottom = '150px';
       }
@@ -160,7 +125,7 @@ function LoginPage() {
     return () => {
       document.head.removeChild(meta);
     };
-  }, [rightSectionRef]);
+  }, []);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
@@ -277,7 +242,7 @@ function LoginPage() {
   return (
     <form onSubmit={handleFormSubmit} style={{ touchAction: 'manipulation' }}>
       <div className="container">
-        <div className="right-section" ref={rightSectionRef}>
+        <div className="right-section">
           <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo" loading="lazy" />
           <div className="user-icon">
             <img src="/user.png" alt="Kullanıcı Simgesi" loading="lazy" />
