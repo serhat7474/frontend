@@ -76,7 +76,7 @@ function LoginPageContent() {
             requestAnimationFrame(() => {
               passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
-          }, 200);
+          }, 300); // Süreyi 300ms'ye artır
         } else {
           const offset = 200;
           setTimeout(() => {
@@ -84,7 +84,7 @@ function LoginPageContent() {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
             });
-          }, 200);
+          }, 300); // Süreyi 300ms'ye artır
         }
       }
     }
@@ -148,7 +148,12 @@ function LoginPageContent() {
     } else if (isIOS()) {
       const rightSection = rightSectionRef.current;
       if (rightSection) {
-        rightSection.style.paddingBottom = '150px';
+        rightSection.style.paddingBottom = '200px'; // iOS için padding artırıldı
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }, 300);
       }
     }
 
@@ -372,7 +377,7 @@ function LoginPageContent() {
                   <input
                     id="password-input"
                     ref={passwordInputRef}
-                    type="password"
+                    type="tel"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     maxLength="6"
