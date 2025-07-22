@@ -378,9 +378,7 @@ function LoginPage() {
                     onChange={(e) => handleNumberInput(e, 'SET_PASSWORD_VALUE', 6)}
                     onFocus={handlePasswordFocus}
                     onBlur={handlePasswordBlur}
-                    className={`new modifiye password-input ${
-                      inputValue.length === 11 ? 'no-right-line' : ''
-                    }`}
+                    className={`new-input password-input ${inputValue.length === 11 ? 'no-right-line' : ''}`}
                     autoComplete="new-password"
                     autoCapitalize="none"
                     aria-describedby="password-error"
