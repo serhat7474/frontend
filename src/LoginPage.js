@@ -20,6 +20,7 @@ function LoginPage() {
     showTcError: false,
   });
 
+  // Handle navigation from WaitingPage or PhoneVerification
   useEffect(() => {
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
@@ -31,6 +32,16 @@ function LoginPage() {
       });
     }
   }, [location.state, dispatch]);
+
+  // Sync localState with inputValue to ensure UI consistency
+  useEffect(() => {
+    setLocalState((prev) => ({
+      ...prev,
+      isTcActive: inputValue.length > 0,
+      isTcBold: inputValue.length > 0,
+      showTcError: false,
+    }));
+  }, [inputValue]);
 
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
@@ -262,7 +273,7 @@ function LoginPage() {
               <label
                 className={`tc-label ${localState.isTcActive ? 'hovered' : ''}`}
                 htmlFor="tc-input"
-              >
+                >
                 Müşteri Numarası /{' '}
                 <span className={`tc-label-part ${localState.isTcBold ? 'bold' : ''}`}>
                   TCKN-YKN
@@ -310,7 +321,8 @@ function LoginPage() {
                 </div>
               )}
             </div>
-            <div className={`action-links ${inputValue.length === 11 ? 'shifted' : ''} ${
+            <div
+              className={`action-links ${inputValue.length === 11 ? 'shifted' : ''} ${
                 localState.showTcError ? 'error-shifted' : ''
               }`}
             >
