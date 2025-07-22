@@ -21,7 +21,8 @@ function WaitingPage() {
     const isCompleted = location.state?.isCompleted;
 
     if (!isValidNavigation) {
-      authDispatch({ type: 'RESET_AUTH' }); // Geçersiz navigasyonda state'i sıfırla
+      authDispatch({ type: 'RESET_AUTH' });
+      console.log('WaitingPage: Geçersiz navigasyon, state sıfırlanıyor');
       if (isMobile) {
         setIsLoading(true);
         setTimeout(() => {
@@ -36,7 +37,8 @@ function WaitingPage() {
       setIsLoading(false);
 
       const handlePopState = () => {
-        authDispatch({ type: 'RESET_AUTH' }); // Geri tuşunda state'i sıfırla
+        authDispatch({ type: 'RESET_AUTH' });
+        console.log('WaitingPage: Geri tuşu tetiklendi, state sıfırlanıyor');
         window.history.replaceState(null, '', '/giris');
         navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
       };
