@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth, AuthProvider } from './AuthContext';
-import { ScrollProvider, useScroll } from './ScrollContext';
+import { useAuth } from './AuthContext';
+import { useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-function PhoneVerificationPageContent() {
+function PhoneVerificationPage() {
   const [state, setState] = React.useState({
     phoneNumber: '',
     isPhoneActive: false,
@@ -126,7 +126,7 @@ function PhoneVerificationPageContent() {
 
       const inputRect = phoneRef.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 200; // LoginPage'deki password-input ofsetine benzer, artırıldı
+      const offset = 200;
 
       console.log('Android: Scroll işlemi başlatılıyor', { inputRect, viewportHeight, offset });
 
@@ -136,7 +136,7 @@ function PhoneVerificationPageContent() {
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           console.log('Android: Scroll tamamlandı', { scrollTo });
         });
-      }, 300); // Klavye animasyonu için gecikme artırıldı
+      }, 300);
     };
 
     const handleBlurScroll = () => {
@@ -367,16 +367,6 @@ function PhoneVerificationPageContent() {
         <div style={{ height: '135vh', width: '100%' }}></div>
       </div>
     </div>
-  );
-}
-
-function PhoneVerificationPage() {
-  return (
-    <ScrollProvider>
-      <AuthProvider>
-        <PhoneVerificationPageContent />
-      </AuthProvider>
-    </ScrollProvider>
   );
 }
 
