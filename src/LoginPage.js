@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuth } from './AuthContext';
 
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 function LoginPage() {
   const { state, dispatch } = useAuth();
   const { inputValue = '', passwordValue = '' } = state || {};
@@ -18,7 +20,6 @@ function LoginPage() {
     showTcError: false,
   });
 
-  // Telefon doğrulama veya bekleme sayfasından geri dönüldüğünde state'i sıfırla
   useEffect(() => {
     if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
       dispatch({ type: 'RESET_AUTH' });
@@ -39,35 +40,53 @@ function LoginPage() {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 200;
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          });
-        }, 200);
+
+        if (isIOS()) {
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+          }, 200);
+        } else {
+          const offset = 200;
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+            });
+          }, 200);
+        }
       }
     }
   }, [inputValue]);
 
   useEffect(() => {
     const handleTcFocus = () => {
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid || !tcInputRef.current) return;
-
       const rightSection = document.querySelector('.right-section');
-      if (rightSection) {
-        const tcInput = tcInputRef.current;
-        const inputRect = tcInput.getBoundingClientRect();
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 100;
+      if (!rightSection || !tcInputRef.current) return;
+
+      if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+            tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 200);
+        return;
       }
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) return;
+
+      const tcInput = tcInputRef.current;
+      const inputRect = tcInput.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const offset = 100;
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        });
+      }, 200);
     };
 
     const tcInput = tcInputRef.current;
@@ -86,7 +105,7 @@ function LoginPage() {
     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
     document.head.appendChild(meta);
 
-    if ("virtualKeyboard" in navigator) {
+    if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
       navigator.virtualKeyboard.ongeometrychange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
@@ -96,6 +115,11 @@ function LoginPage() {
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
+    } else if (isIOS()) {
+      const rightSection = document.querySelector('.right-section');
+      if (rightSection) {
+        rightSection.style.paddingBottom = '150px';
+      }
     }
 
     return () => {
