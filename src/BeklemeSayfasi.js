@@ -28,12 +28,12 @@ function WaitingPage() {
         setTimeout(() => {
           window.history.replaceState(null, '', '/giris');
           authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
-          navigate('/giris', { replace: true });
+          navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
         }, 1500);
       } else {
         window.history.replaceState(null, '', '/giris');
         authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
-        navigate('/giris', { replace: true });
+        navigate('/giris', { replace: true, state: { fromWaitingPage: true } });
       }
       return;
     }
@@ -42,7 +42,7 @@ function WaitingPage() {
     const handlePopState = (event) => {
       event.preventDefault(); // Varsayılan davranışı engelle
       authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
-      navigate('/giris', { replace: true }); // /giris sayfasına yönlendir
+      navigate('/giris', { replace: true, state: { fromWaitingPage: true } }); // /giris sayfasına yönlendir
     };
 
     // Geçerli sayfa yığınına ekle ve popstate dinleyicisini bağla
