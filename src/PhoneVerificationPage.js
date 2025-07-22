@@ -103,30 +103,40 @@ function PhoneVerificationPageContent() {
 
     const handleFocusScroll = () => {
       const rightSection = rightSectionRef.current;
-      if (!rightSection || !phoneRef) return;
+      if (!rightSection || !phoneRef) {
+        console.warn('rightSectionRef veya phoneRef mevcut değil');
+        return;
+      }
 
       if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             phoneRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log('iOS: scrollIntoView tetiklendi');
           });
         }, 200);
         return;
       }
 
       const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
+      if (!isAndroid) {
+        console.warn('Android cihaz değil');
+        return;
+      }
 
       const inputRect = phoneRef.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 150;
+      const offset = 200; // LoginPage'deki password-input ofsetine benzer, artırıldı
+
+      console.log('Android: Scroll işlemi başlatılıyor', { inputRect, viewportHeight, offset });
 
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          console.log('Android: Scroll tamamlandı', { scrollTo });
         });
-      }, 200);
+      }, 300); // Klavye animasyonu için gecikme artırıldı
     };
 
     const handleBlurScroll = () => {
@@ -135,6 +145,7 @@ function PhoneVerificationPageContent() {
         rightSection.style.height = '100vh';
         rightSection.style.paddingBottom = isIOS() ? '150px' : '0';
         rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        console.log('Blur: Sayfa en üste kaydırıldı');
       }
     };
 
@@ -353,6 +364,7 @@ function PhoneVerificationPageContent() {
             Doğrula
           </button>
         </div>
+        <div style={{ height: '135vh', width: '100%' }}></div>
       </div>
     </div>
   );
