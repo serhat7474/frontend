@@ -122,7 +122,7 @@ function PhoneVerificationPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const offset = 250; // Android için daha fazla aşağı kaydırmak için offset artırıldı
+      const offset = 300; // Android için daha fazla aşağı kaydırmak için offset artırıldı (önceki 250'den 300'e)
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -355,6 +355,8 @@ function PhoneVerificationPageContent() {
             Doğrula
           </button>
         </div>
+        {/* Sayfa uzunluğunu arttırmak için ekstra boşluk */}
+        <div style={{ height: '300px' }}></div>
       </div>
     </div>
   );
