@@ -4,8 +4,6 @@ import './App.css';
 import { AuthProvider, useAuth } from './AuthContext';
 import { useScroll } from './ScrollContext';
 
-const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
 function LoginPageContent() {
   const { state, dispatch } = useAuth();
   const { inputValue = '', passwordValue = '' } = state || {};
@@ -13,7 +11,7 @@ function LoginPageContent() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { rightSectionRef } = useScroll();
+  const { rightSectionRef, scrollConfig, handleInputFocus } = useScroll();
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -21,24 +19,6 @@ function LoginPageContent() {
     isTcBold: inputValue.length > 0,
     showTcError: false,
   });
-
-  // Sayfa yüklendiğinde veya geri dönüldüğünde scroll'u en üste kaydır
-  useEffect(() => {
-    const scrollToTop = () => {
-      if (rightSectionRef.current) {
-        rightSectionRef.current.scrollTop = 0;
-        rightSectionRef.current.dataset.loaded = 'true';
-        console.log('LoginPage: Sayfa en üste kaydırıldı');
-      } else {
-        console.log('LoginPage: rightSectionRef null, tekrar deneniyor');
-        setTimeout(scrollToTop, 100);
-      }
-    };
-
-    setTimeout(() => {
-      requestAnimationFrame(scrollToTop);
-    }, 200);
-  }, [rightSectionRef, location.state]);
 
   // Handle navigation from WaitingPage or PhoneVerification
   useEffect(() => {
@@ -53,7 +33,7 @@ function LoginPageContent() {
     }
   }, [location.state, dispatch]);
 
-  // Sync localState with inputValue to ensure UI consistency
+  // Sync localState with inputValue
   useEffect(() => {
     setLocalState((prev) => ({
       ...prev,
@@ -67,95 +47,42 @@ function LoginPageContent() {
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
+      handleInputFocus(passwordInputRef, scrollConfig.passwordOffset);
       console.log('Şifre inputuna odaklanıldı');
     }
-  }, [inputValue]);
+  }, [inputValue, handleInputFocus, scrollConfig.passwordOffset]);
 
-  // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu ekranın ortasına gelsin)
-  useEffect(() => {
-    if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
-      const rightSection = rightSectionRef.current;
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      const passwordInput = passwordInputRef.current;
-
-      console.log('Scroll useEffect tetiklendi:', {
-        inputValueLength: inputValue.length,
-        isAndroid,
-        rightSectionExists: !!rightSection,
-        passwordInputExists: !!passwordInput,
-        userAgent: navigator.userAgent,
-      });
-
-      if (!passwordInput) {
-        console.log('Hata: passwordInput null');
-        return;
-      }
-
-      const inputRect = passwordInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-
-      console.log('Kaydırma hesaplaması:', {
-        inputRectTop: inputRect.top,
-        viewportHeight,
-        currentScrollTop: rightSection.scrollTop,
-      });
-
-      if (isAndroid) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
-            console.log('Android için kaydırma uygulanıyor:', { scrollTo });
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          });
-        }, 300);
-      } else if (isIOS()) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            console.log('iOS için scrollIntoView çağrıldı');
-            passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }, 300);
-      }
-    } else {
-      console.log('Scroll koşulu sağlanmadı:', {
-        inputValueLength: inputValue.length,
-        rightSectionExists: !!rightSectionRef.current,
-        passwordInputExists: !!passwordInputRef.current,
-      });
-    }
-  }, [inputValue, rightSectionRef]);
-
+  // Sanal klavye ve viewport ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
+    meta.content =
+      'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
     document.head.appendChild(meta);
 
+    const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
-      navigator.virtualKeyboard.ongeometrychange = () => {
+      const handleKeyboardGeometryChange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = rightSectionRef.current;
-        if (rightSection) {
-          rightSection.style.paddingBottom = `${kbHeight + 150}px`;
+        if (rightSectionRef.current) {
+          rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
+      navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
+      return () => {
+        navigator.virtualKeyboard.removeEventListener('geometrychange', handleKeyboardGeometryChange);
+        document.head.removeChild(meta);
+      };
     } else if (isIOS()) {
-      const rightSection = rightSectionRef.current;
-      if (rightSection) {
-        rightSection.style.paddingBottom = '200px';
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-          });
-        }, 300);
+      if (rightSectionRef.current) {
+        rightSectionRef.current.style.paddingBottom = '200px';
       }
+      return () => {
+        document.head.removeChild(meta);
+      };
     }
-
-    return () => {
-      document.head.removeChild(meta);
-    };
   }, [rightSectionRef]);
 
   const handleNumberInput = useCallback(
@@ -219,7 +146,8 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0,
     }));
-  }, [inputValue]);
+    handleInputFocus(tcInputRef, scrollConfig.tcOffset);
+  }, [inputValue, handleInputFocus, scrollConfig.tcOffset]);
 
   const handleTcBlur = useCallback(() => {
     if (!inputValue.length) {
@@ -233,7 +161,8 @@ function LoginPageContent() {
 
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
-  }, []);
+    handleInputFocus(passwordInputRef, scrollConfig.passwordOffset);
+  }, [handleInputFocus, scrollConfig.passwordOffset]);
 
   const handlePasswordBlur = useCallback(
     (e) => {
