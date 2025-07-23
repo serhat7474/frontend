@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, memo, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -71,21 +71,14 @@ function LoginPageContent() {
   }, [inputValue]);
 
   // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu göründüğünde)
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
       const passwordInput = passwordInputRef.current;
       const continueButton = document.querySelector('.continue-button');
-      const offset = 200; // Şifre inputu ve Devam butonu için sabit ofset
 
-      if (!passwordInput || !continueButton) {
-        console.log('Refler hazır değil, scroll atlandı:', {
-          passwordInput: !!passwordInput,
-          continueButton: !!continueButton,
-        });
-        return;
-      }
+      if (!passwordInput || !continueButton) return;
 
       const inputRect = passwordInput.getBoundingClientRect();
       const buttonRect = continueButton.getBoundingClientRect();
@@ -100,47 +93,21 @@ function LoginPageContent() {
         keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0; // Ekranın %30'u kadar
       }
 
-      const scrollToPosition = () => {
-        if (!rightSection || !passwordInput || !continueButton) return;
-        const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
-        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        console.log('Android için otomatik scroll tetiklendi:', {
-          scrollTo,
-          inputTop: inputRect.top,
-          viewportHeight,
-          keyboardHeight,
-        });
-      };
-
       if (isAndroid) {
+        const offset = 200; // Şifre inputu ve Devam butonu için daha fazla alan
         setTimeout(() => {
-          requestAnimationFrame(scrollToPosition);
-        }, 500); // Gecikmeyi artırdık (DOM render için)
+          requestAnimationFrame(() => {
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+            console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
+          });
+        }, 150);
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log('iOS için scrollIntoView tetiklendi');
           });
-        }, 500);
-      }
-
-      // Klavye değişikliğinde scroll'u tekrarla (Android için)
-      if (isAndroid && 'virtualKeyboard' in navigator) {
-        const handleKeyboardChange = () => {
-          keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
-          if (!rightSection || !passwordInput || !continueButton) return;
-          const updatedInputRect = passwordInput.getBoundingClientRect();
-          const updatedButtonRect = continueButton.getBoundingClientRect();
-          const scrollTo = rightSection.scrollTop + updatedInputRect.top - (viewportHeight - updatedInputRect.height - updatedButtonRect.height - keyboardHeight) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Klavye değişikliğinde scroll tekrarı:', {
-            scrollTo,
-            keyboardHeight,
-          });
-        };
-        navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardChange);
-        return () => navigator.virtualKeyboard.removeEventListener('geometrychange', handleKeyboardChange);
+        }, 300);
       }
     }
   }, [inputValue, rightSectionRef]);
