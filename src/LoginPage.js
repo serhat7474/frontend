@@ -178,8 +178,8 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0,
     }));
-    handleInputFocus(tcInputRef, scrollConfig?.tcOffset || 100);
-  }, [inputValue, handleInputFocus, scrollConfig?.tcOffset]);
+    // handleInputFocus çağrısı kaldırıldı
+  }, [inputValue]);
 
   const handleTcBlur = useCallback(() => {
     if (!inputValue.length) {
