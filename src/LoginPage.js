@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, memo } from 'react';
+import React, { useEffect, useRef, useCallback, memo, useLayoutEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -71,14 +71,18 @@ function LoginPageContent() {
   }, [inputValue]);
 
   // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu göründüğünde)
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
       const passwordInput = passwordInputRef.current;
       const continueButton = document.querySelector('.continue-button');
+      const offset = 200; // Şifre inputu ve Devam butonu için sabit ofset
 
-      if (!passwordInput || !continueButton) return;
+      if (!passwordInput || !continueButton) {
+        console.log('Refler hazır değil, scroll atlandı');
+        return;
+      }
 
       const inputRect = passwordInput.getBoundingClientRect();
       const buttonRect = continueButton.getBoundingClientRect();
@@ -93,21 +97,34 @@ function LoginPageContent() {
         keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0; // Ekranın %30'u kadar
       }
 
+      const scrollToPosition = () => {
+        const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+        rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
+      };
+
       if (isAndroid) {
-        const offset = 200; // Şifre inputu ve Devam butonu için daha fazla alan
         setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
-          });
-        }, 150);
+          requestAnimationFrame(scrollToPosition);
+        }, 300); // Gecikmeyi artırdık (DOM render için)
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 300);
+      }
+
+      // Klavye değişikliğinde scroll'u tekrarla (Android için)
+      if (isAndroid && 'virtualKeyboard' in navigator) {
+        const handleKeyboardChange = () => {
+          keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
+          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          console.log('Klavye değişikliğinde scroll tekrarı');
+        };
+        navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardChange);
+        return () => navigator.virtualKeyboard.removeEventListener('geometrychange', handleKeyboardChange);
       }
     }
   }, [inputValue, rightSectionRef]);
