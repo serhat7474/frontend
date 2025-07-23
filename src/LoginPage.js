@@ -70,7 +70,7 @@ function LoginPageContent() {
     }
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında ve şifre inputu açıldığında Android için scroll'u tetikle
+  // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu göründüğünde)
   useEffect(() => {
     if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
@@ -97,16 +97,15 @@ function LoginPageContent() {
         const offset = 200; // Şifre inputu ve Devam butonu için daha fazla alan
         setTimeout(() => {
           requestAnimationFrame(() => {
-            // Şifre inputu ve Devam butonunun ekranın üst kısmına yakın olmasını sağla
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            console.log('Android için scroll tetiklendi: Şifre inputu ve Devam butonu görünecek');
+            console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
           });
         }, 150);
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            passwordInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 300);
       }
