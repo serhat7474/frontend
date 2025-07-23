@@ -93,29 +93,21 @@ function LoginPageContent() {
 
       const inputRect = passwordInput.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      let keyboardHeight = 0;
-
-      if (isAndroid && 'virtualKeyboard' in navigator) {
-        keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
-      } else {
-        keyboardHeight = isAndroid ? 200 : 0; // Sabit bir klavye yüksekliği
-      }
 
       console.log('Kaydırma hesaplaması:', {
         inputRectTop: inputRect.top,
         viewportHeight,
-        keyboardHeight,
         currentScrollTop: rightSection.scrollTop,
       });
 
       if (isAndroid) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - keyboardHeight) / 2;
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2;
             console.log('Android için kaydırma uygulanıyor:', { scrollTo });
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
-        }, 300); // Gecikmeyi artırdık
+        }, 300);
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
