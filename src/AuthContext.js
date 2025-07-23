@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
 const AuthContext = createContext();
 
@@ -24,71 +24,11 @@ const authReducer = (state, action) => {
   }
 };
 
-const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const scrollConfig = useMemo(() => ({
-    tcOffset: 100,
-    passwordOffset: 150,
-  }), []);
-
-  useEffect(() => {
-    const handleFocus = (e) => {
-      const input = e.target;
-      const rightSection = document.querySelector('.right-section');
-      if (!rightSection) return;
-
-      if (isIOS()) {
-        rightSection.style.transition = 'none';
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }, 100);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const inputRect = input.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      let offset = 0;
-
-      console.log('Focus event triggered on:', input.id);
-
-      if (input.id === 'tc-input') {
-        offset = scrollConfig.tcOffset;
-      } else if (input.id === 'password-input' && state.inputValue.length === 11) {
-        offset = scrollConfig.passwordOffset;
-      }
-
-      if (offset > 0) {
-        rightSection.style.transition = 'none';
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          });
-        }, 100);
-      }
-    };
-
-    const tcInput = document.getElementById('tc-input');
-    const passwordInput = document.getElementById('password-input');
-    if (tcInput) tcInput.addEventListener('focus', handleFocus);
-    if (passwordInput) passwordInput.addEventListener('focus', handleFocus);
-
-    return () => {
-      if (tcInput) tcInput.removeEventListener('focus', handleFocus);
-      if (passwordInput) passwordInput.removeEventListener('focus', handleFocus);
-    };
-  }, [state.inputValue, scrollConfig]);
-
   return (
-    <AuthContext.Provider value={{ state, dispatch, scrollConfig }}>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
