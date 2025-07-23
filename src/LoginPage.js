@@ -77,17 +77,25 @@ function LoginPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (isAndroid) {
         const passwordInput = passwordInputRef.current;
-        if (passwordInput) {
+        const continueButton = rightSection.querySelector('.continue-button');
+        if (passwordInput && continueButton) {
           const inputRect = passwordInput.getBoundingClientRect();
+          const buttonRect = continueButton.getBoundingClientRect();
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 150; // Hafif aşağı kaydırma için offset
+          const keyboardHeight = navigator.virtualKeyboard?.boundingRect.height || 0;
+          const offset = 200; // Butonun görünür kalması için artırılmış offset
           setTimeout(() => {
             requestAnimationFrame(() => {
-              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+              // Şifre inputu ve Devam butonunun görünür olması için kaydırma pozisyonunu hesapla
+              const scrollTo =
+                rightSection.scrollTop +
+                Math.max(inputRect.top, buttonRect.top) - // Şifre inputu veya Devam butonunun en üstteki pozisyonunu kullan
+                (viewportHeight - keyboardHeight - Math.max(inputRect.height, buttonRect.height)) / 2 +
+                offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Scroll triggered for Android when password input appears after 11 digits');
+              console.log('Android için şifre inputu ve Devam butonu göründüğünde kaydırma tetiklendi');
             });
-          }, 150); // DOM'un render edilmesini beklemek için hafif artırılmış zamanlama
+          }, 150); // DOM'un render edilmesini beklemek için uygun zamanlama
         }
       } else if (isIOS()) {
         setTimeout(() => {
