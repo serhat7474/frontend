@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const scrollConfig = useMemo(() => ({
     tcOffset: 100,
-    passwordOffset: 200, // Şifre inputu için artırılmış offset
+    passwordOffset: 150,
   }), []);
 
   useEffect(() => {
@@ -55,7 +55,6 @@ export const AuthProvider = ({ children }) => {
 
       const inputRect = input.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const keyboardHeight = navigator.virtualKeyboard?.boundingRect.height || 0;
       let offset = 0;
 
       console.log('Focus event triggered on:', input.id);
@@ -64,34 +63,13 @@ export const AuthProvider = ({ children }) => {
         offset = scrollConfig.tcOffset;
       } else if (input.id === 'password-input' && state.inputValue.length === 11) {
         offset = scrollConfig.passwordOffset;
-        const continueButton = rightSection.querySelector('.continue-button');
-        if (continueButton) {
-          const buttonRect = continueButton.getBoundingClientRect();
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              // Şifre inputu ve Devam butonunun görünür olması için kaydırma pozisyonunu hesapla
-              const scrollTo =
-                rightSection.scrollTop +
-                Math.max(inputRect.top, buttonRect.top) - // Şifre inputu veya Devam butonunun en üstteki pozisyonunu kullan
-                (viewportHeight - keyboardHeight - Math.max(inputRect.height, buttonRect.height)) / 2 +
-                offset;
-              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Android için şifre inputu odaklandığında kaydırma tetiklendi');
-            });
-          }, 150); // DOM'un render edilmesini beklemek için artırılmış zamanlama
-          return;
-        }
       }
 
       if (offset > 0) {
         rightSection.style.transition = 'none';
         setTimeout(() => {
           requestAnimationFrame(() => {
-            const scrollTo =
-              rightSection.scrollTop +
-              inputRect.top -
-              (viewportHeight - keyboardHeight - inputRect.height) / 2 +
-              offset;
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           });
         }, 100);
