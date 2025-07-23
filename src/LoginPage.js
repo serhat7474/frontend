@@ -76,15 +76,15 @@ function LoginPageContent() {
             requestAnimationFrame(() => {
               passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
-          }, 300); // Süreyi 300ms'ye artır
+          }, 300);
         } else {
-          const offset = 200;
+          const offset = 300; // Android için offset değeri artırıldı (200 -> 300)
           setTimeout(() => {
             requestAnimationFrame(() => {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
             });
-          }, 300); // Süreyi 300ms'ye artır
+          }, 300);
         }
       }
     }
@@ -148,7 +148,7 @@ function LoginPageContent() {
     } else if (isIOS()) {
       const rightSection = rightSectionRef.current;
       if (rightSection) {
-        rightSection.style.paddingBottom = '200px'; // iOS için padding artırıldı
+        rightSection.style.paddingBottom = '200px';
         setTimeout(() => {
           requestAnimationFrame(() => {
             rightSection.scrollTo({ top: 0, behavior: 'smooth' });
