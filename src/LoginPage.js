@@ -100,14 +100,14 @@ function LoginPageContent() {
         if (passwordInput) {
           const inputRect = passwordInput.getBoundingClientRect();
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 250; // Scroll'u daha az kaydırmak için offset (350 -> 250)
+          const offset = 200; // Scroll'u daha az kaydırmak için offset azaltıldı (250 -> 200)
           setTimeout(() => {
             requestAnimationFrame(() => {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
               console.log('Independent scroll triggered for Android after 11 digits');
             });
-          }, 100); // Daha hızlı tepki için süreyi azalttık (300 -> 100)
+          }, 100);
         }
       }
     }
