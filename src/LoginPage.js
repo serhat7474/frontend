@@ -80,7 +80,7 @@ function LoginPageContent() {
         } else {
           console.log('Hata: passwordInputRef veya rightSectionRef null');
         }
-      }, 500); // Klavye açılma süresi için gecikme
+      }, 200); // Hızlandırılmış gecikme
     }
   }, [inputValue, handleInputFocus, scrollConfig?.passwordOffset, rightSectionRef, passwordInputRef]);
 
@@ -100,11 +100,6 @@ function LoginPageContent() {
         if (rightSectionRef.current) {
           rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
         }
-        // Klavye açıldığında kaydırmayı yeniden tetikle
-        if (inputValue.length === 11 && passwordInputRef.current) {
-          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
-          console.log('Klavye açıldığında kaydırma yeniden tetiklendi');
-        }
       };
       navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
       return () => {
@@ -119,7 +114,7 @@ function LoginPageContent() {
         document.head.removeChild(meta);
       };
     }
-  }, [rightSectionRef, handleInputFocus, scrollConfig?.passwordOffset, inputValue]);
+  }, [rightSectionRef]);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
