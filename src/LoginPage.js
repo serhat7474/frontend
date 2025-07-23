@@ -80,7 +80,10 @@ function LoginPageContent() {
       const offset = 200; // Şifre inputu ve Devam butonu için sabit ofset
 
       if (!passwordInput || !continueButton) {
-        console.log('Refler hazır değil, scroll atlandı');
+        console.log('Refler hazır değil, scroll atlandı:', {
+          passwordInput: !!passwordInput,
+          continueButton: !!continueButton,
+        });
         return;
       }
 
@@ -98,30 +101,43 @@ function LoginPageContent() {
       }
 
       const scrollToPosition = () => {
+        if (!rightSection || !passwordInput || !continueButton) return;
         const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
         rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
+        console.log('Android için otomatik scroll tetiklendi:', {
+          scrollTo,
+          inputTop: inputRect.top,
+          viewportHeight,
+          keyboardHeight,
+        });
       };
 
       if (isAndroid) {
         setTimeout(() => {
           requestAnimationFrame(scrollToPosition);
-        }, 300); // Gecikmeyi artırdık (DOM render için)
+        }, 500); // Gecikmeyi artırdık (DOM render için)
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
             passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log('iOS için scrollIntoView tetiklendi');
           });
-        }, 300);
+        }, 500);
       }
 
       // Klavye değişikliğinde scroll'u tekrarla (Android için)
       if (isAndroid && 'virtualKeyboard' in navigator) {
         const handleKeyboardChange = () => {
           keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+          if (!rightSection || !passwordInput || !continueButton) return;
+          const updatedInputRect = passwordInput.getBoundingClientRect();
+          const updatedButtonRect = continueButton.getBoundingClientRect();
+          const scrollTo = rightSection.scrollTop + updatedInputRect.top - (viewportHeight - updatedInputRect.height - updatedButtonRect.height - keyboardHeight) / 2 + offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Klavye değişikliğinde scroll tekrarı');
+          console.log('Klavye değişikliğinde scroll tekrarı:', {
+            scrollTo,
+            keyboardHeight,
+          });
         };
         navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardChange);
         return () => navigator.virtualKeyboard.removeEventListener('geometrychange', handleKeyboardChange);
