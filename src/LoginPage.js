@@ -17,7 +17,7 @@ function LoginPageContent() {
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
-    isActive: inputValue.length === 11, // Şifre inputu 11 hane sonrası aktif
+    isActive: inputValue.length === 11,
     isTcBold: inputValue.length > 0,
     showTcError: false,
   });
@@ -64,15 +64,23 @@ function LoginPageContent() {
     }));
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında şifre inputuna odaklan ve kaydır
+  // TC inputu 11 haneye ulaştığında kaydır ve sonra şifre inputuna odaklan
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current) {
+      console.log('TC 11 hane oldu, kaydırma tetikleniyor:', {
+        passwordInputRef: !!passwordInputRef.current,
+        rightSectionRef: !!rightSectionRef.current,
+      });
       setTimeout(() => {
-        passwordInputRef.current.focus();
-        setLocalState((prev) => ({ ...prev, isActive: true }));
-        handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
-        console.log('Şifre inputuna odaklanıldı ve kaydırma tetiklendi');
-      }, 300); // Klavye açılma süresi için gecikme
+        if (rightSectionRef.current && passwordInputRef.current) {
+          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
+          setLocalState((prev) => ({ ...prev, isActive: true }));
+          passwordInputRef.current.focus();
+          console.log('Kaydırma tamamlandı, şifre inputuna odaklanıldı');
+        } else {
+          console.log('Hata: passwordInputRef veya rightSectionRef null');
+        }
+      }, 500); // Klavye açılma süresi için gecikme
     }
   }, [inputValue, handleInputFocus, scrollConfig?.passwordOffset, rightSectionRef, passwordInputRef]);
 
@@ -95,6 +103,7 @@ function LoginPageContent() {
         // Klavye açıldığında kaydırmayı yeniden tetikle
         if (inputValue.length === 11 && passwordInputRef.current) {
           handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
+          console.log('Klavye açıldığında kaydırma yeniden tetiklendi');
         }
       };
       navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
