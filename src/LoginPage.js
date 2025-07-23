@@ -99,7 +99,7 @@ function LoginPageContent() {
         const passwordInput = passwordInputRef.current;
         const inputRect = passwordInput.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 350; // Android için scroll'u biraz daha aşağı kaydırmak için offset
+        const offset = 250; // Android için scroll'u daha az aşağı kaydırmak için offset azaltıldı (350 -> 250)
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
