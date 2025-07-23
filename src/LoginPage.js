@@ -13,7 +13,7 @@ function LoginPageContent() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { rightSectionRef, scrollConfig } = useScroll();
+  const { rightSectionRef } = useScroll(); // scrollConfig kaldırıldı
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -70,18 +70,16 @@ function LoginPageContent() {
     }
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu göründüğünde)
+  // TC inputu 11 haneye ulaştığında otomatik scroll (şifre inputu ekranın ortasına gelsin)
   useEffect(() => {
     if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
       const passwordInput = passwordInputRef.current;
-      const continueButton = document.querySelector('.continue-button');
 
-      if (!passwordInput || !continueButton) return;
+      if (!passwordInput) return;
 
       const inputRect = passwordInput.getBoundingClientRect();
-      const buttonRect = continueButton.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       let keyboardHeight = 0;
 
@@ -92,12 +90,12 @@ function LoginPageContent() {
       }
 
       if (isAndroid) {
-        const offset = scrollConfig.passwordOffset;
         setTimeout(() => {
           requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+            // Şifre inputunu ekranın ortasına hizala
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - keyboardHeight) / 2;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            console.log('Android için otomatik scroll tetiklendi: Şifre inputu göründü');
+            console.log('Android için kaydırma tetiklendi: Şifre inputu ekranın ortasına hizalandı');
           });
         }, 150);
       } else if (isIOS()) {
@@ -108,7 +106,7 @@ function LoginPageContent() {
         }, 300);
       }
     }
-  }, [inputValue, rightSectionRef, scrollConfig]);
+  }, [inputValue, rightSectionRef]);
 
   useEffect(() => {
     const meta = document.createElement('meta');
