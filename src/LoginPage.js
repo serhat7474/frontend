@@ -4,6 +4,8 @@ import './App.css';
 import { AuthProvider, useAuth } from './AuthContext';
 import { useScroll } from './ScrollContext';
 
+const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 function LoginPageContent() {
   const { state, dispatch } = useAuth();
   const { inputValue = '', passwordValue = '' } = state || {};
@@ -15,10 +17,28 @@ function LoginPageContent() {
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
-    isActive: passwordValue.length > 0,
+    isActive: inputValue.length === 11, // Şifre inputu 11 hane sonrası aktif
     isTcBold: inputValue.length > 0,
     showTcError: false,
   });
+
+  // Sayfa yüklendiğinde veya geri dönüldüğünde scroll'u en üste kaydır
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (rightSectionRef.current) {
+        rightSectionRef.current.scrollTop = 0;
+        rightSectionRef.current.dataset.loaded = 'true';
+        console.log('LoginPage: Sayfa en üste kaydırıldı');
+      } else {
+        console.log('LoginPage: rightSectionRef null, tekrar deneniyor');
+        setTimeout(scrollToTop, 100);
+      }
+    };
+
+    setTimeout(() => {
+      requestAnimationFrame(scrollToTop);
+    }, 200);
+  }, [rightSectionRef, location.state]);
 
   // Handle navigation from WaitingPage or PhoneVerification
   useEffect(() => {
@@ -40,17 +60,19 @@ function LoginPageContent() {
       isTcActive: inputValue.length > 0,
       isTcBold: inputValue.length > 0,
       showTcError: false,
+      isActive: inputValue.length === 11, // Şifre inputu 11 hane sonrası aktif
     }));
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında şifre inputuna odaklan
+  // TC inputu 11 haneye ulaştığında şifre inputuna odaklan ve kaydır
   useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current) {
+    if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current) {
       passwordInputRef.current.focus();
-      handleInputFocus(passwordInputRef, scrollConfig.passwordOffset);
-      console.log('Şifre inputuna odaklanıldı');
+      setLocalState((prev) => ({ ...prev, isActive: true }));
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Şifre için kaydırma
+      console.log('Şifre inputuna odaklanıldı ve kaydırma tetiklendi');
     }
-  }, [inputValue, handleInputFocus, scrollConfig.passwordOffset]);
+  }, [inputValue, handleInputFocus, scrollConfig?.passwordOffset, rightSectionRef, passwordInputRef]);
 
   // Sanal klavye ve viewport ayarları
   useEffect(() => {
@@ -60,7 +82,6 @@ function LoginPageContent() {
       'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual';
     document.head.appendChild(meta);
 
-    const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
       const handleKeyboardGeometryChange = () => {
@@ -136,8 +157,9 @@ function LoginPageContent() {
         showTcError: false,
       }));
       passwordInputRef.current?.focus();
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Temizle sonrası kaydırma
     },
-    [dispatch]
+    [dispatch, handleInputFocus, scrollConfig?.passwordOffset]
   );
 
   const handleTcFocus = useCallback(() => {
@@ -146,8 +168,8 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0,
     }));
-    handleInputFocus(tcInputRef, scrollConfig.tcOffset);
-  }, [inputValue, handleInputFocus, scrollConfig.tcOffset]);
+    handleInputFocus(tcInputRef, scrollConfig?.tcOffset || 100); // TC için kaydırma
+  }, [inputValue, handleInputFocus, scrollConfig?.tcOffset]);
 
   const handleTcBlur = useCallback(() => {
     if (!inputValue.length) {
@@ -161,8 +183,8 @@ function LoginPageContent() {
 
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
-    handleInputFocus(passwordInputRef, scrollConfig.passwordOffset);
-  }, [handleInputFocus, scrollConfig.passwordOffset]);
+    handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Şifre için kaydırma
+  }, [handleInputFocus, scrollConfig?.passwordOffset]);
 
   const handlePasswordBlur = useCallback(
     (e) => {
