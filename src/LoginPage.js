@@ -62,7 +62,6 @@ function LoginPageContent() {
     }));
   }, [inputValue]);
 
-  // Şifre inputuna otomatik odaklanma ve scroll (tc 11 hane dolduğunda)
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current) {
       passwordInputRef.current.focus();
@@ -76,30 +75,21 @@ function LoginPageContent() {
           setTimeout(() => {
             requestAnimationFrame(() => {
               passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              console.log('iOS: Şifre inputu için scrollIntoView çağrıldı (otomatik odaklanma)');
             });
           }, 300);
         } else {
-          const offset = 300; // Android için offset değeri
+          const offset = 350; // Android için offset değeri artırıldı (300 -> 350) daha aşağı kaydırmak için
           setTimeout(() => {
             requestAnimationFrame(() => {
-              if (!inputRect || !viewportHeight) {
-                console.warn('Android: inputRect veya viewportHeight tanımlı değil (otomatik odaklanma)');
-                return;
-              }
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
               rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log(`Android: Şifre inputu için scrollTo ${scrollTo}px çağrıldı (otomatik odaklanma)`);
             });
-          }, 400); // Zamanlamayı 400ms'ye artırdık
+          }, 300);
         }
-      } else {
-        console.warn('Android: rightSectionRef mevcut değil (otomatik odaklanma)');
       }
     }
   }, [inputValue, rightSectionRef]);
 
-  // TC inputu için scroll
   useEffect(() => {
     const handleTcFocus = () => {
       const rightSection = rightSectionRef.current;
@@ -139,49 +129,6 @@ function LoginPageContent() {
     };
   }, [rightSectionRef]);
 
-  // Şifre inputu için manuel odaklanma scroll
-  useEffect(() => {
-    const handlePasswordFocusScroll = () => {
-      const rightSection = rightSectionRef.current;
-      if (!rightSection || !passwordInputRef.current) return;
-
-      if (isIOS()) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            passwordInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            console.log('iOS: Şifre inputu için scrollIntoView çağrıldı (manuel odaklanma)');
-          });
-        }, 200);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const passwordInput = passwordInputRef.current;
-      const inputRect = passwordInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 300;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log(`Android: Şifre inputu için scrollTo ${scrollTo}px çağrıldı (manuel odaklanma)`);
-        });
-      }, 200);
-    };
-
-    const passwordInput = passwordInputRef.current;
-    if (passwordInput) {
-      passwordInput.addEventListener('focus', handlePasswordFocusScroll);
-    }
-
-    return () => {
-      if (passwordInput) passwordInput.removeEventListener('focus', handlePasswordFocusScroll);
-    };
-  }, [rightSectionRef]);
-
-  // Meta tag ve sanal klavye ayarları
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
