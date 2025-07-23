@@ -109,7 +109,7 @@ function PhoneVerificationPageContent() {
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
       if (isIOS()) {
-        const offset = 200; // iOS için offset değeri eklendi
+        const offset = 200; // iOS için offset değeri
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -122,7 +122,7 @@ function PhoneVerificationPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const offset = 150; // Android için mevcut offset değeri korundu
+      const offset = 250; // Android için daha fazla aşağı kaydırmak için offset artırıldı
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
