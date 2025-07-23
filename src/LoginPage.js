@@ -75,20 +75,34 @@ function LoginPageContent() {
     if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
+      const passwordInput = passwordInputRef.current;
+      const continueButton = document.querySelector('.continue-button');
+
+      if (!passwordInput || !continueButton) return;
+
+      const inputRect = passwordInput.getBoundingClientRect();
+      const buttonRect = continueButton.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      let keyboardHeight = 0;
+
+      // Sanal klavye yüksekliğini al (varsa)
+      if (isAndroid && 'virtualKeyboard' in navigator) {
+        keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
+      } else {
+        // Android için varsayılan klavye yüksekliği tahmini
+        keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0; // Ekranın %30'u kadar
+      }
+
       if (isAndroid) {
-        const passwordInput = passwordInputRef.current;
-        if (passwordInput) {
-          const inputRect = passwordInput.getBoundingClientRect();
-          const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 150; // Hafif aşağı kaydırma için offset
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Scroll triggered for Android when password input appears after 11 digits');
-            });
-          }, 150); // DOM'un render edilmesini beklemek için hafif artırılmış zamanlama
-        }
+        const offset = 200; // Şifre inputu ve Devam butonu için daha fazla alan
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            // Şifre inputu ve Devam butonunun ekranın üst kısmına yakın olmasını sağla
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+            console.log('Android için scroll tetiklendi: Şifre inputu ve Devam butonu görünecek');
+          });
+        }, 150);
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
