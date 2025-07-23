@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react'; // useRef eklendi
 import { useLocation } from 'react-router-dom';
 
 const ScrollContext = createContext();
@@ -13,6 +13,7 @@ export const ScrollProvider = ({ children }) => {
     phoneOffset: 350,
   }), []);
 
+  // Rota değiştiğinde veya sayfa yüklendiğinde en üste kaydır
   useEffect(() => {
     const scrollToTop = () => {
       if (rightSectionRef.current) {
@@ -29,33 +30,14 @@ export const ScrollProvider = ({ children }) => {
     }, 200);
   }, [location.pathname]);
 
+  // Input odaklanma için scroll yönetimi
   const handleInputFocus = (inputRef, offset) => {
-    if (!inputRef.current || !rightSectionRef.current) {
-      console.log('Hata: inputRef veya rightSectionRef null', {
-        inputRef: !!inputRef.current,
-        rightSectionRef: !!rightSectionRef.current,
-      });
-      return;
-    }
+    if (!inputRef.current || !rightSectionRef.current) return;
 
     const isAndroid = /Android/i.test(navigator.userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const rightSection = rightSectionRef.current;
     const input = inputRef.current;
-
-    const inputRect = input.getBoundingClientRect();
-    const viewportHeight = window.visualViewport?.height || window.innerHeight;
-    const keyboardHeight = window.visualViewport?.offsetTop
-      ? window.innerHeight - window.visualViewport.height
-      : 250; // Varsayılan klavye yüksekliği
-
-    console.log('Focus event tetiklendi:', {
-      inputId: input.id,
-      inputRectTop: inputRect.top,
-      viewportHeight,
-      keyboardHeight,
-      currentScrollTop: rightSection.scrollTop,
-    });
 
     if (isIOS) {
       setTimeout(() => {
@@ -68,6 +50,20 @@ export const ScrollProvider = ({ children }) => {
     }
 
     if (isAndroid) {
+      const inputRect = input.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const keyboardHeight = window.visualViewport?.offsetTop
+        ? window.innerHeight - window.visualViewport.height
+        : 0;
+
+      console.log('Android: Focus event tetiklendi', {
+        inputId: input.id,
+        inputRectTop: inputRect.top,
+        viewportHeight,
+        keyboardHeight,
+        currentScrollTop: rightSection.scrollTop,
+      });
+
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo =
@@ -78,7 +74,7 @@ export const ScrollProvider = ({ children }) => {
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
           console.log('Android: Kaydırma uygulandı', { scrollTo });
         });
-      }, 200); // Hızlandırılmış gecikme
+      }, 300);
     }
   };
 
