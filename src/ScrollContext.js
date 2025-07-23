@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const ScrollContext = createContext();
@@ -8,21 +8,20 @@ export const ScrollProvider = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Rota değiştiğinde veya sayfa yüklendiğinde scroll'u en üste kaydır
     const scrollToTop = () => {
       if (rightSectionRef.current) {
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = "true";
         console.log(`ScrollContext: ${location.pathname} için sayfa en üste kaydırıldı`);
       } else {
-        setTimeout(scrollToTop, 100); // Ref mevcut değilse tekrar dene
+        setTimeout(scrollToTop, 100);
       }
     };
 
     setTimeout(() => {
       requestAnimationFrame(scrollToTop);
     }, 200);
-  }, [location.pathname]); // Rota değişimlerini dinle
+  }, [location.pathname]);
 
   const value = {
     rightSectionRef,
