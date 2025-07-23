@@ -13,7 +13,7 @@ function LoginPageContent() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { rightSectionRef } = useScroll(); // scrollConfig kaldırıldı
+  const { rightSectionRef } = useScroll();
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -30,6 +30,7 @@ function LoginPageContent() {
         rightSectionRef.current.dataset.loaded = 'true';
         console.log('LoginPage: Sayfa en üste kaydırıldı');
       } else {
+        console.log('LoginPage: rightSectionRef null, tekrar deneniyor');
         setTimeout(scrollToTop, 100);
       }
     };
@@ -77,7 +78,18 @@ function LoginPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       const passwordInput = passwordInputRef.current;
 
-      if (!passwordInput) return;
+      console.log('Scroll useEffect tetiklendi:', {
+        inputValueLength: inputValue.length,
+        isAndroid,
+        rightSectionExists: !!rightSection,
+        passwordInputExists: !!passwordInput,
+        userAgent: navigator.userAgent,
+      });
+
+      if (!passwordInput) {
+        console.log('Hata: passwordInput null');
+        return;
+      }
 
       const inputRect = passwordInput.getBoundingClientRect();
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
@@ -86,25 +98,38 @@ function LoginPageContent() {
       if (isAndroid && 'virtualKeyboard' in navigator) {
         keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
       } else {
-        keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0;
+        keyboardHeight = isAndroid ? 200 : 0; // Sabit bir klavye yüksekliği
       }
+
+      console.log('Kaydırma hesaplaması:', {
+        inputRectTop: inputRect.top,
+        viewportHeight,
+        keyboardHeight,
+        currentScrollTop: rightSection.scrollTop,
+      });
 
       if (isAndroid) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            // Şifre inputunu ekranın ortasına hizala
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - keyboardHeight) / 2;
+            console.log('Android için kaydırma uygulanıyor:', { scrollTo });
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            console.log('Android için kaydırma tetiklendi: Şifre inputu ekranın ortasına hizalandı');
           });
-        }, 150);
+        }, 300); // Gecikmeyi artırdık
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
+            console.log('iOS için scrollIntoView çağrıldı');
             passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 300);
       }
+    } else {
+      console.log('Scroll koşulu sağlanmadı:', {
+        inputValueLength: inputValue.length,
+        rightSectionExists: !!rightSectionRef.current,
+        passwordInputExists: !!passwordInputRef.current,
+      });
     }
   }, [inputValue, rightSectionRef]);
 
