@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './AuthContext';
-import { ScrollProvider, useScroll } from './ScrollContext';
+import { useScroll } from './ScrollContext';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -13,7 +13,7 @@ function LoginPageContent() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { rightSectionRef } = useScroll();
+  const { rightSectionRef, scrollConfig } = useScroll();
 
   const [localState, setLocalState] = React.useState({
     isTcActive: inputValue.length > 0,
@@ -85,16 +85,14 @@ function LoginPageContent() {
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       let keyboardHeight = 0;
 
-      // Sanal klavye yüksekliğini al (varsa)
       if (isAndroid && 'virtualKeyboard' in navigator) {
         keyboardHeight = navigator.virtualKeyboard.boundingRect.height || 0;
       } else {
-        // Android için varsayılan klavye yüksekliği tahmini
-        keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0; // Ekranın %30'u kadar
+        keyboardHeight = isAndroid ? viewportHeight * 0.3 : 0;
       }
 
       if (isAndroid) {
-        const offset = 200; // Şifre inputu ve Devam butonu için daha fazla alan
+        const offset = scrollConfig.passwordOffset;
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height - buttonRect.height - keyboardHeight) / 2 + offset;
@@ -110,46 +108,7 @@ function LoginPageContent() {
         }, 300);
       }
     }
-  }, [inputValue, rightSectionRef]);
-
-  useEffect(() => {
-    const handleTcFocus = () => {
-      const rightSection = rightSectionRef.current;
-      if (!rightSection || !tcInputRef.current) return;
-
-      if (isIOS()) {
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            tcInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }, 200);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const tcInput = tcInputRef.current;
-      const inputRect = tcInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const offset = 100;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        });
-      }, 200);
-    };
-
-    const tcInput = tcInputRef.current;
-    if (tcInput) {
-      tcInput.addEventListener('focus', handleTcFocus);
-    }
-
-    return () => {
-      if (tcInput) tcInput.removeEventListener('focus', handleTcFocus);
-    };
-  }, [rightSectionRef]);
+  }, [inputValue, rightSectionRef, scrollConfig]);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -467,11 +426,9 @@ function LoginPageContent() {
 
 function LoginPage() {
   return (
-    <ScrollProvider>
-      <AuthProvider>
-        <LoginPageContent />
-      </AuthProvider>
-    </ScrollProvider>
+    <AuthProvider>
+      <LoginPageContent />
+    </AuthProvider>
   );
 }
 
