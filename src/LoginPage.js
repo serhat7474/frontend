@@ -60,17 +60,19 @@ function LoginPageContent() {
       isTcActive: inputValue.length > 0,
       isTcBold: inputValue.length > 0,
       showTcError: false,
-      isActive: inputValue.length === 11, // Şifre inputu 11 hane sonrası aktif
+      isActive: inputValue.length === 11,
     }));
   }, [inputValue]);
 
   // TC inputu 11 haneye ulaştığında şifre inputuna odaklan ve kaydır
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current) {
-      passwordInputRef.current.focus();
-      setLocalState((prev) => ({ ...prev, isActive: true }));
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Şifre için kaydırma
-      console.log('Şifre inputuna odaklanıldı ve kaydırma tetiklendi');
+      setTimeout(() => {
+        passwordInputRef.current.focus();
+        setLocalState((prev) => ({ ...prev, isActive: true }));
+        handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
+        console.log('Şifre inputuna odaklanıldı ve kaydırma tetiklendi');
+      }, 300); // Klavye açılma süresi için gecikme
     }
   }, [inputValue, handleInputFocus, scrollConfig?.passwordOffset, rightSectionRef, passwordInputRef]);
 
@@ -90,6 +92,10 @@ function LoginPageContent() {
         if (rightSectionRef.current) {
           rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
         }
+        // Klavye açıldığında kaydırmayı yeniden tetikle
+        if (inputValue.length === 11 && passwordInputRef.current) {
+          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
+        }
       };
       navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
       return () => {
@@ -104,7 +110,7 @@ function LoginPageContent() {
         document.head.removeChild(meta);
       };
     }
-  }, [rightSectionRef]);
+  }, [rightSectionRef, handleInputFocus, scrollConfig?.passwordOffset, inputValue]);
 
   const handleNumberInput = useCallback(
     (e, type, maxLength) => {
@@ -157,7 +163,7 @@ function LoginPageContent() {
         showTcError: false,
       }));
       passwordInputRef.current?.focus();
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Temizle sonrası kaydırma
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
     },
     [dispatch, handleInputFocus, scrollConfig?.passwordOffset]
   );
@@ -168,7 +174,7 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0,
     }));
-    handleInputFocus(tcInputRef, scrollConfig?.tcOffset || 100); // TC için kaydırma
+    handleInputFocus(tcInputRef, scrollConfig?.tcOffset || 100);
   }, [inputValue, handleInputFocus, scrollConfig?.tcOffset]);
 
   const handleTcBlur = useCallback(() => {
@@ -183,7 +189,7 @@ function LoginPageContent() {
 
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
-    handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150); // Şifre için kaydırma
+    handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 150);
   }, [handleInputFocus, scrollConfig?.passwordOffset]);
 
   const handlePasswordBlur = useCallback(
