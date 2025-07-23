@@ -62,33 +62,37 @@ function LoginPageContent() {
     }));
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında odaklanma ve scroll
+  // TC inputu 11 haneye ulaştığında şifre inputuna odaklan
   useEffect(() => {
-    if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current) {
+    if (inputValue.length === 11 && passwordInputRef.current) {
+      passwordInputRef.current.focus();
+      console.log('Şifre inputuna odaklanıldı');
+    }
+  }, [inputValue]);
+
+  // TC inputu 11 haneye ulaştığında ve şifre inputu açıldığında Android için scroll'u tetikle
+  useEffect(() => {
+    if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
       const rightSection = rightSectionRef.current;
-      const passwordInput = passwordInputRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
-
-      // Şifre inputuna odaklan
-      passwordInput.focus();
-
-      // Scroll işlemini gerçekleştir
-      const inputRect = passwordInput.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-
       if (isAndroid) {
-        const offset = 150; // Android için hafif aşağı kaydırma (200 -> 150)
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-            console.log('Scroll triggered for Android after 11 digits');
-          });
-        }, 100); // Daha hızlı tepki için kısa zamanlama
+        const passwordInput = passwordInputRef.current;
+        if (passwordInput) {
+          const inputRect = passwordInput.getBoundingClientRect();
+          const viewportHeight = window.visualViewport?.height || window.innerHeight;
+          const offset = 150; // Hafif aşağı kaydırma için offset
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+              console.log('Scroll triggered for Android when password input appears after 11 digits');
+            });
+          }, 150); // DOM'un render edilmesini beklemek için hafif artırılmış zamanlama
+        }
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            passwordInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 300);
       }
