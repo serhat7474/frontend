@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth, AuthProvider } from './AuthContext'; // AuthProvider'ı içe aktar
-import { useScroll, ScrollProvider } from './ScrollContext'; // ScrollProvider'ı içe aktar
+import { useAuth, AuthProvider } from './AuthContext';
+import { useScroll } from './ScrollContext'; // ScrollProvider'ı kaldırmaya gerek yok, sadece useScroll kullanıyoruz
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -109,7 +109,7 @@ function PhoneVerificationPageContent() {
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
       if (isIOS()) {
-        const offset = 200; // iOS için offset değeri
+        const offset = 200;
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -122,7 +122,7 @@ function PhoneVerificationPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const offset = 350; // Android için kaydırma mesafesi (300 -> 350)
+      const offset = 350;
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -355,7 +355,6 @@ function PhoneVerificationPageContent() {
             Doğrula
           </button>
         </div>
-        {/* Sayfa uzunluğunu artırmak için ekstra boşluk */}
         <div style={{ height: '500px' }}></div>
       </div>
     </div>
@@ -364,11 +363,9 @@ function PhoneVerificationPageContent() {
 
 function PhoneVerificationPage() {
   return (
-    <ScrollProvider>
-      <AuthProvider>
-        <PhoneVerificationPageContent />
-      </AuthProvider>
-    </ScrollProvider>
+    <AuthProvider>
+      <PhoneVerificationPageContent />
+    </AuthProvider>
   );
 }
 
