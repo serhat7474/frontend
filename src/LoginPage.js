@@ -65,50 +65,32 @@ function LoginPageContent() {
   // TC inputu 11 haneye ulaştığında odaklanma ve scroll
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current) {
-      passwordInputRef.current.focus();
       const rightSection = rightSectionRef.current;
+      const passwordInput = passwordInputRef.current;
       const isAndroid = /Android/i.test(navigator.userAgent);
+
+      // Şifre inputuna odaklan
+      passwordInput.focus();
+
+      // Scroll işlemini gerçekleştir
+      const inputRect = passwordInput.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+
       if (isAndroid) {
-        const passwordInput = passwordInputRef.current;
-        const inputRect = passwordInput.getBoundingClientRect();
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const offset = 350; // Android için offset değeri
+        const offset = 150; // Android için hafif aşağı kaydırma (200 -> 150)
         setTimeout(() => {
           requestAnimationFrame(() => {
             const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
             rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
             console.log('Scroll triggered for Android after 11 digits');
           });
-        }, 300);
+        }, 100); // Daha hızlı tepki için kısa zamanlama
       } else if (isIOS()) {
         setTimeout(() => {
           requestAnimationFrame(() => {
-            passwordInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            passwordInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
           });
         }, 300);
-      }
-    }
-  }, [inputValue, rightSectionRef]);
-
-  // TC inputu 11 haneye ulaştığında Android için scroll'u bağımsız olarak tetikle
-  useEffect(() => {
-    if (inputValue.length === 11 && rightSectionRef.current && passwordInputRef.current) {
-      const rightSection = rightSectionRef.current;
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        const passwordInput = passwordInputRef.current;
-        if (passwordInput) {
-          const inputRect = passwordInput.getBoundingClientRect();
-          const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const offset = 200; // Scroll'u daha az kaydırmak için offset azaltıldı (250 -> 200)
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-              rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-              console.log('Independent scroll triggered for Android after 11 digits');
-            });
-          }, 100);
-        }
       }
     }
   }, [inputValue, rightSectionRef]);
