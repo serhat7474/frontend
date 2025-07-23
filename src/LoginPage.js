@@ -78,7 +78,7 @@ function LoginPageContent() {
             });
           }, 300);
         } else {
-          const offset = 350; // Android için offset değeri artırıldı (300 -> 350) daha aşağı kaydırmak için
+          const offset = 350; // Android için offset değeri
           setTimeout(() => {
             requestAnimationFrame(() => {
               const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -86,6 +86,26 @@ function LoginPageContent() {
             });
           }, 300);
         }
+      }
+    }
+  }, [inputValue, rightSectionRef]);
+
+  // TC inputu 11 haneye ulaştığında Android için scroll'u aşağı kaydır
+  useEffect(() => {
+    if (inputValue.length === 11 && rightSectionRef.current) {
+      const rightSection = rightSectionRef.current;
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        const passwordInput = passwordInputRef.current;
+        const inputRect = passwordInput.getBoundingClientRect();
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const offset = 350; // Android için scroll'u biraz daha aşağı kaydırmak için offset
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
+            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
+          });
+        }, 300);
       }
     }
   }, [inputValue, rightSectionRef]);
