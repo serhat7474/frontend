@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth, AuthProvider } from './AuthContext';
-import { ScrollProvider, useScroll } from './ScrollContext';
+import { useAuth, AuthProvider } from './AuthContext'; // AuthProvider'ı içe aktar
+import { useScroll, ScrollProvider } from './ScrollContext'; // ScrollProvider'ı içe aktar
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -122,7 +122,7 @@ function PhoneVerificationPageContent() {
       const isAndroid = /Android/i.test(navigator.userAgent);
       if (!isAndroid) return;
 
-      const offset = 300; // Android için daha fazla aşağı kaydırmak için offset artırıldı (önceki 250'den 300'e)
+      const offset = 350; // Android için kaydırma mesafesi (300 -> 350)
       setTimeout(() => {
         requestAnimationFrame(() => {
           const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
@@ -355,8 +355,8 @@ function PhoneVerificationPageContent() {
             Doğrula
           </button>
         </div>
-        {/* Sayfa uzunluğunu arttırmak için ekstra boşluk */}
-        <div style={{ height: '300px' }}></div>
+        {/* Sayfa uzunluğunu artırmak için ekstra boşluk */}
+        <div style={{ height: '500px' }}></div>
       </div>
     </div>
   );
