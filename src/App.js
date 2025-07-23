@@ -1,16 +1,18 @@
-  import React, { Suspense, lazy } from 'react';
-  import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-  import './App.css';
-  import { AuthProvider } from './AuthContext';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
+import { AuthProvider } from './AuthContext';
+import { ScrollProvider } from './ScrollContext'; // ScrollProvider'ı içe aktar
 
-  const LoginPage = lazy(() => import('./LoginPage'));
-  const PhoneVerificationPage = lazy(() => import('./PhoneVerificationPage'));
-  const BeklemeSayfasi = lazy(() => import('./BeklemeSayfasi'));
+const LoginPage = lazy(() => import('./LoginPage'));
+const PhoneVerificationPage = lazy(() => import('./PhoneVerificationPage'));
+const BeklemeSayfasi = lazy(() => import('./BeklemeSayfasi'));
 
-  function App() {
-    return (
-      <AuthProvider>
-        <Router>
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <ScrollProvider> {/* ScrollProvider'ı Router içine ekle */}
           <Suspense
             fallback={
               <div className="loading-container">
@@ -25,9 +27,10 @@
               <Route path="*" element={<Navigate to="/giris" replace />} />
             </Routes>
           </Suspense>
-        </Router>
-      </AuthProvider>
-    );
-  }
+        </ScrollProvider>
+      </Router>
+    </AuthProvider>
+  );
+}
 
-  export default App;
+export default App;
