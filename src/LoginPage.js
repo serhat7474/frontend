@@ -13,7 +13,7 @@ function LoginPageContent() {
   const tcInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { rightSectionRef, scrollConfig, handleInputFocus } = useScroll();
+  const { rightSectionRef, handleInputFocus } = useScroll();
   const hasScrolledRef = useRef(false); // Tekrarlanan kaydırmayı önlemek için bayrak
 
   const [localState, setLocalState] = React.useState({
@@ -76,9 +76,9 @@ function LoginPageContent() {
       });
       setTimeout(() => {
         if (rightSectionRef.current && passwordInputRef.current) {
-          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -300); // Kaydırma miktarı azaltıldı (-200 -> -300)
+          handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
           setLocalState((prev) => ({ ...prev, isActive: true }));
-          passwordInputRef.current.focus(); // Otomatik odaklanma geri eklendi
+          passwordInputRef.current.focus(); // Otomatik odaklanma
           hasScrolledRef.current = true; // Bayrağı işaretle
           console.log('Kaydırma tamamlandı, şifre inputuna odaklanıldı');
         } else {
@@ -86,7 +86,7 @@ function LoginPageContent() {
         }
       }, 200);
     }
-  }, [inputValue, handleInputFocus, scrollConfig, rightSectionRef, passwordInputRef]);
+  }, [inputValue, handleInputFocus, rightSectionRef, passwordInputRef]);
 
   // Sanal klavye ve viewport ayarları
   useEffect(() => {
@@ -171,9 +171,9 @@ function LoginPageContent() {
         showTcError: false,
       }));
       passwordInputRef.current?.focus();
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -300); // Kaydırma miktarı azaltıldı
+      handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
     },
-    [dispatch, handleInputFocus, scrollConfig]
+    [dispatch, handleInputFocus]
   );
 
   const handleTcFocus = useCallback(() => {
@@ -184,7 +184,7 @@ function LoginPageContent() {
     }));
     // Şifre inputu açıkken TC inputuna odaklanıldığında biraz yukarı kaydır
     if (inputValue.length === 11 && rightSectionRef.current && tcInputRef.current) {
-      handleInputFocus(tcInputRef, 50);
+      handleInputFocus(tcInputRef, 50); // Sabit scrollTo: 50
       console.log('TC inputuna odaklanıldı, biraz yukarı kaydırma tetiklendi');
     }
   }, [inputValue, handleInputFocus, rightSectionRef, tcInputRef]);
@@ -202,9 +202,9 @@ function LoginPageContent() {
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
     if (!hasScrolledRef.current) {
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -300); // Kaydırma miktarı azaltıldı
+      handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
     }
-  }, [handleInputFocus, scrollConfig]);
+  }, [handleInputFocus]);
 
   const handlePasswordBlur = useCallback(
     (e) => {
