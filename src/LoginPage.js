@@ -67,7 +67,7 @@ function LoginPageContent() {
     hasScrolledRef.current = false;
   }, [inputValue]);
 
-  // TC inputu 11 haneye ulaştığında kaydır ve sonra şifre inputuna odaklan
+  // TC inputu 11 haneye ulaştığında kaydır
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current && !hasScrolledRef.current) {
       console.log('TC 11 hane oldu, kaydırma tetikleniyor:', {
@@ -76,11 +76,9 @@ function LoginPageContent() {
       });
       setTimeout(() => {
         if (rightSectionRef.current && passwordInputRef.current) {
-          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -50); // Kaydırma miktarı azaltıldı (0 -> -50)
+          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -200); // Kaydırma miktarı azaltıldı (-150 -> -200)
           setLocalState((prev) => ({ ...prev, isActive: true }));
-          passwordInputRef.current.focus();
-          hasScrolledRef.current = true; // Bayrağı işaretle
-          console.log('Kaydırma tamamlandı, şifre inputuna odaklanıldı');
+          console.log('Kaydırma tamamlandı');
         } else {
           console.log('Hata: passwordInputRef veya rightSectionRef null');
         }
@@ -171,7 +169,7 @@ function LoginPageContent() {
         showTcError: false,
       }));
       passwordInputRef.current?.focus();
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -50); // Kaydırma miktarı azaltıldı (0 -> -50)
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -200); // Kaydırma miktarı azaltıldı
     },
     [dispatch, handleInputFocus, scrollConfig]
   );
@@ -200,9 +198,9 @@ function LoginPageContent() {
   }, [inputValue]);
 
   const handlePasswordFocus = useCallback(() => {
+    setLocalState((prev) => ({ ...prev, isActive: true }));
     if (!hasScrolledRef.current) {
-      setLocalState((prev) => ({ ...prev, isActive: true }));
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -50); // Kaydırma miktarı azaltıldı (0 -> -50)
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || -200); // Kaydırma miktarı azaltıldı
     }
   }, [handleInputFocus, scrollConfig]);
 
