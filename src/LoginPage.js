@@ -68,12 +68,14 @@ function LoginPageContent() {
   // TC inputu 11 haneye ulaştığında kaydır ve şifre inputuna odaklan
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current && !hasScrolledRef.current) {
-      if (rightSectionRef.current && passwordInputRef.current) {
-        handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
-        setLocalState((prev) => ({ ...prev, isActive: true }));
-        passwordInputRef.current.focus(); // Otomatik odaklanma
-        hasScrolledRef.current = true; // Bayrağı işaretle
-      }
+      setTimeout(() => {
+        if (rightSectionRef.current && passwordInputRef.current) {
+          handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
+          setLocalState((prev) => ({ ...prev, isActive: true }));
+          passwordInputRef.current.focus(); // Otomatik odaklanma
+          hasScrolledRef.current = true; // Bayrağı işaretle
+        }
+      }, 200);
     }
   }, [inputValue, handleInputFocus, rightSectionRef, passwordInputRef]);
 
