@@ -69,11 +69,11 @@ function LoginPageContent() {
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current && !hasScrolledRef.current) {
       if (rightSectionRef.current && passwordInputRef.current) {
-        handleInputFocus(passwordInputRef, 80); // Sabit scrollTo: 80
+        handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
         setLocalState((prev) => ({ ...prev, isActive: true }));
         passwordInputRef.current.focus(); // Otomatik odaklanma
         hasScrolledRef.current = true; // Bayrağı işaretle
-        console.log('Şifre inputuna odaklanıldı, scrollTo: 80');
+        console.log('Şifre inputuna odaklanıldı, scrollTo: 150');
       }
     }
   }, [inputValue, handleInputFocus, rightSectionRef, passwordInputRef]);
@@ -401,7 +401,7 @@ function LoginPageContent() {
   );
 }
 
-function LoginPage() {
+function LoginPage() {1
   return (
     <AuthProvider>
       <LoginPageContent />
