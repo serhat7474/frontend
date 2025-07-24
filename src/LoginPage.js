@@ -73,7 +73,7 @@ function LoginPageContent() {
       });
       setTimeout(() => {
         if (rightSectionRef.current && passwordInputRef.current) {
-          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 100); // scrollConfig kullanıldı
+          handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 50); // Kaydırma miktarı azaltıldı (100 -> 50)
           setLocalState((prev) => ({ ...prev, isActive: true }));
           passwordInputRef.current.focus();
           console.log('Kaydırma tamamlandı, şifre inputuna odaklanıldı');
@@ -167,7 +167,7 @@ function LoginPageContent() {
         showTcError: false,
       }));
       passwordInputRef.current?.focus();
-      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 100);
+      handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 50); // Kaydırma miktarı azaltıldı (100 -> 50)
     },
     [dispatch, handleInputFocus, scrollConfig]
   );
@@ -197,7 +197,7 @@ function LoginPageContent() {
 
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
-    handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 100);
+    handleInputFocus(passwordInputRef, scrollConfig?.passwordOffset || 50); // Kaydırma miktarı azaltıldı (100 -> 50)
   }, [handleInputFocus, scrollConfig]);
 
   const handlePasswordBlur = useCallback(
