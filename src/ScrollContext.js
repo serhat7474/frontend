@@ -9,7 +9,7 @@ export const ScrollProvider = ({ children }) => {
 
   const scrollConfig = useMemo(() => ({
     tcOffset: 100,
-    passwordOffset: -200, // Varsayılan offset azaltıldı
+    passwordOffset: -300, // Varsayılan offset azaltıldı
     phoneOffset: 350,
   }), []);
 
@@ -49,7 +49,7 @@ export const ScrollProvider = ({ children }) => {
     const viewportHeight = window.visualViewport?.height || window.innerHeight;
     const keyboardHeight = window.visualViewport?.offsetTop
       ? window.innerHeight - window.visualViewport.height
-      : 300; // Varsayılan klavye yüksekliği artırıldı
+      : 350; // Varsayılan klavye yüksekliği artırıldı
 
     console.log('Focus event tetiklendi:', {
       inputId: input.id,
