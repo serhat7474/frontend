@@ -29,9 +29,7 @@ function LoginPageContent() {
       if (rightSectionRef.current) {
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = 'true';
-        console.log('LoginPage: Sayfa en üste kaydırıldı');
       } else {
-        console.log('LoginPage: rightSectionRef null, tekrar deneniyor');
         setTimeout(scrollToTop, 100);
       }
     };
@@ -58,8 +56,8 @@ function LoginPageContent() {
   useEffect(() => {
     setLocalState((prev) => ({
       ...prev,
-      isTcActive: inputValue.length > 0,
-      isTcBold: inputValue.length > 0,
+      isTcActive: prev.isTcActive || inputValue.length > 0, // isTcActive true kalır
+      isTcBold: inputValue.length > 0, // Metin varsa kalın, yoksa ince
       showTcError: false,
       isActive: inputValue.length === 11,
     }));
@@ -70,19 +68,12 @@ function LoginPageContent() {
   // TC inputu 11 haneye ulaştığında kaydır ve şifre inputuna odaklan
   useEffect(() => {
     if (inputValue.length === 11 && passwordInputRef.current && rightSectionRef.current && !hasScrolledRef.current) {
-      console.log('TC 11 hane oldu, kaydırma tetikleniyor:', {
-        passwordInputRef: !!passwordInputRef.current,
-        rightSectionRef: !!rightSectionRef.current,
-      });
       setTimeout(() => {
         if (rightSectionRef.current && passwordInputRef.current) {
           handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
           setLocalState((prev) => ({ ...prev, isActive: true }));
           passwordInputRef.current.focus(); // Otomatik odaklanma
           hasScrolledRef.current = true; // Bayrağı işaretle
-          console.log('Kaydırma tamamlandı, şifre inputuna odaklanıldı');
-        } else {
-          console.log('Hata: passwordInputRef veya rightSectionRef null');
         }
       }, 200);
     }
@@ -140,8 +131,8 @@ function LoginPageContent() {
     if ((e.key === 'Backspace' || e.key === 'Delete') && !e.target.value) {
       setLocalState((prev) => ({
         ...prev,
-        isTcBold: false,
-        isTcActive: true,
+        isTcActive: true, // Label üstte kalsın
+        isTcBold: false, // Label kalın olmasın
       }));
     }
   }, []);
@@ -152,8 +143,8 @@ function LoginPageContent() {
       dispatch({ type: 'CLEAR_TC' });
       setLocalState((prev) => ({
         ...prev,
-        isTcActive: true,
-        isTcBold: false,
+        isTcActive: true, // Label üstte kalsın
+        isTcBold: false, // Label kalın olmasın
         showTcError: false,
       }));
       tcInputRef.current?.focus();
@@ -176,12 +167,11 @@ function LoginPageContent() {
     setLocalState((prev) => ({
       ...prev,
       isTcActive: true,
-      isTcBold: inputValue.length > 0,
+      isTcBold: inputValue.length > 0, // Metin varsa kalın, yoksa ince
     }));
     // Şifre inputu açıkken TC inputuna odaklanıldığında biraz yukarı kaydır
     if (inputValue.length === 11 && rightSectionRef.current && tcInputRef.current) {
       handleInputFocus(tcInputRef, 50); // Sabit scrollTo: 50
-      console.log('TC inputuna odaklanıldı, biraz yukarı kaydırma tetiklendi');
     }
   }, [inputValue, handleInputFocus, rightSectionRef, tcInputRef]);
 
@@ -189,8 +179,8 @@ function LoginPageContent() {
     if (!inputValue.length) {
       setLocalState((prev) => ({
         ...prev,
-        isTcActive: false,
-        isTcBold: false,
+        isTcActive: false, // Boşsa ve blur olursa label içeri dönsün
+        isTcBold: false, // Boşsa ve blur olursa label içeri dönsün
       }));
     }
   }, [inputValue]);
@@ -198,7 +188,6 @@ function LoginPageContent() {
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
     handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150, her zaman kaydır
-    console.log('Şifre inputuna odaklanıldı, aşağı kaydırma tetiklendi');
   }, [handleInputFocus]);
 
   const handlePasswordBlur = useCallback(
@@ -301,7 +290,7 @@ function LoginPageContent() {
                     alt="Hata Simgesi"
                     className="error-icon"
                     loading="lazy"
-                    onError={() => console.warn('Hata simgesi yüklenemedi')}
+                    onError={() => {}}
                   />
                   Hatalı giriş yaptınız, lütfen tekrar deneyiniz.
                 </div>
@@ -315,14 +304,14 @@ function LoginPageContent() {
               <button
                 className="action-link become-customer"
                 type="button"
-                onClick={() => console.log('Müşteri Olmak İstiyorum tıklandı')}
+                onClick={() => {}}
               >
                 MÜŞTERİ OLMAK İSTİYORUM
               </button>
               <button
                 className="action-link create-password"
                 type="button"
-                onClick={() => console.log('Şifre Oluştur tıklandı')}
+                onClick={() => {}}
               >
                 ŞİFRE OLUŞTUR
               </button>
