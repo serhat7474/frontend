@@ -65,6 +65,8 @@ function PhoneVerificationPageContent() {
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
         if (rightSectionRef.current) {
           rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
+        } else {
+          console.log('Hata: rightSectionRef null (sanal klavye)');
         }
       };
       navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
@@ -75,6 +77,8 @@ function PhoneVerificationPageContent() {
     } else if (isIOS()) {
       if (rightSectionRef.current) {
         rightSectionRef.current.style.paddingBottom = '150px';
+      } else {
+        console.log('Hata: rightSectionRef null (iOS)');
       }
       return () => {
         document.head.removeChild(meta);
@@ -90,6 +94,7 @@ function PhoneVerificationPageContent() {
         rightSectionRef.current.dataset.loaded = 'true';
         console.log('Sayfa en üste kaydırıldı');
       } else {
+        console.log('Hata: rightSectionRef null (scrollToTop)');
         setTimeout(scrollToTop, 100);
       }
     };
@@ -126,9 +131,13 @@ function PhoneVerificationPageContent() {
       showPhoneError: false,
       errorMessage: '',
     }));
-    phoneInputRef.current?.focus();
-    handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
-    console.log('Telefon numarası temizlendi, aşağı kaydırma tetiklendi');
+    if (phoneInputRef.current) {
+      phoneInputRef.current.focus();
+      handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
+      console.log('Telefon numarası temizlendi, aşağı kaydırma tetiklendi');
+    } else {
+      console.log('Hata: phoneInputRef null');
+    }
   }, [handleInputFocus]);
 
   // Telefon inputuna fokuslanma
@@ -140,9 +149,16 @@ function PhoneVerificationPageContent() {
       isPhonePrefixVisible: true,
       isPhoneFocused: true,
     }));
-    handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
-    console.log('Telefon inputuna odaklanıldı, aşağı kaydırma tetiklendi');
-  }, [handleInputFocus]);
+    if (phoneInputRef.current && rightSectionRef.current) {
+      handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
+      console.log('Telefon inputuna odaklanıldı, aşağı kaydırma tetiklendi');
+    } else {
+      console.log('Hata: phoneInputRef veya rightSectionRef null', {
+        phoneInputRef: !!phoneInputRef.current,
+        rightSectionRef: !!rightSectionRef.current,
+      });
+    }
+  }, [handleInputFocus, rightSectionRef]);
 
   // Telefon inputundan çıkma
   const handlePhoneBlur = useCallback(() => {
