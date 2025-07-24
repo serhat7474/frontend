@@ -73,7 +73,6 @@ function LoginPageContent() {
         setLocalState((prev) => ({ ...prev, isActive: true }));
         passwordInputRef.current.focus(); // Otomatik odaklanma
         hasScrolledRef.current = true; // Bayrağı işaretle
-        console.log('Şifre inputuna odaklanıldı, scrollTo: 150');
       }
     }
   }, [inputValue, handleInputFocus, rightSectionRef, passwordInputRef]);
@@ -147,12 +146,8 @@ function LoginPageContent() {
         showTcError: false,
       }));
       tcInputRef.current?.focus();
-      if (rightSectionRef.current && tcInputRef.current) {
-        handleInputFocus(tcInputRef, 80); // Sabit scrollTo: 80
-        console.log('TC inputu temizlendi, scrollTo: 80');
-      }
     },
-    [dispatch, handleInputFocus, rightSectionRef, tcInputRef]
+    [dispatch]
   );
 
   const handleClearPassword = useCallback(
@@ -161,8 +156,7 @@ function LoginPageContent() {
       dispatch({ type: 'CLEAR_PASSWORD' });
       setLocalState((prev) => ({ ...prev, isActive: true, showTcError: false }));
       passwordInputRef.current?.focus();
-      handleInputFocus(passwordInputRef, 80); // Sabit scrollTo: 80
-      console.log('Şifre inputu temizlendi, scrollTo: 80');
+      handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
     },
     [dispatch, handleInputFocus]
   );
@@ -173,11 +167,9 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0, // Metin varsa kalın, yoksa ince
     }));
-    if (rightSectionRef.current && tcInputRef.current) {
-      // Şifre inputu açıkken TC inputuna odaklanıldığında yukarı kaydır, yoksa aşağı kaydır
-      const scrollToValue = inputValue.length === 11 ? 50 : 80;
-      handleInputFocus(tcInputRef, scrollToValue);
-      console.log(`TC inputuna odaklanıldı, scrollTo: ${scrollToValue}`);
+    // Şifre inputu açıkken TC inputuna odaklanıldığında biraz yukarı kaydır
+    if (inputValue.length === 11 && rightSectionRef.current && tcInputRef.current) {
+      handleInputFocus(tcInputRef, 50); // Sabit scrollTo: 50
     }
   }, [inputValue, handleInputFocus, rightSectionRef, tcInputRef]);
 
@@ -193,8 +185,7 @@ function LoginPageContent() {
 
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
-    handleInputFocus(passwordInputRef, 80); // Sabit scrollTo: 80, her zaman kaydır
-    console.log('Şifre inputuna odaklanıldı, scrollTo: 80');
+    handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150, her zaman kaydır
   }, [handleInputFocus]);
 
   const handlePasswordBlur = useCallback(
@@ -401,7 +392,7 @@ function LoginPageContent() {
   );
 }
 
-function LoginPage() {1
+function LoginPage() {
   return (
     <AuthProvider>
       <LoginPageContent />
