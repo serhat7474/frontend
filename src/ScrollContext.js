@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const ScrollContext = createContext();
@@ -6,12 +6,6 @@ const ScrollContext = createContext();
 export const ScrollProvider = ({ children }) => {
   const rightSectionRef = useRef(null);
   const location = useLocation();
-
-  const scrollConfig = useMemo(() => ({
-    tcOffset: 100,
-    passwordOffset: -300, // Varsayılan offset azaltıldı
-    phoneOffset: 350,
-  }), []);
 
   // Rota değiştiğinde veya sayfa yüklendiğinde en üste kaydır
   useEffect(() => {
@@ -31,7 +25,7 @@ export const ScrollProvider = ({ children }) => {
   }, [location.pathname]);
 
   // Input odaklanma için scroll yönetimi
-  const handleInputFocus = (inputRef, offset) => {
+  const handleInputFocus = (inputRef, targetScrollTo) => {
     if (!inputRef.current || !rightSectionRef.current) {
       console.log('Hata: inputRef veya rightSectionRef null', {
         inputRef: !!inputRef.current,
@@ -49,7 +43,7 @@ export const ScrollProvider = ({ children }) => {
     const viewportHeight = window.visualViewport?.height || window.innerHeight;
     const keyboardHeight = window.visualViewport?.offsetTop
       ? window.innerHeight - window.visualViewport.height
-      : 350; // Varsayılan klavye yüksekliği artırıldı
+      : 350; // Varsayılan klavye yüksekliği
 
     console.log('Focus event tetiklendi:', {
       inputId: input.id,
@@ -58,7 +52,7 @@ export const ScrollProvider = ({ children }) => {
       viewportHeight,
       keyboardHeight,
       currentScrollTop: rightSection.scrollTop,
-      offset,
+      targetScrollTo,
     });
 
     if (isIOS) {
@@ -74,13 +68,8 @@ export const ScrollProvider = ({ children }) => {
     if (isAndroid) {
       setTimeout(() => {
         requestAnimationFrame(() => {
-          const scrollTo =
-            rightSection.scrollTop +
-            inputRect.top -
-            (viewportHeight - inputRect.height - keyboardHeight) / 2 +
-            offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Android: Kaydırma uygulandı', { scrollTo, offset });
+          rightSection.scrollTo({ top: targetScrollTo, behavior: 'smooth' });
+          console.log('Android: Kaydırma uygulandı', { scrollTo: targetScrollTo });
         });
       }, 200);
     }
@@ -88,7 +77,6 @@ export const ScrollProvider = ({ children }) => {
 
   const value = {
     rightSectionRef,
-    scrollConfig,
     handleInputFocus,
   };
 
