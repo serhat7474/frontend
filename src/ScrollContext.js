@@ -9,7 +9,7 @@ export const ScrollProvider = ({ children }) => {
 
   const scrollConfig = useMemo(() => ({
     tcOffset: 100,
-    passwordOffset: 150,
+    passwordOffset: -200, // Varsayılan offset azaltıldı
     phoneOffset: 350,
   }), []);
 
@@ -49,14 +49,16 @@ export const ScrollProvider = ({ children }) => {
     const viewportHeight = window.visualViewport?.height || window.innerHeight;
     const keyboardHeight = window.visualViewport?.offsetTop
       ? window.innerHeight - window.visualViewport.height
-      : 250; // Varsayılan klavye yüksekliği
+      : 300; // Varsayılan klavye yüksekliği artırıldı
 
     console.log('Focus event tetiklendi:', {
       inputId: input.id,
       inputRectTop: inputRect.top,
+      inputRectHeight: inputRect.height,
       viewportHeight,
       keyboardHeight,
       currentScrollTop: rightSection.scrollTop,
+      offset,
     });
 
     if (isIOS) {
@@ -78,9 +80,9 @@ export const ScrollProvider = ({ children }) => {
             (viewportHeight - inputRect.height - keyboardHeight) / 2 +
             offset;
           rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          console.log('Android: Kaydırma uygulandı', { scrollTo });
+          console.log('Android: Kaydırma uygulandı', { scrollTo, offset });
         });
-      }, 200); // Hızlandırılmış gecikme
+      }, 200);
     }
   };
 
