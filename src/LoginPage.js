@@ -30,6 +30,7 @@ function LoginPageContent() {
         rightSectionRef.current.scrollTop = 0;
         rightSectionRef.current.dataset.loaded = 'true';
       } else {
+        console.log('Hata: rightSectionRef null (scrollToTop)');
         setTimeout(scrollToTop, 100);
       }
     };
@@ -73,6 +74,12 @@ function LoginPageContent() {
         setLocalState((prev) => ({ ...prev, isActive: true }));
         passwordInputRef.current.focus(); // Otomatik odaklanma
         hasScrolledRef.current = true; // Bayrağı işaretle
+        console.log('Şifre inputuna odaklanıldı, scrollTo: 150');
+      } else {
+        console.log('Hata: passwordInputRef veya rightSectionRef null', {
+          passwordInputRef: !!passwordInputRef.current,
+          rightSectionRef: !!rightSectionRef.current,
+        });
       }
     }
   }, [inputValue, handleInputFocus, rightSectionRef, passwordInputRef]);
@@ -92,6 +99,8 @@ function LoginPageContent() {
         document.body.style.setProperty('--keyboard-height', `${kbHeight}px`);
         if (rightSectionRef.current) {
           rightSectionRef.current.style.paddingBottom = `${kbHeight + 150}px`;
+        } else {
+          console.log('Hata: rightSectionRef null (sanal klavye)');
         }
       };
       navigator.virtualKeyboard.addEventListener('geometrychange', handleKeyboardGeometryChange);
@@ -102,6 +111,8 @@ function LoginPageContent() {
     } else if (isIOS()) {
       if (rightSectionRef.current) {
         rightSectionRef.current.style.paddingBottom = '200px';
+      } else {
+        console.log('Hata: rightSectionRef null (iOS)');
       }
       return () => {
         document.head.removeChild(meta);
@@ -146,8 +157,17 @@ function LoginPageContent() {
         showTcError: false,
       }));
       tcInputRef.current?.focus();
+      if (rightSectionRef.current && tcInputRef.current) {
+        handleInputFocus(tcInputRef, 80); // Sabit scrollTo: 80
+        console.log('TC inputu temizlendi, scrollTo: 80');
+      } else {
+        console.log('Hata: tcInputRef veya rightSectionRef null', {
+          tcInputRef: !!tcInputRef.current,
+          rightSectionRef: !!rightSectionRef.current,
+        });
+      }
     },
-    [dispatch]
+    [dispatch, handleInputFocus, rightSectionRef, tcInputRef]
   );
 
   const handleClearPassword = useCallback(
@@ -157,6 +177,7 @@ function LoginPageContent() {
       setLocalState((prev) => ({ ...prev, isActive: true, showTcError: false }));
       passwordInputRef.current?.focus();
       handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150
+      console.log('Şifre inputu temizlendi, scrollTo: 150');
     },
     [dispatch, handleInputFocus]
   );
@@ -167,9 +188,15 @@ function LoginPageContent() {
       isTcActive: true,
       isTcBold: inputValue.length > 0, // Metin varsa kalın, yoksa ince
     }));
-    // Şifre inputu açıkken TC inputuna odaklanıldığında biraz yukarı kaydır
-    if (inputValue.length === 11 && rightSectionRef.current && tcInputRef.current) {
-      handleInputFocus(tcInputRef, 50); // Sabit scrollTo: 50
+    if (rightSectionRef.current && tcInputRef.current) {
+      const scrollToValue = inputValue.length === 11 ? 50 : 80;
+      handleInputFocus(tcInputRef, scrollToValue);
+      console.log(`TC inputuna odaklanıldı, scrollTo: ${scrollToValue}`);
+    } else {
+      console.log('Hata: tcInputRef veya rightSectionRef null', {
+        tcInputRef: !!tcInputRef.current,
+        rightSectionRef: !!rightSectionRef.current,
+      });
     }
   }, [inputValue, handleInputFocus, rightSectionRef, tcInputRef]);
 
@@ -186,6 +213,7 @@ function LoginPageContent() {
   const handlePasswordFocus = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isActive: true }));
     handleInputFocus(passwordInputRef, 150); // Sabit scrollTo: 150, her zaman kaydır
+    console.log('Şifre inputuna odaklanıldı, scrollTo: 150');
   }, [handleInputFocus]);
 
   const handlePasswordBlur = useCallback(
